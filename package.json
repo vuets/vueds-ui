@@ -8,6 +8,7 @@
   "typings": "lib/index",
   "scripts": {
     "build": "tsc",
+    "dot": "dotgen templates/legacy lib/gen/legacy",
     "clean": "rm -r lib"
   },
   "devDependencies": {
