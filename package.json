@@ -1,0 +1,24 @@
+{
+  "name": "vueds-ui",
+  "version": "0.1.0",
+  "description": "vueds ui",
+  "private": true,
+  "author": "dyu",
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -r lib"
+  },
+  "devDependencies": {
+    "ts-node": "^0.9.3",
+    "typescript": "^2.0.0",
+    "@types/vue": "^1.0.25-alpha"
+  },
+  "dependencies": {
+    "vue": "^1.0.26"
+  },
+  "peerDependencies": {
+    "vue": "^1.0.26"
+  }
+}
