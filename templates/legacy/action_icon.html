@@ -1,6 +1,6 @@
 {{##$:
-var c = require('vui/constants'),
-    common = require('./common'),
+var common = require('../common'), 
+    c = common.c,
     paramStr = function(param) {
         return typeof param === 'string' ? common.replaceBacktick(param) : '';
     };
