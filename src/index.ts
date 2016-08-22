@@ -39,7 +39,7 @@ Vue.directive('xp', {
             return
         }
         
-        this.str_frag = new FragmentFactory(vm, tpl.main(value)).create(host, scope, frag)
+        this.str_frag = new FragmentFactory(vm, tpl.main.call(this, value)).create(host, scope, frag)
         if (!el.firstChild) {
             if (value.$replace) {
                 this.str_frag.before(el, false)
