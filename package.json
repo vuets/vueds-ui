@@ -17,6 +17,8 @@
     "@types/vue": "^1.0.25-alpha"
   },
   "dependencies": {
+    "hammerjs": "^2.0.8",
+    "numeral": "^1.5.3",
     "vue": "^1.0.26"
   },
   "peerDependencies": {
