@@ -1,0 +1,20 @@
+{{##$:
+var action_icon = require('./action_icon');
+#}}
+
+{{##body(it, fields, pojo):
+{{* fields:item:i }}
+{{% out += action_icon.body(it, item, item.show || it.show, item.icon || 'circle', item.icon_empty, pojo, pojo + (item.state_suffix || '.vstate')); %}}
+{{*}}
+#}}
+
+{{% var content_loc = it.content_loc || 1; %}}
+{{? content_loc === 1 }}
+<content></content>
+{{?}}
+{{? it.a }}<a>{{?}}
+{{% out += body(it, it.fields, it.POJO || 'pojo'); %}}
+{{? it.a }}</a>{{?}}
+{{? content_loc === 2 }}
+<content></content>
+{{?}}

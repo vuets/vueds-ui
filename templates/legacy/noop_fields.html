@@ -1,0 +1,20 @@
+{{##$:
+var common = require('./common');
+#}}
+
+<div
+{{%
+    var f, d, count = 0, 
+    descriptor = it.$initvar, 
+    array = descriptor.$fdf, mask = 5, 
+    pojo = it.POJO || 'pojo', 
+    excludes = it.excludes || common.default_obj;
+%}}
+{{% for(var i = 0, len = array.length; i < len; i++) { %}}
+{{% f = array[i]; d = descriptor[f]; %}}
+{{% if(!d.t || (d.a & mask) || excludes[f]) continue; %}}
+{{% out += (0 === count++ ? ' v-noop="' : ','); %}}
+{{pojo}}.{{f}}
+{{% } %}}
+{{? 0 !== count }}"{{?}}
+></div>

@@ -1,0 +1,34 @@
+{{##$:
+var c = require('vui/constants'),
+    common = require('./common');
+#}}
+
+{{% var pager = it.PAGER, pojo = it.POJO || 'pojo', attrs = it.attrs, item_attrs = it.item_attrs; %}}
+
+<ul class="ui{{? it.custom_list_class }} {{it.custom_list_class}}{{??}} small divided selection{{?}}{{? it.list_class }} {{it.list_class}}{{?}} list"
+  {{% if (attrs) { for(var i in attrs) { %}}
+  {{i}}="{{attrs[i]}}"
+  {{% } } %}}>
+  <li class="item{{? it.item_class }} {{it.item_class}}{{?}}"
+      v-repeat="{{pojo}}:{{pager}}.array"
+      {{% if (item_attrs) { for(var i in item_attrs) { %}}
+      {{i}}="{{item_attrs[i]}}"
+      {{% } } %}}
+      {{? it.click_to_select }}
+      v-xon="click8:{{pager}}.$handle(11, {{pojo}}){{? it.dblclick_to_update }}, dblclick11:{{pager}}.$handle(13, {{pojo}}, ({{pojo}}._.vstate ^= {{c.STATE_UPDATE}})){{?}}"
+      {{?}}
+      v-show="({{pojo}}._.lstate &amp; {{c.LSTATE_INCLUDED}}){{? it.item_show }}{{common.exprs(it.item_show, pojo, ' &amp;&amp; ', true)}}{{?}}"
+      v-class="active:({{pojo}}._.lstate &amp; {{c.LSTATE_SELECTED}}){{? it.item_vclass }}{{common.kv_exprs(it.item_vclass, pojo, ', ', true, ' &amp;&amp; ')}}{{?}}">
+    <content></content>
+    <div v-show="!({{pager}}.{{pojo}}._.vstate &amp; {{c.STATE_UPDATE}})
+        &amp;&amp; {{pojo}}._.msg &amp;&amp; {{pojo}}._.state &amp; {{c.MASK_STATUS}}">
+      <div class="ui message"
+          v-class="success:{{pojo}}._.state &amp; {{c.STATE_SUCCESS}}, 
+                   error:{{pojo}}._.state &amp; {{c.STATE_ERROR}},
+                   warning:{{pojo}}._.state &amp; {{c.STATE_WARNING}}">
+        <i class="close icon" v-xon="click:{{pojo}}._.msg = null"></i>
+        <span v-text="{{pojo}}._.msg"></span>
+      </div>
+    </div>
+  </li>
+</ul>

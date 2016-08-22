@@ -1,0 +1,27 @@
+
+{{##option_el(it, v, text):
+<option value="{{v}}">{{text}}</option>
+#}}
+
+{{%
+var pojo = it.POJO, 
+    f = it.field, 
+    d = it.d_override || it.$initvar[f], 
+    excludes = it.excludes, 
+    includes = it.includes, 
+    title = it.title || '', 
+    text;
+%}}
+
+<select v-class="active:{{pojo}}.{{f}}"{{? it.disable }} v-disable="{{it.disable}}"{{?}}
+    v-xmodel="{{? it.handler_id }}{{it.handler_id}}:{{?}}{{pojo}}.{{f}}">
+  {{? !it.update }}
+  <option value="">{{title}}</option>
+  {{?}}
+  {{* d.v:v:i}}
+  {{%
+  if (includes) { if ((text = includes[String(v)]) != null) { out += option_el(it, v, text || d.$v[i]); }} 
+  else if (!excludes || !excludes[String(v)]) { out += option_el(it, v, d.$v[i]); } 
+  %}}
+  {{*}}
+</select>

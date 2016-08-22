@@ -1,0 +1,36 @@
+{{##$:
+var c = require('vui/constants');
+#}}
+
+{{##delete_icons(it, pojo, handler, handler_id, handler_args, hf, sf, zkf)=
+{{%
+var show;
+if (sf != null) {
+    show = pojo + "['" + sf + "']";
+    if (zkf) show += "=== 'AAAAAAAAAAAA'";
+} else if (hf != null) {
+    if (zkf) show = pojo + "['" + hf + "'] !== 'AAAAAAAAAAAA'";
+    else show = "!" + pojo + "['" + hf + "']";
+}
+%}}
+<i class="trash icon" {{? show }}v-show="{{show}}"{{?}}
+    v-xon="click:{{pojo}}._.vstate ^= 1"></i>
+<i class="ok sign icon"
+    v-show="{{pojo}}._.vstate &amp; 1"
+    v-xon="click:handle(null, (pager.state &amp; {{c.STATE_LOADING}}) ? {{c.PREVENT_BOTH}} : {{handler}}({{handler_id}}, {{? handler_args }}{ v:{{pojo}}, {{handler_args}} }{{??}}{{pojo}}{{?}}, ({{pojo}}._.vstate ^= 1)))"></i>
+<i class="remove sign icon"
+    v-show="{{pojo}}._.vstate &amp; 1"
+    v-xon="click:{{pojo}}._.vstate ^= 1"></i>
+#}}
+
+{{% var pager = it.PAGER, pojo = it.POJO || 'pojo', handler = it.handler || 'handle'; %}}
+
+<content></content>
+{{? pager }}
+<i class="pencil icon" 
+    {{? it.update_icon_click }}v-xon="click3:{{pager}}.$handle(13, {{pojo}}, ({{pojo}}._.vstate ^= {{c.STATE_UPDATE}}))"{{?}}></i>
+{{?}}
+{{? it.handler_id }}
+{{% out += delete_icons(it, pojo, handler, it.handler_id, it.handler_args, it.hf, it.sf, it.zkf) %}}
+{{?}}
+

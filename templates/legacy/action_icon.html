@@ -1,0 +1,53 @@
+{{##$:
+var c = require('vui/constants'),
+    common = require('./common'),
+    paramStr = function(param) {
+        return typeof param === 'string' ? common.replaceBacktick(param) : '';
+    };
+#}}
+
+{{##bool_set(item, pojo):
+({{pojo}}['{{item.f}}'] = !{{pojo}}['{{item.f}}'])
+#}}
+
+/* requires hid, bit, icon, $f */
+{{##body(it, item, show, icon, icon_empty, pojo, pstate, cached_exprs)=
+{{%
+if (item.$f$ && !icon_empty) icon_empty = icon === 'circle' ? 'blank' : 'empty';
+if (show) cached_exprs = common.exprs(show, pojo, ' &amp;&amp; ');
+%}}
+<i class="{{icon}} icon"
+    {{? item.$f$ }}
+    v-attr="title: {{pojo}}['{{item.f}}'] ? '{{item.$f}}' : '{{item.$f$}}'"
+    v-class="{{icon_empty}}: !{{pojo}}['{{item.f}}']"
+    {{?? item.$f }}
+    title="{{item.$f}}"
+    {{?}}
+    {{? show }}
+    v-show="{{cached_exprs}}"
+    {{?}}
+    v-xon="click3:{{pstate}} ^= {{item.bit}}"></i>
+<i class="ok sign icon"
+    v-show="({{pstate}} &amp; {{item.bit}}){{? show }} &amp;&amp; {{cached_exprs}}{{?}}"
+    v-xon="click3:handle(null, (pager.state &amp; {{c.STATE_LOADING}}) ? {{c.PREVENT_BOTH}} :
+        {{? item.param }}
+        handle({{item.hid}}, { {{? typeof item.param !== 'string' || item.param.charAt(0) === ',' }}p: {{pojo}}{{? item.f }}, f: {{item.f}}{{?}}{{?}}{{paramStr(item.param)}}{{? item.$f$ || item.bool }}, v: {{bool_set(item, pojo)}}{{?}} },
+        {{??}}
+        handle({{item.hid}}, {{pojo}},{{? item.$f$ || item.bool }} {{bool_set(item, pojo)}},{{?}}
+        {{?}}
+        ({{pstate}} ^= {{item.bit}})))"></i>
+<i class="remove sign icon"
+    v-show="({{pstate}} &amp; {{item.bit}}){{? show }} &amp;&amp; {{cached_exprs}}{{?}}"
+    v-xon="click3:{{pstate}} ^= {{item.bit}}"></i>
+#}}
+
+{{% var pojo = it.POJO || 'pojo', content_loc = it.content_loc || 1; %}}
+{{? content_loc === 1 }}
+<content></content>
+{{?}}
+{{? it.a }}<a>{{?}}
+{{% out += body(it, it, it.show, it.icon || 'circle', it.icon_empty, pojo, pojo + (it.state_suffix || '.vstate')); %}}
+{{? it.a }}<a>{{?}}
+{{? content_loc === 2 }}
+<content></content>
+{{?}}

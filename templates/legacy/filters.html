@@ -1,0 +1,79 @@
+{{##$:
+var c = require('vui/constants'),
+    enum_select = require('./enum_select'),
+    numArray = ["two", "three", "four", "five"],
+    suffix = ' xcompact';
+    
+    /* TODO: no xcompact modifier if only single filter? */
+#}}
+
+{{##field_enum(it, item, descriptor, pojo, hid_suffix, class_suffix)=
+<div class="fluid picker{{class_suffix}}">
+{{%
+out += enum_select.main({
+    $initvar: descriptor,
+    POJO: pojo, 
+    disable: item.disable,
+    includes: item.includes, 
+    excludes: item.excludes, 
+    title: item.$,
+    handler_id: item.hid + hid_suffix + '__preset__1',
+    field: item.f
+}); 
+%}}
+</div>
+#}}
+
+/* TODO edit the raw icons reference if you upgrade/change the icon set. */
+
+{{##field_bool(it, item, descriptor, pojo, hid_suffix, class_suffix, item_value_display)=
+<div class="fluid picker{{class_suffix}}">
+<select class="icons" v-class="active:{{? item.active }}{{item.active}}{{??}}{{pojo}}['{{item.f}}'] !== null{{?}}"
+    {{? item.disable }}v-disable="{{item.disable}}"{{?}}
+    v-xmodel="{{item.hid}}{{hid_suffix}}__preset__1:{{pojo}}.{{item.f}}">
+  <option value="">{{item.$}}:</option>
+  <option value="1">{{item_value_display}} &#xf058;</option>
+  <option value="0">{{item_value_display}} &#xf057;</option>
+</select>
+</div>
+#}}
+
+{{##field_suggest(it, item, descriptor, pojo, hid_suffix, class_suffix)=
+<div class="ui input{{class_suffix}}">
+  <input type="text" placeholder="{{item.$}}"{{? item.disable }} v-disable="{{item.disable}}"{{?}}
+      v-suggest="{{item.tc}}__{{item.hid}}{{hid_suffix}}__preset__1:{{pojo}}._.vprops.{{item.f}}"/>
+</div>
+#}}
+
+{{##field_default(it, item, descriptor, pojo, hid_suffix, class_suffix, with_errmsg)=
+<div class="ui input{{class_suffix}}">
+  <input type="text" placeholder="{{item.$}}"{{? item.disable }} v-disable="{{item.disable}}"{{?}}
+      v-xmodel="{{item.hid}}{{hid_suffix}}__preset__1:{{pojo}}.{{item.f}}"/>
+  {{? with_errmsg }}
+  <div v-text="{{pojo}}._.vprops.{{item.f}}"></div>
+  {{?}}
+</div>
+#}}
+
+{{##body(it, filters, descriptor, pojo, hid_suffix, d, attrs)=
+{{? filters.length > 1 }}
+<div class="{{numArray[filters.length-2]}} fields">
+{{?}}
+{{* filters:item:i }}
+<div class="field"{{% if (attrs = item.attrs) for(var i in attrs) { %}} {{i}}="{{attrs[i]}}"{{% } %}}>
+{{%
+d = descriptor[item.f];
+if (d.t === 1) out += field_bool(it, item, descriptor, pojo, hid_suffix, suffix, item.$);
+else if (d.t === 16 ) out += field_enum(it, item, descriptor, pojo, hid_suffix, suffix);
+else if (item.tc) out += field_suggest(it, item, descriptor, pojo, hid_suffix, suffix);
+else out += field_default(it, item, descriptor, pojo, hid_suffix, suffix);
+%}}
+</div>
+{{*}}
+{{? filters.length > 1 }}
+</div>
+{{?}}
+#}}
+
+{{% out += body(it, it.filters, it.$initvar, it.POJO + '.entry_filter_new', ''); %}}
+

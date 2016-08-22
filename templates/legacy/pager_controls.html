@@ -1,0 +1,125 @@
+{{##$:
+var c = require('vui/constants');
+#}}
+
+{{##msg_fragment(it, pager):
+<div v-show="{{pager}}.msg &amp;&amp; {{pager}}.state &amp; {{c.MASK_STATUS}}">
+  <div class="ui message"
+      v-class="success:{{pager}}.state &amp; {{c.STATE_SUCCESS}}, 
+               error:{{pager}}.state &amp; {{c.STATE_ERROR}},
+               warning:{{pager}}.state &amp; {{c.STATE_WARNING}}">
+    <i class="close icon" v-xon="click:{{pager}}.msg = null"></i>
+    <span v-text="{{pager}}.msg"></span>
+  </div>
+</div>
+#}}
+
+{{##rpc_item(it, pager):
+<div class="item">
+<div class="ui tiny icon buttons">
+  {{? it.content_loc === 1 }}
+  <content></content>
+  {{?}}
+  {{? !it.without_sort }}
+  <button type="button" class="ui button"
+      v-disable="2 > {{pager}}.store.size || {{pager}}.store.state &amp; {{c.STATE_LOADING}}"
+      v-xon="click:{{pager}}.$handle(1, ({{pager}}.state ^= {{c.STATE_DESC}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}}))">
+    <i class="icon" 
+        v-class="{{? it.reverse_icon }}down{{??}}up{{?}}:({{pager}}.state &amp; {{c.STATE_DESC}}) === 0, 
+        {{? it.reverse_icon }}up{{??}}down{{?}}:{{pager}}.state &amp; {{c.STATE_DESC}}"></i>
+  </button>
+  {{?}}
+  {{? !it.without_rpc_newer }}
+  <button type="button" class="ui button" 
+      v-disable="{{pager}}.store.state &amp; {{c.MASK_RPC_DISABLE}}"
+      v-xon="click:{{pager}}.$handle(16, {{it.flags || 0}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="reply mail icon"></i>
+  </button>
+  {{?}}
+  {{? !it.without_rpc_older }}
+  <button type="button" class="ui button"
+      v-disable="{{pager}}.store.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.store.size === 0"
+      v-xon="click:{{pager}}.$handle(17, {{it.flags || 0}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="forward mail icon"></i>
+  </button>
+  {{?}}
+  {{? !it.without_rpc_reload }}
+  <button type="button" class="ui button"
+      v-disable="{{pager}}.store.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.store.size === 0"
+      v-xon="click:{{pager}}.$handle(4{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="repeat icon"></i>
+  </button>
+  {{?}}
+  {{? it.content_loc === 2 }}
+  <content></content>
+  {{?}}
+</div>
+</div>
+#}}
+
+{{##nav_item(it, pager):
+<div class="item">
+<div class="ui tiny icon buttons">
+  {{? it.content_loc === 4 }}
+  <content></content>
+  {{?}}
+  <button type="button" class="ui button"
+      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
+      v-xon="click:{{pager}}.$handle(1, ({{pager}}.page = 0){{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="double angle left icon"></i>
+  </button>
+  <button type="button" class="ui button" 
+      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
+      v-xon="click:{{pager}}.$handle(1, --{{pager}}.page{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="angle left icon"></i>
+  </button>
+  <button type="button" class="ui button"
+      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
+      v-xon="click:{{pager}}.$handle(1, ++{{pager}}.page{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="angle right icon"></i>
+  </button>
+  <button type="button" class="ui button"
+      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
+      v-xon="click:{{pager}}.$handle(1, ({{pager}}.page = {{pager}}.page_count){{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
+    <i class="double angle right icon"></i>
+  </button>
+  {{? it.content_loc === 5 }}
+  <content></content>
+  {{?}}
+</div>
+</div>
+#}}
+
+{{##count_item(it, pager):
+<div class="item">
+{{? it.content_loc === 7 }}
+<content></content>
+{{?}}
+<span v-show="{{pager}}.store.size !== 0" 
+    v-text="{{pager}}.page_from"></span>
+<span v-show="{{pager}}.page_from !== {{pager}}.page_to">
+  <span v-show="{{pager}}.store.size !== 0" >-</span>
+  <span v-text="{{pager}}.page_to"></span>
+</span> of <span v-text="{{pager}}.store.size"></span>
+{{? it.content_loc === 8 }}
+<content></content>
+{{?}}
+</div>
+#}}
+
+{{% var pager = it.PAGER, attrs = it.attrs; %}}
+{{? !it.without_msg && it.top }}
+{{% out += msg_fragment(it, pager); %}}
+{{?}}
+<div class="ui tiny horizontal list{{? it.list_class }} {{it.list_class}}{{?}}"{{? attrs }}{{% for(var i in attrs) { %}}{{i}}="{{attrs[i]}}"{{% } %}}{{?}}>
+  {{? it.content_loc === 0 }}<content></content>{{?}}
+  {{% if (!it.without_rpc) out += rpc_item(it, pager); %}}
+  {{? it.content_loc === 3 }}<content></content>{{?}}
+  {{% if (!it.without_nav) out += nav_item(it, pager); %}}
+  {{? it.content_loc === 6 }}<content></content>{{?}}
+  {{% if (!it.without_count) out += count_item(it, pager); %}}
+  {{? it.content_loc === 9 }}<content></content>{{?}}
+</div>
+{{? !it.without_msg && !it.top }}
+{{% out += msg_fragment(it, pager); %}}
+{{?}}

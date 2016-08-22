@@ -1,0 +1,41 @@
+{{##$:
+var common = require('./common'),
+    default_obj = common.default_obj;
+#}}
+
+{{##field_string(it, f, d, pojo, handler, attrs, tag, icon, icon_wrap, prefix, suffix, filter):
+<div{{? tag }}><{{tag}}{{?}}
+    dtap="1"
+    v-xon="dtap:{{pojo}}._.vprops.f{{f}} ^= 1"
+    v-show="!{{pojo}}._.vprops.f{{f}}"
+    {{% for(var i in attrs) { %}}
+    {{i}}="{{attrs[i]}}"
+    {{% } %}}
+    >{{prefix}}{{? icon }}<i class="{{icon}}">{{? !icon_wrap }}</i>{{?}}{{?}}<span v-text="{{pojo}}.{{f}}{{? filter }}| {{filter}}{{?? d.o }}| {{% switch (d.o) { case 1: out+='hms'; break; case 2: out+='ymd'; break; case 4: out+='ymdtime'; break; } %}}{{?}}"></span>{{? icon && icon_wrap }}</i>{{?}}{{suffix}}
+{{? tag }}</{{tag}}>{{?}}</div>
+<div class="mdl small input" v-show="{{pojo}}._.vprops.f{{f}}">
+  <input type="text" v-xmodel="{{pojo}}.{{f}}"
+      v-xon="change:{{handler}}({{it.handler_id}}, {{pojo}}){{? d.o }}, dtcomplete:{{handler}}({{it.handler_id}}, {{pojo}})" dt="1{{?}}" />
+  <div class="bottom-right icons">
+    <i class="delete icon" v-xon="click:{{pojo}}._.vprops.f{{f}} ^= ({{pojo}}._.vprops['{{f}}'] ? 0 : 1)"></i>
+  </div>
+</div>
+#}}
+{{% /*
+    TODO: shouldn't mask be 5? (hide readonly fields) 
+*/%}}
+{{% 
+    var f, d, 
+    descriptor = it.$initvar, 
+    array = it.fields, 
+    mask = 4, 
+    obj, 
+    pojo = it.POJO || 'pojo',
+    handler = it.handler || 'handle';
+%}}
+{{% for(var i = 0, len = array.length; i < len; i++) { %}}
+{{% f = array[i]; if(f.$f) { obj = f; f = f.$f; } else { obj = default_obj; } d = descriptor[f]; %}}
+{{% if(d.t < 3 || (d.a & mask)) continue; %}}
+{{% out += field_string(it, f, d, pojo, handler, obj.$attrs || default_obj, obj.$icon ? null : obj.$tag, obj.$icon, obj.$icon_wrap, obj.$prefix || '', obj.$suffix || '', obj.$filter); %}}
+{{% } %}}
+<content></content>
