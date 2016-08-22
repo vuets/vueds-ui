@@ -10,11 +10,11 @@ var common = require('../common'),
     <input type="text"
         v-listsearch="{{it.search_key || '3'}}__{{it.search_hid || c.HANDLE_ENTRY_SEARCH}}{{hid_suffix}}:{{pager}}"{{? it.title }} placeholder="{{it.title}}"{{?}}
         {{? update }}
-        v-disable="{{dpager}}.store.state &amp; {{c.STATE_LOADING}} || (
-            !{{pager}}.store.size &amp;&amp; 
-            !({{pager}}.store.state &amp; {{c.STATE_LOCAL_SEARCH}}))"
+        v-disable="{{dpager}}.state &amp; {{c.STATE_LOADING}} || (
+            !{{pager}}.size &amp;&amp; 
+            !({{pager}}.state &amp; {{c.STATE_LOCAL_SEARCH}}))"
         {{??}}
-        v-disable="!{{pager}}.store.size &amp;&amp; !({{pager}}.store.state &amp; {{c.STATE_LOCAL_SEARCH}})"
+        v-disable="!{{pager}}.size &amp;&amp; !({{pager}}.state &amp; {{c.STATE_LOCAL_SEARCH}})"
         {{?}}
       />
     <i class="icon search"></i>

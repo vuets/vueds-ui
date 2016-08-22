@@ -22,7 +22,7 @@ var common = require('../common'), c = common.c;
   {{?}}
   {{? !it.without_sort }}
   <button type="button" class="ui button"
-      v-disable="2 > {{pager}}.store.size || {{pager}}.store.state &amp; {{c.STATE_LOADING}}"
+      v-disable="2 > {{pager}}.size || {{pager}}.state &amp; {{c.STATE_LOADING}}"
       v-xon="click:{{pager}}.$handle(1, ({{pager}}.state ^= {{c.STATE_DESC}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}}))">
     <i class="icon" 
         v-class="{{? it.reverse_icon }}down{{??}}up{{?}}:({{pager}}.state &amp; {{c.STATE_DESC}}) === 0, 
@@ -31,21 +31,21 @@ var common = require('../common'), c = common.c;
   {{?}}
   {{? !it.without_rpc_newer }}
   <button type="button" class="ui button" 
-      v-disable="{{pager}}.store.state &amp; {{c.MASK_RPC_DISABLE}}"
+      v-disable="{{pager}}.state &amp; {{c.MASK_RPC_DISABLE}}"
       v-xon="click:{{pager}}.$handle(16, {{it.flags || 0}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="reply mail icon"></i>
   </button>
   {{?}}
   {{? !it.without_rpc_older }}
   <button type="button" class="ui button"
-      v-disable="{{pager}}.store.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.store.size === 0"
+      v-disable="{{pager}}.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.size === 0"
       v-xon="click:{{pager}}.$handle(17, {{it.flags || 0}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="forward mail icon"></i>
   </button>
   {{?}}
   {{? !it.without_rpc_reload }}
   <button type="button" class="ui button"
-      v-disable="{{pager}}.store.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.store.size === 0"
+      v-disable="{{pager}}.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.size === 0"
       v-xon="click:{{pager}}.$handle(4{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="repeat icon"></i>
   </button>
@@ -64,22 +64,22 @@ var common = require('../common'), c = common.c;
   <content></content>
   {{?}}
   <button type="button" class="ui button"
-      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
+      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
       v-xon="click:{{pager}}.$handle(1, ({{pager}}.page = 0){{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="double angle left icon"></i>
   </button>
   <button type="button" class="ui button" 
-      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
+      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
       v-xon="click:{{pager}}.$handle(1, --{{pager}}.page{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="angle left icon"></i>
   </button>
   <button type="button" class="ui button"
-      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
+      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
       v-xon="click:{{pager}}.$handle(1, ++{{pager}}.page{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="angle right icon"></i>
   </button>
   <button type="button" class="ui button"
-      v-disable="{{pager}}.store.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
+      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
       v-xon="click:{{pager}}.$handle(1, ({{pager}}.page = {{pager}}.page_count){{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="double angle right icon"></i>
   </button>
@@ -95,12 +95,12 @@ var common = require('../common'), c = common.c;
 {{? it.content_loc === 7 }}
 <content></content>
 {{?}}
-<span v-show="{{pager}}.store.size !== 0" 
+<span v-show="{{pager}}.size !== 0" 
     v-text="{{pager}}.page_from"></span>
 <span v-show="{{pager}}.page_from !== {{pager}}.page_to">
-  <span v-show="{{pager}}.store.size !== 0" >-</span>
+  <span v-show="{{pager}}.size !== 0" >-</span>
   <span v-text="{{pager}}.page_to"></span>
-</span> of <span v-text="{{pager}}.store.size"></span>
+</span> of <span v-text="{{pager}}.size"></span>
 {{? it.content_loc === 8 }}
 <content></content>
 {{?}}
