@@ -2,7 +2,11 @@
 var common = require('../common'), c = common.c;
 #}}
 
-{{% var pager = it.PAGER, dpager = it.DPAGER || pager; %}}
+{{%
+var pager = it.pager, 
+    dpager = it.dpager || pager,
+    content = it.body || '<content></content>';
+%}}
 
 {{? pager }}
 <div class="item">
@@ -43,7 +47,7 @@ var common = require('../common'), c = common.c;
   </div>
   {{?}}
   {{? it.custom_content }}
-  <content></content>
+  {{content}}
   {{?? !it.nocontent }}
   <div class="item">
     <div {{? it.id }}id="{{it.id}}" {{?}}class="dropdown">
@@ -51,7 +55,7 @@ var common = require('../common'), c = common.c;
         <i class="down triangle icon"></i>
       </div>
       <ul class="dropdown-menu" v-close="click:'1'">
-        <content></content>
+        {{content}}
       </ul>
     </div>
   </div>

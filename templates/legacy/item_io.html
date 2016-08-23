@@ -49,12 +49,13 @@ var common = require('../common'),
 #}}
 
 {{% 
-var pojo = it.POJO,
+var pojo = it.pojo,
     update = it.update,/* || 0 !== pojo.indexOf('pojo_new'),*/
     pager = pojo + '.pager',
-    dpager = update ? (it.DPAGER || 'pager') : '',
+    dpager = update ? (it.dpager || 'pager') : '',
     descriptor = it.$initvar,
-    hid_suffix = update ? '__update__1' : '';
+    hid_suffix = update ? '__update__1' : '',
+    content = it.body || '<content></content>';
 %}}
 
 <div class="ui attached large secondary pointing menu">
@@ -64,7 +65,7 @@ var pojo = it.POJO,
 {{% out += filters.body(it, it.filters, descriptor, pojo + '.entry_filter_new', hid_suffix); %}}
 </div>
 <div v-xpartial="pager_controls:{ top: true, reverse_icon: true, content_loc: 0,
-    PAGER: '{{pojo}}._.pager', without_rpc_reload:1, without_rpc_newer:1, without_rpc_older:1 }">
+    pager: '{{pojo}}._.pager', without_rpc_reload:1, without_rpc_newer:1, without_rpc_older:1 }">
   <div class="item">
     <div class="ui tiny icon buttons">
       <button type="button" class="ui button"
@@ -76,6 +77,6 @@ var pojo = it.POJO,
     </div>
   </div>
 </div>
-<content></content>
+{{content}}
 {{% if (!it.item_select) out += item_input(it, pojo, update, hid_suffix); %}}
 

@@ -2,7 +2,13 @@
 var common = require('../common'), c = common.c;
 #}}
 
-{{% var pager = it.PAGER, pojo = it.POJO || 'pojo', attrs = it.attrs, item_attrs = it.item_attrs; %}}
+{{%
+var pager = it.pager, 
+    pojo = it.pojo || 'pojo', 
+    attrs = it.attrs, 
+    item_attrs = it.item_attrs,
+    content = it.body || '<content></content>'; 
+%}}
 
 <ul class="ui{{? it.custom_list_class }} {{it.custom_list_class}}{{??}} small divided selection{{?}}{{? it.list_class }} {{it.list_class}}{{?}} list"
   {{% if (attrs) { for(var i in attrs) { %}}
@@ -18,7 +24,7 @@ var common = require('../common'), c = common.c;
       {{?}}
       v-show="({{pojo}}._.lstate &amp; {{c.LSTATE_INCLUDED}}){{? it.item_show }}{{common.exprs(it.item_show, pojo, ' &amp;&amp; ', true)}}{{?}}"
       v-class="active:({{pojo}}._.lstate &amp; {{c.LSTATE_SELECTED}}){{? it.item_vclass }}{{common.kv_exprs(it.item_vclass, pojo, ', ', true, ' &amp;&amp; ')}}{{?}}">
-    <content></content>
+    {{content}}
     <div v-show="!({{pager}}.{{pojo}}._.vstate &amp; {{c.STATE_UPDATE}})
         &amp;&amp; {{pojo}}._.msg &amp;&amp; {{pojo}}._.state &amp; {{c.MASK_STATUS}}">
       <div class="ui message"

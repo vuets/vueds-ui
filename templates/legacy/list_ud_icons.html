@@ -23,9 +23,14 @@ if (sf != null) {
     v-xon="click:{{pojo}}._.vstate ^= 1"></i>
 #}}
 
-{{% var pager = it.PAGER, pojo = it.POJO || 'pojo', handler = it.handler || 'handle'; %}}
+{{%
+var pager = it.pager, 
+    pojo = it.pojo || 'pojo', 
+    handler = it.handler || 'handle',
+    content = it.body || '<content></content>';
+%}}
 
-<content></content>
+{{content}}
 {{? pager }}
 <i class="pencil icon" 
     {{? it.update_icon_click }}v-xon="click3:{{pager}}.$handle(13, {{pojo}}, ({{pojo}}._.vstate ^= {{c.STATE_UPDATE}}))"{{?}}></i>

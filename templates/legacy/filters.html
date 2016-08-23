@@ -13,7 +13,7 @@ var common = require('../common'),
 {{%
 out += enum_select.main({
     $initvar: descriptor,
-    POJO: pojo, 
+    pojo: pojo, 
     disable: item.disable,
     includes: item.includes, 
     excludes: item.excludes, 
@@ -76,5 +76,5 @@ else out += field_default(it, item, descriptor, pojo, hid_suffix, suffix);
 {{?}}
 #}}
 
-{{% out += body(it, it.filters, it.$initvar, it.POJO + '.entry_filter_new', ''); %}}
+{{% out += body(it, it.filters, it.$initvar, it.pojo + '.entry_filter_new', ''); %}}
 

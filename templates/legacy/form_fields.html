@@ -51,11 +51,12 @@ var common = require('../common'), c = common.c;
 {{##body(it, root)=
 {{%
 var descriptor = it.$initvar, 
+    content = it.body || '<content></content>',
     excludes = it.excludes || common.default_obj,
     show_fields = it.show_fields || common.default_obj,
     array = descriptor.$fdf, 
     mask = it.update ? 13 : 3, 
-    pojo = it.POJO || 'pojo',
+    pojo = it.pojo || 'pojo',
     ffid,
     f, sf,
     d;
@@ -67,7 +68,7 @@ if (descriptor.$fmf) {
             $initvar: descriptor[f].d,
             update: it.update,
             without_vclass: it.without_vclass,
-            POJO: pojo+'.'+f
+            pojo: pojo+'.'+f
         }, root);
     }
 }
@@ -94,6 +95,6 @@ if (ffid && array.length) root.ffid = null;
 {{% } %}}
 #}}
 
-<content></content>
+{{content}}
 {{% out += body(it, it); %}}
 

@@ -7,7 +7,7 @@ var common = require('../common');
     var f, d, count = 0, 
     descriptor = it.$initvar, 
     array = descriptor.$fdf, mask = 5, 
-    pojo = it.POJO || 'pojo', 
+    pojo = it.pojo || 'pojo', 
     excludes = it.excludes || common.default_obj;
 %}}
 {{% for(var i = 0, len = array.length; i < len; i++) { %}}

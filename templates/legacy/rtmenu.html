@@ -31,15 +31,16 @@ out += '1.0:4.0__0.1';
 #}}
 
 {{%
-var pager = it.PAGER,
+var pager = it.pager,
     attrs = it.attrs,
     items = it.items,
     empty = items && !items.length,
     inline = it.inline,
-    content_items = it.content_items || 0;
+    content_items = it.content_items || 0,
+    content = it.body || '<content></content>';
 
 if (empty) {
-    out += '<content></content>';
+    out += content;
     if (pager && !it.nosearch) {
         out += icon_search(it, pager);
     }
@@ -70,7 +71,7 @@ if (empty) {
     <a v-toggle="~click:'3.1'"><i class="icon filter"></i></a>
     {{?}}
     {{? !content_items }}
-    <content></content>
+    {{content}}
     {{?}}
   </div>
   {{??}}
@@ -89,14 +90,14 @@ if (empty) {
         <li v-toggle="~click:'5.1'"><a><i class="icon filter"></i></a></li>
         {{?}}
         {{? !content_items }}
-        <content></content>
+        {{content}}
         {{?}}
       </ul>
     </div>
   </div>
   {{?}}
   {{? content_items }}
-  <content></content>
+  {{content}}
   {{?}}
   {{? pager && !it.nosearch }}
   {{% out += icon_search(it, pager); %}}

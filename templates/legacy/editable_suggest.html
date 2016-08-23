@@ -27,7 +27,7 @@ var common = require('../common'),
     var f = it.field, 
     descriptor = it.$initvar, 
     d = d = descriptor[f],
-    pojo = it.POJO || 'pojo',
+    pojo = it.pojo || 'pojo',
     handler = it.handler || 'handle';
 %}}
 {{% out += field_string(it, f, d, pojo, handler, it.$attrs || default_obj, it.$icon ? null : it.$tag, it.$icon, it.$icon_wrap, it.$prefix || '', it.$suffix || '', it.$filter); %}}

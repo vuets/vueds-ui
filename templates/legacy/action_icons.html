@@ -8,13 +8,16 @@ var action_icon = require('./action_icon');
 {{*}}
 #}}
 
-{{% var content_loc = it.content_loc || 1; %}}
+{{%
+var content_loc = it.content_loc || 1,
+    content = it.body || '<content></content>';
+%}}
 {{? content_loc === 1 }}
-<content></content>
+{{content}}
 {{?}}
 {{? it.a }}<a>{{?}}
-{{% out += body(it, it.fields, it.POJO || 'pojo'); %}}
+{{% out += body(it, it.fields, it.pojo || 'pojo'); %}}
 {{? it.a }}</a>{{?}}
 {{? content_loc === 2 }}
-<content></content>
+{{content}}
 {{?}}

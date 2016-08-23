@@ -18,7 +18,7 @@ var common = require('../common'), c = common.c;
 <div class="item">
 <div class="ui tiny icon buttons">
   {{? it.content_loc === 1 }}
-  <content></content>
+  {{it.content}}
   {{?}}
   {{? !it.without_sort }}
   <button type="button" class="ui button"
@@ -51,7 +51,7 @@ var common = require('../common'), c = common.c;
   </button>
   {{?}}
   {{? it.content_loc === 2 }}
-  <content></content>
+  {{it.content}}
   {{?}}
 </div>
 </div>
@@ -61,7 +61,7 @@ var common = require('../common'), c = common.c;
 <div class="item">
 <div class="ui tiny icon buttons">
   {{? it.content_loc === 4 }}
-  <content></content>
+  {{it.content}}
   {{?}}
   <button type="button" class="ui button"
       v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
@@ -84,7 +84,7 @@ var common = require('../common'), c = common.c;
     <i class="double angle right icon"></i>
   </button>
   {{? it.content_loc === 5 }}
-  <content></content>
+  {{it.content}}
   {{?}}
 </div>
 </div>
@@ -93,7 +93,7 @@ var common = require('../common'), c = common.c;
 {{##count_item(it, pager):
 <div class="item">
 {{? it.content_loc === 7 }}
-<content></content>
+{{it.content}}
 {{?}}
 <span v-show="{{pager}}.size !== 0" 
     v-text="{{pager}}.page_from"></span>
@@ -102,23 +102,28 @@ var common = require('../common'), c = common.c;
   <span v-text="{{pager}}.page_to"></span>
 </span> of <span v-text="{{pager}}.size"></span>
 {{? it.content_loc === 8 }}
-<content></content>
+{{it.content}}
 {{?}}
 </div>
 #}}
 
-{{% var pager = it.PAGER, attrs = it.attrs; %}}
+{{%
+var pager = it.pager,
+    attrs = it.attrs;
+
+it.content = it.body || '<content></content>';
+%}}
 {{? !it.without_msg && it.top }}
 {{% out += msg_fragment(it, pager); %}}
 {{?}}
 <div class="ui tiny horizontal list{{? it.list_class }} {{it.list_class}}{{?}}"{{? attrs }}{{% for(var i in attrs) { %}}{{i}}="{{attrs[i]}}"{{% } %}}{{?}}>
-  {{? it.content_loc === 0 }}<content></content>{{?}}
+  {{? it.content_loc === 0 }}{{it.content}}{{?}}
   {{% if (!it.without_rpc) out += rpc_item(it, pager); %}}
-  {{? it.content_loc === 3 }}<content></content>{{?}}
+  {{? it.content_loc === 3 }}{{it.content}}{{?}}
   {{% if (!it.without_nav) out += nav_item(it, pager); %}}
-  {{? it.content_loc === 6 }}<content></content>{{?}}
+  {{? it.content_loc === 6 }}{{it.content}}{{?}}
   {{% if (!it.without_count) out += count_item(it, pager); %}}
-  {{? it.content_loc === 9 }}<content></content>{{?}}
+  {{? it.content_loc === 9 }}{{it.content}}{{?}}
 </div>
 {{? !it.without_msg && !it.top }}
 {{% out += msg_fragment(it, pager); %}}

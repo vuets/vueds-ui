@@ -25,17 +25,18 @@ var common = require('../common'),
     TODO: shouldn't mask be 5? (hide readonly fields) 
 */%}}
 {{% 
-    var f, d, 
+var f, d, 
     descriptor = it.$initvar, 
     array = it.fields, 
     mask = 4, 
     obj, 
-    pojo = it.POJO || 'pojo',
-    handler = it.handler || 'handle';
+    pojo = it.pojo || 'pojo',
+    handler = it.handler || 'handle',
+    content = it.body || '<content></content>';
 %}}
 {{% for(var i = 0, len = array.length; i < len; i++) { %}}
 {{% f = array[i]; if(f.$f) { obj = f; f = f.$f; } else { obj = default_obj; } d = descriptor[f]; %}}
 {{% if(d.t < 3 || (d.a & mask)) continue; %}}
 {{% out += field_string(it, f, d, pojo, handler, obj.$attrs || default_obj, obj.$icon ? null : obj.$tag, obj.$icon, obj.$icon_wrap, obj.$prefix || '', obj.$suffix || '', obj.$filter); %}}
 {{% } %}}
-<content></content>
+{{content}}

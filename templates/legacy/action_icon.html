@@ -41,13 +41,17 @@ if (show) cached_exprs = common.exprs(show, pojo, ' &amp;&amp; ');
     v-xon="click3:{{pstate}} ^= {{item.bit}}"></i>
 #}}
 
-{{% var pojo = it.POJO || 'pojo', content_loc = it.content_loc || 1; %}}
+{{%
+var pojo = it.pojo || 'pojo',
+    content_loc = it.content_loc || 1,
+    content = it.body || '<content></content>';
+%}}
 {{? content_loc === 1 }}
-<content></content>
+{{content}}
 {{?}}
 {{? it.a }}<a>{{?}}
 {{% out += body(it, it, it.show, it.icon || 'circle', it.icon_empty, pojo, pojo + (it.state_suffix || '.vstate')); %}}
 {{? it.a }}<a>{{?}}
 {{? content_loc === 2 }}
-<content></content>
+{{content}}
 {{?}}

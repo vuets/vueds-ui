@@ -25,8 +25,8 @@ var common = require('../common'),
     {{? it.condition || it.delete_condition }}
     </span>
     {{?}}
-    {{? content_loc === 1 }}<content></content>{{?}}
-    <span v-text="{{pojo}}.{{f}}{{? filter }}| {{filter}}{{?? d.o }}| {{% switch (d.o) { case 1: out+='hms'; break; case 2: out+='ymd'; break; case 4: out+='ymdtime'; break; } %}}{{?}}"></span>{{suffix}}{{? content_loc === 2 }}<content></content>{{?}}
+    {{? content_loc === 1 }}{{it.content}}{{?}}
+    <span v-text="{{pojo}}.{{f}}{{? filter }}| {{filter}}{{?? d.o }}| {{% switch (d.o) { case 1: out+='hms'; break; case 2: out+='ymd'; break; case 4: out+='ymdtime'; break; } %}}{{?}}"></span>{{suffix}}{{? content_loc === 2 }}{{it.content}}{{?}}
 {{? tag }}</{{tag}}>{{?}}</div>
 <div class="mdl small input"
     v-show="{{pojo}}._.vprops.f{{f}}">
@@ -44,6 +44,7 @@ var common = require('../common'),
 var f = it.field, 
     descriptor = it.$initvar, 
     d = d = descriptor[f],
-    pojo = it.POJO || 'pojo';
+    pojo = it.pojo || 'pojo';
+it.content = it.body || '<content></content>';
 %}}
 {{% out += field_string(it, f, d, pojo, it.$attrs || default_obj, it.$icon ? null : it.$tag, it.$icon, it.$prefix || '', it.$suffix || '', it.$filter, it.content_loc || 2); %}}
