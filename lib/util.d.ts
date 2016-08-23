@@ -1,4 +1,6 @@
 import { Trie } from './trie';
+export declare const addClass: (el: Element, cls: string) => void;
+export declare function setClass(el: Element, cls: string): void;
 export declare function getUTCOffset(): number;
 export declare const UTC_OFFSET: number, HOST_RAW_OFFSET: number, HOST_RAW_OFFSET_SECONDS: number;
 export declare function localToUtc(ts: number): number;
@@ -21,7 +23,7 @@ export declare function isInput(el: Element): boolean;
 export declare function findupClass(el: Element, cls: string, limit: number): Element;
 export declare function hasClass(el: Element, cls: string): boolean;
 export declare function removeClass(el: Element, cls: string): boolean;
-export declare function toggleClass(el: any, cls: string): void;
+export declare function toggleClass(el: Element, cls: string): void;
 export declare function getLastChildElement(el: any): any;
 export declare function getFirstChildElement(el: any): any;
 export declare function resolveRelativeElement(el: any, str: string): any;

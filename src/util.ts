@@ -3,9 +3,11 @@ declare function require(path: string) : any;
 import * as Vue from 'vue'
 import { Trie } from './trie'
 
-const { /*removeClass, */addClass } = Vue.util
-
 const numeral = require('numeral'),
+    // browser sniffing from vuejs
+    UA = window.navigator.userAgent.toLowerCase(),
+    isIE = UA && UA.indexOf('trident') > 0,
+    isIE9 = UA && UA.indexOf('msie 9.0') > 0,
     document = window.document,
     createEvent = document['createEvent'],
     createEventObject = document['createEventObject'],
@@ -16,6 +18,16 @@ const numeral = require('numeral'),
     monthRegularArray = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ],
     monthLeapArray = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ],
     daysArray = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+
+export const { addClass } = Vue.util
+
+export function setClass(el: Element, cls: string) {
+    if (isIE9 && !/svg$/.test(el.namespaceURI)) {
+        el.className = cls
+    } else {
+        el.setAttribute('class', cls)
+    }
+}
 
 function getDateUTCOffset(date: Date): string {
     var n = date.getTimezoneOffset() * -10 / 6,
@@ -167,25 +179,49 @@ export function hasClass(el: Element, cls: string): boolean {
     return hasClassList ? el.classList.contains(cls) : el.className.indexOf(cls) !== -1
 }
 export function removeClass (el: Element, cls: string): boolean {
+    let removed: boolean
     if (hasClassList) {
-        let len = el.classList.length
-        el.classList.remove(cls)
-        return len > el.classList.length
+        let classList = el.classList, 
+            len = classList.length
+        
+        classList.remove(cls)
+        removed = len > classList.length
+        if (removed && len === 1)
+            el.removeAttribute('class')
     } else {
         let cur = ' ' + el.className + ' ',
-            tar = ' ' + cls + ' ',
-            len = cur.length
+            tar = ' ' + cls + ' '
+        
+        removed = false
         while (cur.indexOf(tar) >= 0) {
             cur = cur.replace(tar, ' ')
+            removed = true
         }
-        let className = cur.trim()
-        el.className = className
-        return className.length === cur.length + 2
+        if (removed)
+            setClass(el, cur.trim())
     }
+    return removed
 }
-export function toggleClass(el, cls: string) {
-    if (!removeClass(el, cls))
-        addClass(el, cls)
+export function toggleClass(el: Element, cls: string) {
+    if (hasClassList) {
+        let classList = el.classList, 
+            len = classList.length
+        
+        classList.remove(cls)
+        if (len === classList.length)
+            classList.add(cls)
+    } else {
+        let className = el.className,
+            cur = ' ' + className + ' ',
+            tar = ' ' + cls + ' ',
+            removed = false
+        
+        while (cur.indexOf(tar) >= 0) {
+            cur = cur.replace(tar, ' ')
+            removed = true
+        }
+        setClass(el, removed ? cur.trim() : className + ' ' + cls)
+    }
 }
 /*export function toggleActive(el) {
     if (removeClass(el, 'active')) {
