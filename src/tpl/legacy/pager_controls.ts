@@ -40,16 +40,17 @@ function track_clicks(it: Opts): string {
 }
 
 export function msg_fragment(it: Opts): string {
+    let pager = it.pager
     return `
-<div v-show="${it.pager}.msg &amp;&amp; ${it.pager}.state &amp; ${PojoState.MASK_STATUS}">
+<div v-show="${pager}.msg &amp;&amp; ${pager}.state &amp; ${PojoState.MASK_STATUS}">
   <div class="ui message"
       :class="{
-        success: ${it.pager}.state &amp; ${PojoState.SUCCESS},
-        error: ${it.pager}.state &amp; ${PojoState.ERROR},
-        warning: ${it.pager}.state &amp; ${PojoState.WARNING}
+        success: ${pager}.state &amp; ${PojoState.SUCCESS},
+        error: ${pager}.state &amp; ${PojoState.ERROR},
+        warning: ${pager}.state &amp; ${PojoState.WARNING}
       }">
-    <i class="close icon" @click.prevent="${it.pager}.msg = null"></i>
-    <span v-text="${it.pager}.msg"></span>
+    <i class="close icon" @click.prevent="${pager}.msg = null"></i>
+    <span v-text="${pager}.msg"></span>
   </div>
 </div>`
 }
