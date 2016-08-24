@@ -43,10 +43,12 @@ export function msg_fragment(it: Opts): string {
     return `
 <div v-show="${it.pager}.msg &amp;&amp; ${it.pager}.state &amp; ${PojoState.MASK_STATUS}">
   <div class="ui message"
-      v-class="success:${it.pager}.state &amp; ${PojoState.SUCCESS},
-               error:${it.pager}.state &amp; ${PojoState.ERROR},
-               warning:${it.pager}.state &amp; ${PojoState.WARNING}">
-    <i class="close icon" v-xon="click:${it.pager}.msg = null"></i>
+      :class="{
+        success: ${it.pager}.state &amp; ${PojoState.SUCCESS},
+        error: ${it.pager}.state &amp; ${PojoState.ERROR},
+        warning: ${it.pager}.state &amp; ${PojoState.WARNING}
+      }">
+    <i class="close icon" @click.prevent="${it.pager}.msg = null"></i>
     <span v-text="${it.pager}.msg"></span>
   </div>
 </div>`
