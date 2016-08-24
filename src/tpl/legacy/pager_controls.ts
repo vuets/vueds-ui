@@ -2,7 +2,7 @@ declare function require(path: string): any;
 
 import { include_if, when, anchor } from '../common'
 
-import { PojoState, PagerState } from 'vueds/lib/store'
+import { PagerState } from 'vueds/lib/store'
 
 export interface Opts {
     /**
@@ -42,12 +42,12 @@ function track_clicks(it: Opts): string {
 export function msg_fragment(it: Opts): string {
     let pager = it.pager
     return `
-<div v-show="${pager}.msg &amp;&amp; ${pager}.state &amp; ${PojoState.MASK_STATUS}">
+<div v-show="${pager}.msg &amp;&amp; ${pager}.state &amp; ${PagerState.MASK_STATUS}">
   <div class="ui message"
       :class="{
-        success: ${pager}.state &amp; ${PojoState.SUCCESS},
-        error: ${pager}.state &amp; ${PojoState.ERROR},
-        warning: ${pager}.state &amp; ${PojoState.WARNING}
+        success: ${pager}.state &amp; ${PagerState.SUCCESS},
+        error: ${pager}.state &amp; ${PagerState.ERROR},
+        warning: ${pager}.state &amp; ${PagerState.WARNING}
       }">
     <i class="close icon" @click.prevent="${pager}.msg = null"></i>
     <span v-text="${pager}.msg"></span>
@@ -58,7 +58,7 @@ export function msg_fragment(it: Opts): string {
 export function sort_btn(it: Opts): string {
     return `
 <button type="button" class="ui button"
-    v-disable="2 > ${it.pager}.size || ${it.pager}.state &amp; ${PojoState.LOADING}"
+    v-disable="2 > ${it.pager}.size || ${it.pager}.state &amp; ${PagerState.LOADING}"
     v-xon="click:${it.pager}.$handle(1, 
         (${it.pager}.state ^= ${PagerState.DESC}${include_if(it.track_clicks, track_clicks, it)}))">
   <i class="icon"
@@ -114,22 +114,22 @@ export function nav_item(it: Opts): string {
   <div class="ui tiny icon buttons">
     ${when(it.content_loc === 4, it._content)}
     <button type="button" class="ui button"
-        v-disable="${it.pager}.state &amp; ${PojoState.LOADING} || ${it.pager}.page === 0"
+        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === 0"
         v-xon="click:${it.pager}.$handle(1, (${it.pager}.page = 0)${include_if(it.track_clicks, track_clicks, it)})">
         <i class="double angle left icon"></i>
     </button>
     <button type="button" class="ui button" 
-        v-disable="${it.pager}.state &amp; ${PojoState.LOADING} || ${it.pager}.page === 0"
+        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === 0"
         v-xon="click:${it.pager}.$handle(1, --${it.pager}.page${include_if(it.track_clicks, track_clicks, it)})">
         <i class="angle left icon"></i>
     </button>
     <button type="button" class="ui button"
-        v-disable="${it.pager}.state &amp; ${PojoState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
+        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
         v-xon="click:${it.pager}.$handle(1, ++${it.pager}.page${include_if(it.track_clicks, track_clicks, it)})">
         <i class="angle right icon"></i>
     </button>
     <button type="button" class="ui button"
-        v-disable="${it.pager}.state &amp; ${PojoState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
+        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
         v-xon="click:${it.pager}.$handle(1, 
             (${it.pager}.page = ${it.pager}.page_count)${include_if(it.track_clicks, track_clicks, it)})">
         <i class="double angle right icon"></i>
