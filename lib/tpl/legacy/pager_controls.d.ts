@@ -3,12 +3,15 @@ export interface Opts {
      * Defaults to 'pager'
      */
     pager: string;
+    flags?: number;
     top?: boolean;
     content_loc?: number;
     attrs?: any;
     track_clicks?: boolean;
     without_sort?: boolean;
     reverse_icon?: boolean;
+    without_nav?: boolean;
+    without_count?: boolean;
     without_rpc?: boolean;
     without_rpc_newer?: boolean;
     without_rpc_older?: boolean;

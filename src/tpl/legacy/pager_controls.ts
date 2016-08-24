@@ -9,6 +9,7 @@ export interface Opts {
      * Defaults to 'pager'
      */
     pager: string
+    flags?: number
     top?: boolean
     content_loc?: number
 
@@ -17,6 +18,10 @@ export interface Opts {
 
     without_sort?: boolean
     reverse_icon?: boolean
+
+    without_nav?: boolean
+
+    without_count?: boolean
 
     without_rpc?: boolean
     without_rpc_newer?: boolean
@@ -62,8 +67,8 @@ export function sort_btn(it: Opts): string {
 export function rpc_newer_btn(it: Opts): string {
     return `
 <button type="button" class="ui button" 
-    v-disable="${it.pager}.state &amp; {{c.MASK_RPC_DISABLE}}"
-    v-xon="click:${it.pager}.$handle(16, {{it.flags || 0}}${include_if(it.track_clicks, track_clicks, it)})">
+    v-disable="${it.pager}.state &amp; ${PagerState.MASK_RPC_DISABLE}"
+    v-xon="click:${it.pager}.$handle(16, ${it.flags || 0}${include_if(it.track_clicks, track_clicks, it)})">
   <i class="reply mail icon"></i>
 </button>`
 }
@@ -71,8 +76,8 @@ export function rpc_newer_btn(it: Opts): string {
 export function rpc_older_btn(it: Opts): string {
     return `
 <button type="button" class="ui button"
-    v-disable="${it.pager}.state &amp; {{c.MASK_RPC_DISABLE}} || ${it.pager}.size === 0"
-    v-xon="click:${it.pager}.$handle(17, {{it.flags || 0}}${include_if(it.track_clicks, track_clicks, it)})">
+    v-disable="${it.pager}.state &amp; ${PagerState.MASK_RPC_DISABLE} || ${it.pager}.size === 0"
+    v-xon="click:${it.pager}.$handle(17, ${it.flags || 0}${include_if(it.track_clicks, track_clicks, it)})">
   <i class="forward mail icon"></i>
 </button>`
 }
@@ -80,7 +85,7 @@ export function rpc_older_btn(it: Opts): string {
 export function rpc_reload_btn(it: Opts): string {
     return `
 <button type="button" class="ui button"
-    v-disable="${it.pager}.state &amp; {{c.MASK_RPC_DISABLE}} || ${it.pager}.size === 0"
+    v-disable="${it.pager}.state &amp; ${PagerState.MASK_RPC_DISABLE} || ${it.pager}.size === 0"
     v-xon="click:${it.pager}.$handle(4${include_if(it.track_clicks, track_clicks, it)})">
   <i class="repeat icon"></i>
 </button>`
@@ -163,11 +168,10 @@ ${include_if(!it.without_msg && it.top, msg_fragment, it)}
 <div class="ui tiny horizontal list${include_if(it.list_class, list_class, it)}"${include_if(it.attrs, attrs, it)}>
   ${when(it.content_loc === 0, it._content)}
   ${include_if(!it.without_rpc, rpc_item, it)}
-  {{% if (!it.without_rpc) out += rpc_item(it, pager); %}}
   ${when(it.content_loc === 3, it._content)}
-  {{% if (!it.without_nav) out += nav_item(it, pager); %}}
+  ${include_if(!it.without_nav, nav_item, it)}
   ${when(it.content_loc === 6, it._content)}
-  {{% if (!it.without_count) out += count_item(it, pager); %}}
+  ${include_if(!it.without_count, count_item, it)}
   ${when(it.content_loc === 9, it._content)}
 </div>
 ${include_if(!it.without_msg && !it.top, msg_fragment, it)}
