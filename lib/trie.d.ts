@@ -127,7 +127,7 @@ export declare class Trie {
      *
      * @type  {Array}
      */
-    getWords(): any[];
+    getWords(): never[];
     /**
      * Retrieve the Array of words that originate from this trie.
      * The main use-case for this function is for implementations of the
@@ -139,7 +139,7 @@ export declare class Trie {
      *
      * @type  {Array}
      */
-    getMetas(): any[];
+    getMetas(): never[];
     /**
      * Retrieve the prefix count of the applied argument
      *

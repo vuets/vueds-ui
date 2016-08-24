@@ -21,7 +21,7 @@ const numeral = require('numeral'),
 
 export const { addClass } = Vue.util
 
-export function setClass(el: Element, cls: string) {
+export function setClass(el, cls: string) {
     if (isIE9 && !/svg$/.test(el.namespaceURI)) {
         el.className = cls
     } else {
@@ -161,7 +161,7 @@ export function isInput(el: Element): boolean {
     var tag = el.tagName
     return tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA'
 }
-export function findupClass(el: Element, cls: string, limit: number): Element {
+export function findupClass(el: Element, cls: string, limit: number): Element|null {
     if (hasClassList) {
         do {
             if (el.classList.contains(cls)) return el
@@ -739,9 +739,9 @@ export function formatDate(v): string {
 export function formatDateTime(v): string {
     return !v || isNaN(v) ? '' : toYMDTime(new Date(utcToLocal(v)), '/')
 }
-export function isValidDateStr(text: string): number {
+export function isValidDateStr(text: string): number|null {
     if (!regexDate.test(text) || isNaN(Date.parse(text))) {
-        return null;
+        return null
     }
     
     var y = parseInt(text.substring(0, 4), 10),
@@ -750,18 +750,18 @@ export function isValidDateStr(text: string): number {
         
     // Check the ranges of m and y
     if (y < 1000 || y > 3000 || m == 0 || m > 12)
-        return null;
+        return null
 
     // Adjust for leap ys
     var monthArray = (y % 400 == 0 || (y % 100 != 0 && y % 4 == 0)) ? monthLeapArray : monthRegularArray;
 
     // Check the range of the d
-    return d > 0 && d <= monthArray[m - 1] ? new Date(y, m - 1, d).getTime() : null;
+    return d > 0 && d <= monthArray[m - 1] ? new Date(y, m - 1, d).getTime() : null
 }
-export function isValidDateTimeStr(dt): number {
+export function isValidDateTimeStr(dt): number|null {
     var text = dt.substring(0, 10)
     if (!regexDate.test(text) || isNaN(Date.parse(text))) {
-        return null;
+        return null
     }
     
     var y = parseInt(text.substring(0, 4), 10),
@@ -771,7 +771,7 @@ export function isValidDateTimeStr(dt): number {
     
     // Check the ranges of m and y
     if (y < 1000 || y > 3000 || m == 0 || m > 12)
-        return null;
+        return null
     
     // Adjust for leap ys
     var monthArray = (y % 400 == 0 || (y % 100 != 0 && y % 4 == 0)) ? monthLeapArray : monthRegularArray;

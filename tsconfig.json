@@ -1,19 +1,26 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "commonjs",
     "target": "es5",
+    "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "declaration": true,
+    "noImplicitAny": false,
+    "preserveConstEnums": false,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true,
+    "removeComments": false,
     "outDir": "lib"
   },
   "files": [
     "src/index.ts",
     "src/trie.ts",
     "src/util.ts",
-    "src/gen/common.ts"
+    "src/gen/common.ts",
+    "src/tpl/common.ts",
+    "src/tpl/legacy/pager_controls.ts"
   ]
 }
