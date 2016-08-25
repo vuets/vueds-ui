@@ -44,11 +44,7 @@ export function msg_fragment(it: Opts): string {
     return `
 <div v-show="${pager}.msg &amp;&amp; ${pager}.state &amp; ${PagerState.MASK_STATUS}">
   <div class="ui message"
-      :class="{
-        success: ${pager}.state &amp; ${PagerState.SUCCESS},
-        error: ${pager}.state &amp; ${PagerState.ERROR},
-        warning: ${pager}.state &amp; ${PagerState.WARNING}
-      }">
+      v-pclass:status-="${pager}.state &amp; ${PagerState.MASK_STATUS}">
     <i class="close icon" @click.prevent="${pager}.msg = null"></i>
     <span v-text="${pager}.msg"></span>
   </div>
