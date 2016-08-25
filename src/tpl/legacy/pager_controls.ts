@@ -1,6 +1,6 @@
 declare function require(path: string): any;
 
-import { include_if, when, anchor } from '../common'
+import { include_if, when, anchor, tern_yes_no } from '../common'
 
 import { PagerState } from 'vueds/lib/store'
 
@@ -51,15 +51,16 @@ export function msg_fragment(it: Opts): string {
 </div>`
 }
 
+
+
 export function sort_btn(it: Opts): string {
+    let pager = it.pager
     return `
 <button type="button" class="ui button"
-    v-disable="2 > ${it.pager}.size || ${it.pager}.state &amp; ${PagerState.LOADING}"
-    v-xon="click:${it.pager}.$handle(1, 
-        (${it.pager}.state ^= ${PagerState.DESC}${include_if(it.track_clicks, track_clicks, it)}))">
-  <i class="icon"
-      v-class="${it.reverse_icon ? 'down': 'up'}:(${it.pager}.state &amp; ${PagerState.DESC}) === 0, 
-      ${it.reverse_icon ? 'up': 'down'}:${it.pager}.state &amp; ${PagerState.DESC}"></i>
+    v-disable="2 > ${pager}.size || ${pager}.state &amp; ${PagerState.LOADING}"
+    @click.prevent="pager.store.repaint(
+        (${pager}.state ^= ${PagerState.DESC}${include_if(it.track_clicks, track_clicks, it)}))">
+  <i class="icon" v-pclass:desc-="${pager}.state &amp; ${PagerState.DESC} ? ${tern_yes_no(!it.reverse_icon)}"></i>
 </button>`
 }
 
