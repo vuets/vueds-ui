@@ -17,7 +17,11 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }
 
 export function update(el: any, { value, oldValue }: VNodeDirective, vnode: VNodeWithData) {
-    var disabled = !!value
+    let disabled = !!value
+
+    // check the state before applying
+    if (disabled === el.disabled)
+        return
     
     el.disabled = disabled
     if (disabled) addClass(el, 'disabled')
