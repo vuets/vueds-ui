@@ -3,11 +3,11 @@ var common = require('../common'), c = common.c;
 #}}
 
 {{##msg_fragment(it, pager):
-<div v-show="{{pager}}.msg &amp;&amp; {{pager}}.state &amp; {{c.MASK_STATUS}}">
+<div v-show="{{pager}}.msg && {{pager}}.state & {{c.MASK_STATUS}}">
   <div class="ui message"
-      v-class="success:{{pager}}.state &amp; {{c.STATE_SUCCESS}}, 
-               error:{{pager}}.state &amp; {{c.STATE_ERROR}},
-               warning:{{pager}}.state &amp; {{c.STATE_WARNING}}">
+      v-class="success:{{pager}}.state & {{c.STATE_SUCCESS}}, 
+               error:{{pager}}.state & {{c.STATE_ERROR}},
+               warning:{{pager}}.state & {{c.STATE_WARNING}}">
     <i class="close icon" v-xon="click:{{pager}}.msg = null"></i>
     <span v-text="{{pager}}.msg"></span>
   </div>
@@ -22,30 +22,30 @@ var common = require('../common'), c = common.c;
   {{?}}
   {{? !it.without_sort }}
   <button type="button" class="ui button"
-      v-disable="2 > {{pager}}.size || {{pager}}.state &amp; {{c.STATE_LOADING}}"
+      v-disable="2 > {{pager}}.size || {{pager}}.state & {{c.STATE_LOADING}}"
       v-xon="click:{{pager}}.$handle(1, ({{pager}}.state ^= {{c.STATE_DESC}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}}))">
     <i class="icon" 
-        v-class="{{? it.reverse_icon }}down{{??}}up{{?}}:({{pager}}.state &amp; {{c.STATE_DESC}}) === 0, 
-        {{? it.reverse_icon }}up{{??}}down{{?}}:{{pager}}.state &amp; {{c.STATE_DESC}}"></i>
+        v-class="{{? it.reverse_icon }}down{{??}}up{{?}}:({{pager}}.state & {{c.STATE_DESC}}) === 0, 
+        {{? it.reverse_icon }}up{{??}}down{{?}}:{{pager}}.state & {{c.STATE_DESC}}"></i>
   </button>
   {{?}}
   {{? !it.without_rpc_newer }}
   <button type="button" class="ui button" 
-      v-disable="{{pager}}.state &amp; {{c.MASK_RPC_DISABLE}}"
+      v-disable="{{pager}}.state & {{c.MASK_RPC_DISABLE}}"
       v-xon="click:{{pager}}.$handle(16, {{it.flags || 0}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="reply mail icon"></i>
   </button>
   {{?}}
   {{? !it.without_rpc_older }}
   <button type="button" class="ui button"
-      v-disable="{{pager}}.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.size === 0"
+      v-disable="{{pager}}.state & {{c.MASK_RPC_DISABLE}} || {{pager}}.size === 0"
       v-xon="click:{{pager}}.$handle(17, {{it.flags || 0}}{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="forward mail icon"></i>
   </button>
   {{?}}
   {{? !it.without_rpc_reload }}
   <button type="button" class="ui button"
-      v-disable="{{pager}}.state &amp; {{c.MASK_RPC_DISABLE}} || {{pager}}.size === 0"
+      v-disable="{{pager}}.state & {{c.MASK_RPC_DISABLE}} || {{pager}}.size === 0"
       v-xon="click:{{pager}}.$handle(4{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="repeat icon"></i>
   </button>
@@ -64,22 +64,22 @@ var common = require('../common'), c = common.c;
   {{it.content}}
   {{?}}
   <button type="button" class="ui button"
-      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
+      v-disable="{{pager}}.state & {{c.STATE_LOADING}} || {{pager}}.page === 0"
       v-xon="click:{{pager}}.$handle(1, ({{pager}}.page = 0){{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="double angle left icon"></i>
   </button>
   <button type="button" class="ui button" 
-      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === 0"
+      v-disable="{{pager}}.state & {{c.STATE_LOADING}} || {{pager}}.page === 0"
       v-xon="click:{{pager}}.$handle(1, --{{pager}}.page{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="angle left icon"></i>
   </button>
   <button type="button" class="ui button"
-      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
+      v-disable="{{pager}}.state & {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
       v-xon="click:{{pager}}.$handle(1, ++{{pager}}.page{{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="angle right icon"></i>
   </button>
   <button type="button" class="ui button"
-      v-disable="{{pager}}.state &amp; {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
+      v-disable="{{pager}}.state & {{c.STATE_LOADING}} || {{pager}}.page === {{pager}}.page_count"
       v-xon="click:{{pager}}.$handle(1, ({{pager}}.page = {{pager}}.page_count){{? it.track_clicks }}, ({{pager}}.$clicks ^= 1){{?}})">
     <i class="double angle right icon"></i>
   </button>

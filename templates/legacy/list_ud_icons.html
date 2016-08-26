@@ -16,10 +16,10 @@ if (sf != null) {
 <i class="trash icon" {{? show }}v-show="{{show}}"{{?}}
     v-xon="click:{{pojo}}._.vstate ^= 1"></i>
 <i class="ok sign icon"
-    v-show="{{pojo}}._.vstate &amp; 1"
-    v-xon="click:handle(null, (pager.state &amp; {{c.STATE_LOADING}}) ? {{c.PREVENT_BOTH}} : {{handler}}({{handler_id}}, {{? handler_args }}{ v:{{pojo}}, {{handler_args}} }{{??}}{{pojo}}{{?}}, ({{pojo}}._.vstate ^= 1)))"></i>
+    v-show="{{pojo}}._.vstate & 1"
+    v-xon="click:handle(null, (pager.state & {{c.STATE_LOADING}}) ? {{c.PREVENT_BOTH}} : {{handler}}({{handler_id}}, {{? handler_args }}{ v:{{pojo}}, {{handler_args}} }{{??}}{{pojo}}{{?}}, ({{pojo}}._.vstate ^= 1)))"></i>
 <i class="remove sign icon"
-    v-show="{{pojo}}._.vstate &amp; 1"
+    v-show="{{pojo}}._.vstate & 1"
     v-xon="click:{{pojo}}._.vstate ^= 1"></i>
 #}}
 

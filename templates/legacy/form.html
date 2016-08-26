@@ -31,10 +31,10 @@ if (it.df != null) {
 {{?}}
 <{{tag}} class="ui form" v-clear
     v-xon="keyup{{? it.modal }}__{{pojo}}._.msg{{?}}:{{pojo}}._.msg = null | key esc"
-    v-class="success:{{pojo}}._.state &amp; {{c.STATE_SUCCESS}}, 
-             error:{{pojo}}._.state &amp; {{c.STATE_ERROR}}, 
-             warning:{{pojo}}._.state &amp; {{c.STATE_WARNING}},
-             loading:{{pojo}}._.state &amp; {{c.STATE_LOADING}}">
+    v-class="success:{{pojo}}._.state & {{c.STATE_SUCCESS}}, 
+             error:{{pojo}}._.state & {{c.STATE_ERROR}}, 
+             warning:{{pojo}}._.state & {{c.STATE_WARNING}},
+             loading:{{pojo}}._.state & {{c.STATE_LOADING}}">
   {{? it.title }}
   <p class="title">{{it.title}}</p>
   {{?}}
@@ -48,9 +48,9 @@ if (it.df != null) {
   {{% if (!it.without_msg) { out += form_fields.form_msg(it, pojo); } %}}
   <button type="submit" class="ui fluid submit button{{? it.btn_class }} {{it.btn_class}}{{?}}"
       {{? pager }}
-      v-disable="{{? disable }}{{disable}} || {{?}}{{pager}}.state &amp; 8"
+      v-disable="{{? disable }}{{disable}} || {{?}}{{pager}}.state & 8"
       {{?? it.STATE }}
-      v-disable="{{? disable }}{{disable}} || {{?}}{{it.STATE}} &amp; 8"
+      v-disable="{{? disable }}{{disable}} || {{?}}{{it.STATE}} & 8"
       {{?? disable }}
       v-disable="{{disable}}"
       {{?}}

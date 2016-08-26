@@ -14,7 +14,7 @@ var common = require('../common'),
 {{##body(it, item, show, icon, icon_empty, pojo, pstate, cached_exprs)=
 {{%
 if (item.$f$ && !icon_empty) icon_empty = icon === 'circle' ? 'blank' : 'empty';
-if (show) cached_exprs = common.exprs(show, pojo, ' &amp;&amp; ');
+if (show) cached_exprs = common.exprs(show, pojo, ' && ');
 %}}
 <i class="{{icon}} icon"
     {{? item.$f$ }}
@@ -28,8 +28,8 @@ if (show) cached_exprs = common.exprs(show, pojo, ' &amp;&amp; ');
     {{?}}
     v-xon="click3:{{pstate}} ^= {{item.bit}}"></i>
 <i class="ok sign icon"
-    v-show="({{pstate}} &amp; {{item.bit}}){{? show }} &amp;&amp; {{cached_exprs}}{{?}}"
-    v-xon="click3:handle(null, (pager.state &amp; {{c.STATE_LOADING}}) ? {{c.PREVENT_BOTH}} :
+    v-show="({{pstate}} & {{item.bit}}){{? show }} && {{cached_exprs}}{{?}}"
+    v-xon="click3:handle(null, (pager.state & {{c.STATE_LOADING}}) ? {{c.PREVENT_BOTH}} :
         {{? item.param }}
         handle({{item.hid}}, { {{? typeof item.param !== 'string' || item.param.charAt(0) === ',' }}p: {{pojo}}{{? item.f }}, f: {{item.f}}{{?}}{{?}}{{paramStr(item.param)}}{{? item.$f$ || item.bool }}, v: {{bool_set(item, pojo)}}{{?}} },
         {{??}}
@@ -37,7 +37,7 @@ if (show) cached_exprs = common.exprs(show, pojo, ' &amp;&amp; ');
         {{?}}
         ({{pstate}} ^= {{item.bit}})))"></i>
 <i class="remove sign icon"
-    v-show="({{pstate}} &amp; {{item.bit}}){{? show }} &amp;&amp; {{cached_exprs}}{{?}}"
+    v-show="({{pstate}} & {{item.bit}}){{? show }} && {{cached_exprs}}{{?}}"
     v-xon="click3:{{pstate}} ^= {{item.bit}}"></i>
 #}}
 

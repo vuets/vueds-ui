@@ -11,9 +11,9 @@ var common = require('../common'), c = common.c;
     v-appendto="4.0__0.0__0.0"
     t-listsearch="1.0"
     v-listsearch="{{? it.search_key }}{{it.search_key}}:{{?}}{{pager}}"
-    v-disable="1.0:{{pager}}.state &amp; {{c.STATE_LOADING}} || (
-        !{{pager}}.size &amp;&amp; 
-        !({{pager}}.state &amp; {{c.STATE_LOCAL_SEARCH}})
+    v-disable="1.0:{{pager}}.state & {{c.STATE_LOADING}} || (
+        !{{pager}}.size && 
+        !({{pager}}.state & {{c.STATE_LOCAL_SEARCH}})
 )"></i>
 #}}
 

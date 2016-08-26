@@ -10,11 +10,11 @@ var common = require('../common'),
     <input type="text"
         v-listsearch="{{it.search_key || '3'}}__{{it.search_hid || c.HANDLE_ENTRY_SEARCH}}{{hid_suffix}}:{{pager}}"{{? it.title }} placeholder="{{it.title}}"{{?}}
         {{? update }}
-        v-disable="{{dpager}}.state &amp; {{c.STATE_LOADING}} || (
-            !{{pager}}.size &amp;&amp; 
-            !({{pager}}.state &amp; {{c.STATE_LOCAL_SEARCH}}))"
+        v-disable="{{dpager}}.state & {{c.STATE_LOADING}} || (
+            !{{pager}}.size && 
+            !({{pager}}.state & {{c.STATE_LOCAL_SEARCH}}))"
         {{??}}
-        v-disable="!{{pager}}.size &amp;&amp; !({{pager}}.state &amp; {{c.STATE_LOCAL_SEARCH}})"
+        v-disable="!{{pager}}.size && !({{pager}}.state & {{c.STATE_LOCAL_SEARCH}})"
         {{?}}
       />
     <i class="icon search"></i>
@@ -34,14 +34,14 @@ var common = require('../common'),
   <div class="field">
     <div class="ui input">
       <input type="text" placeholder="{{it.k_title}}"
-          v-disable="{{pojo}}._.entry_filter_new.flags{{? update }} || pager.state &amp; {{c.MASK_RPC_DISABLE}}{{?}}"
+          v-disable="{{pojo}}._.entry_filter_new.flags{{? update }} || pager.state & {{c.MASK_RPC_DISABLE}}{{?}}"
           v-suggest="{{it.k_suggest}}:{{pojo}}._.entry_new.vprops.{{it.k_field}}"/>
     </div>
   </div>
   <div class="field">
     <div class="ui input">
       <input type="text" placeholder="{{it.v_title}}" c-list="3__-.1"
-          v-disable="{{pojo}}._.entry_filter_new.flags{{? update }} || pager.state &amp; {{c.MASK_RPC_DISABLE}}{{?}}"
+          v-disable="{{pojo}}._.entry_filter_new.flags{{? update }} || pager.state & {{c.MASK_RPC_DISABLE}}{{?}}"
           v-xmodel="{{it.input_hid || c.HANDLE_ENTRY_INPUT}}__flags__7{{hid_suffix}}:{{pojo}}._.entry_new.{{it.v_field}}" />
     </div>
   </div>
@@ -69,8 +69,8 @@ var pojo = it.pojo,
   <div class="item">
     <div class="ui tiny icon buttons">
       <button type="button" class="ui button"
-          v-class="active:{{pojo}}._.entry_filter_new.flags &amp; 1"
-          v-xon="click1:handle({{it.sort_hid || c.HANDLE_ENTRY_SORT}}, {v: 0 === ({{pojo}}._.entry_filter_new.flags &amp; 1){{? update }}, update: 1{{?}}})"
+          v-class="active:{{pojo}}._.entry_filter_new.flags & 1"
+          v-xon="click1:handle({{it.sort_hid || c.HANDLE_ENTRY_SORT}}, {v: 0 === ({{pojo}}._.entry_filter_new.flags & 1){{? update }}, update: 1{{?}}})"
           v-disable="2 > {{pojo}}._.pager.size || ({{pojo}}._.entry_filter_new.flags ^ 2) >= 6">
         <i class="icon sort"></i>
       </button>

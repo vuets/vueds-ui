@@ -17,7 +17,7 @@ var common = require('../common'),
 
 {{##filter_fields(it, jso, descriptor, fields, pojo, nf):
 {{% var f, d, hid, disable, display, item, suggestKind; %}}
-<div class="field" v-show="{{pojo}}['{{nf}}'].$show &amp;&amp; {{pojo}}['{{nf}}'].show">
+<div class="field" v-show="{{pojo}}['{{nf}}'].$show && {{pojo}}['{{nf}}'].show">
 {{%
 for (var i = 0, len = fields.length; i < len; i++) {
     f = String(fields[i]);
@@ -75,7 +75,7 @@ out += enum_select.main({
     field: '0',
     handler_id: '0',
     d_override: {v: valueArray, $v: displayArray},
-    disable: 'pager.state &amp; 8'
+    disable: 'pager.state & 8'
 });
 %}}
 </div>

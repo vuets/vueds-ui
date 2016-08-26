@@ -39,10 +39,10 @@ var common = require('../common'), c = common.c;
 #}}
 {{##form_msg(it, pojo)=
 <div class="ui message" 
-    v-show="{{pojo}}._.msg{{? it.update}} &amp;&amp; {{pojo}}._.state &amp; {{c.MASK_STATUS}}{{?}}"
-    v-class="success:{{pojo}}._.state &amp; {{c.STATE_SUCCESS}}, 
-             error:{{pojo}}._.state &amp; {{c.STATE_ERROR}},
-             warning:{{pojo}}._.state &amp; {{c.STATE_WARNING}}">
+    v-show="{{pojo}}._.msg{{? it.update}} && {{pojo}}._.state & {{c.MASK_STATUS}}{{?}}"
+    v-class="success:{{pojo}}._.state & {{c.STATE_SUCCESS}}, 
+             error:{{pojo}}._.state & {{c.STATE_ERROR}},
+             warning:{{pojo}}._.state & {{c.STATE_WARNING}}">
   <i class="close icon" v-xon="click:{{pojo}}._.msg = null"></i>
   <span v-text="{{pojo}}._.msg"></span>
 </div>

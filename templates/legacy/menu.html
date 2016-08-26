@@ -16,9 +16,9 @@ var pager = it.pager,
     {{??}}
     <input type="text" v-listsearch="{{? it.search_key }}{{it.search_key}}:{{?}}{{pager}}"{{? it.title }} placeholder="{{it.title}}"{{?}}
         {{? !it.without_disable }}
-        v-disable="{{dpager}}.state &amp; {{c.STATE_LOADING}} || (
-            !{{dpager}}.size &amp;&amp; 
-            !({{dpager}}.state &amp; {{c.STATE_LOCAL_SEARCH}}))"
+        v-disable="{{dpager}}.state & {{c.STATE_LOADING}} || (
+            !{{dpager}}.size && 
+            !({{dpager}}.state & {{c.STATE_LOCAL_SEARCH}}))"
         {{?}}
         />
     <i class="icon search"></i>
