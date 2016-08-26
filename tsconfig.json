@@ -1,5 +1,4 @@
 {
-  "compileOnSave": true,
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
@@ -20,7 +19,9 @@
     "src/index.ts",
     "src/trie.ts",
     "src/util.ts",
+    "src/v2/index.ts",
     "src/d/disable.ts",
+    "src/d2/disable.ts",
     "src/d/pclass.ts",
     "src/gen/common.ts",
     "src/tpl/common.ts",

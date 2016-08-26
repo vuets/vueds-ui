@@ -1,4 +1,9 @@
 
+export function locateNode(vnode: any/*VNode*/): VNodeWithData {
+    return vnode.child && (!vnode.data || !vnode.data.transition) ? 
+        locateNode(vnode.child._vnode) : vnode
+}
+
 export interface PropOptions {
     type: Function | Array<Function> | null
     default: any
@@ -196,7 +201,7 @@ export declare class VNode {
     return node
 }*/
 
-type VNodeChildren = Array<VNode | string | /*VNodeChildren |*/ null> | string
+export type VNodeChildren = Array<VNode | string | /*VNodeChildren |*/ null> | string
 
 export interface VNodeComponentOptions {
     Ctor: any//Class<Component>
