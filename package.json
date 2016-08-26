@@ -7,20 +7,18 @@
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
-    "build": "tsc",
     "dot": "dotgen templates/legacy lib/gen/legacy",
-    "clean": "rm -r lib"
-  },
-  "devDependencies": {
-    "ts-node": "^0.9.3",
-    "typescript": "^2.0.0",
-    "@types/vue": "^1.0.25-alpha"
+    "build": "tsc"
   },
   "dependencies": {
     "hammerjs": "^2.0.8",
     "numeral": "^1.5.3",
-    "vue": "^1.0.26",
     "vueds": "git+ssh://git@bitbucket.org/davidyu_ftw/vueds.git#master"
+  },
+  "devDependencies": {
+    "@types/vue": "^1.0.29",
+    "typescript": "^2.0.0",
+    "vue": "^1.0.26"
   },
   "peerDependencies": {
     "vue": "^1.0.26"
