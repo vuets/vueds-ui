@@ -23,6 +23,7 @@
     "src/d/disable.ts",
     "src/d2/disable.ts",
     "src/d/pclass.ts",
+    "src/d2/pclass.ts",
     "src/gen/common.ts",
     "src/tpl/common.ts",
     "src/tpl/legacy/pager_controls.ts"
