@@ -42,9 +42,9 @@ function track_clicks(it: Opts): string {
 export function msg_fragment(it: Opts): string {
     let pager = it.pager
     return `
-<div v-show="${pager}.msg &amp;&amp; ${pager}.state &amp; ${PagerState.MASK_STATUS}">
+<div v-show="${pager}.msg && (${pager}.state & ${PagerState.MASK_STATUS})">
   <div class="ui message"
-      v-pclass:status-="${pager}.state &amp; ${PagerState.MASK_STATUS}">
+      v-pclass:status-="${pager}.state & ${PagerState.MASK_STATUS}">
     <i class="close icon" @click.prevent="${pager}.msg = null"></i>
     <span v-text="${pager}.msg"></span>
   </div>
@@ -57,17 +57,17 @@ export function sort_btn(it: Opts): string {
     let pager = it.pager
     return `
 <button type="button" class="ui button"
-    v-disable="2 > ${pager}.size || ${pager}.state &amp; ${PagerState.LOADING}"
+    v-disable="2 > ${pager}.size || (${pager}.state & ${PagerState.LOADING})"
     @click.prevent="pager.store.repaint(
         (${pager}.state ^= ${PagerState.DESC}${include_if(it.track_clicks, track_clicks, it)}))">
-  <i class="icon" v-pclass:desc-="${pager}.state &amp; ${PagerState.DESC} ? ${tern_yes_no(!it.reverse_icon)}"></i>
+  <i class="icon" v-pclass:desc-="${pager}.state & ${PagerState.DESC} ? ${tern_yes_no(!it.reverse_icon)}"></i>
 </button>`
 }
 
 export function rpc_newer_btn(it: Opts): string {
     return `
 <button type="button" class="ui button" 
-    v-disable="${it.pager}.state &amp; ${PagerState.MASK_RPC_DISABLE}"
+    v-disable="${it.pager}.state & ${PagerState.MASK_RPC_DISABLE}"
     v-xon="click:${it.pager}.$handle(16, ${it.flags || 0}${include_if(it.track_clicks, track_clicks, it)})">
   <i class="reply mail icon"></i>
 </button>`
@@ -76,7 +76,7 @@ export function rpc_newer_btn(it: Opts): string {
 export function rpc_older_btn(it: Opts): string {
     return `
 <button type="button" class="ui button"
-    v-disable="${it.pager}.state &amp; ${PagerState.MASK_RPC_DISABLE} || ${it.pager}.size === 0"
+    v-disable="${it.pager}.state & ${PagerState.MASK_RPC_DISABLE} || ${it.pager}.size === 0"
     v-xon="click:${it.pager}.$handle(17, ${it.flags || 0}${include_if(it.track_clicks, track_clicks, it)})">
   <i class="forward mail icon"></i>
 </button>`
@@ -85,7 +85,7 @@ export function rpc_older_btn(it: Opts): string {
 export function rpc_reload_btn(it: Opts): string {
     return `
 <button type="button" class="ui button"
-    v-disable="${it.pager}.state &amp; ${PagerState.MASK_RPC_DISABLE} || ${it.pager}.size === 0"
+    v-disable="${it.pager}.state & ${PagerState.MASK_RPC_DISABLE} || ${it.pager}.size === 0"
     v-xon="click:${it.pager}.$handle(4${include_if(it.track_clicks, track_clicks, it)})">
   <i class="repeat icon"></i>
 </button>`
@@ -111,22 +111,22 @@ export function nav_item(it: Opts): string {
   <div class="ui tiny icon buttons">
     ${when(it.content_loc === 4, it._content)}
     <button type="button" class="ui button"
-        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === 0"
+        v-disable="${it.pager}.state & ${PagerState.LOADING} || ${it.pager}.page === 0"
         v-xon="click:${it.pager}.$handle(1, (${it.pager}.page = 0)${include_if(it.track_clicks, track_clicks, it)})">
         <i class="double angle left icon"></i>
     </button>
     <button type="button" class="ui button" 
-        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === 0"
+        v-disable="${it.pager}.state & ${PagerState.LOADING} || ${it.pager}.page === 0"
         v-xon="click:${it.pager}.$handle(1, --${it.pager}.page${include_if(it.track_clicks, track_clicks, it)})">
         <i class="angle left icon"></i>
     </button>
     <button type="button" class="ui button"
-        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
+        v-disable="${it.pager}.state & ${PagerState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
         v-xon="click:${it.pager}.$handle(1, ++${it.pager}.page${include_if(it.track_clicks, track_clicks, it)})">
         <i class="angle right icon"></i>
     </button>
     <button type="button" class="ui button"
-        v-disable="${it.pager}.state &amp; ${PagerState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
+        v-disable="${it.pager}.state & ${PagerState.LOADING} || ${it.pager}.page === ${it.pager}.page_count"
         v-xon="click:${it.pager}.$handle(1, 
             (${it.pager}.page = ${it.pager}.page_count)${include_if(it.track_clicks, track_clicks, it)})">
         <i class="double angle right icon"></i>
