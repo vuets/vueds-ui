@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData, locateNode } from '../v2/'
+import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
 import { addClass, removeClass } from '../util'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
