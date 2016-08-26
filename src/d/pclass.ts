@@ -10,7 +10,6 @@ export function update(value: any, oldValue: any) {
     }
     if (value) {
         addClass(this.el, this.prefix + value)
-        oldValue = value
     }
 }
 

@@ -16,8 +16,8 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     el.__vOriginalDisplay = originalDisplay*/
 }
 
-export function update(el: any, { value, oldValue }: VNodeDirective, vnode: VNodeWithData) {
-    let disabled = !!value
+export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    let disabled = !!dir.value
 
     // check the state before applying
     if (disabled === el.disabled)
