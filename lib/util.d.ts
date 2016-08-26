@@ -1,6 +1,6 @@
 import { Trie } from './trie';
-export declare const addClass: (el: Element, cls: string) => void;
 export declare function setClass(el: any, cls: string): void;
+export declare function addClass(el: any, cls: any): void;
 export declare function getUTCOffset(): number;
 export declare const UTC_OFFSET: number, HOST_RAW_OFFSET: number, HOST_RAW_OFFSET_SECONDS: number;
 export declare function localToUtc(ts: number): number;

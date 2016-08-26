@@ -19,14 +19,36 @@ const numeral = require('numeral'),
     monthLeapArray = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ],
     daysArray = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
-export const { addClass } = Vue.util
-
 export function setClass(el, cls: string) {
     if (isIE9 && !/svg$/.test(el.namespaceURI)) {
         el.className = cls
     } else {
         el.setAttribute('class', cls)
     }
+}
+
+/**
+ * For IE9 compat: when both class and :class are present
+ * getAttribute('class') returns wrong value...
+ *
+ * @param {Element} el
+ * @return {String}
+ */
+function getClass (el) {
+    let className = el.className
+    return typeof className !== 'object' ? className : (className.baseVal || '')
+}
+
+//export const { addClass } = Vue.util
+export function addClass (el, cls) {
+  if (el.classList) {
+    el.classList.add(cls)
+  } else {
+    var cur = ' ' + getClass(el) + ' '
+    if (cur.indexOf(' ' + cls + ' ') < 0) {
+      setClass(el, (cur + cls).trim())
+    }
+  }
 }
 
 function getDateUTCOffset(date: Date): string {
