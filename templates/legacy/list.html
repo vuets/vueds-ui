@@ -20,7 +20,7 @@ var pager = it.pager,
       {{i}}="{{item_attrs[i]}}"
       {{% } } %}}
       {{? it.click_to_select }}
-      v-xon="click8:{{pager}}.$handle(11, {{pojo}}){{? it.dblclick_to_update }}, dblclick11:{{pager}}.$handle(13, {{pojo}}, ({{pojo}}._.vstate ^= {{c.STATE_UPDATE}})){{?}}"
+      v-xon="click8:{{pager}}.$handle(11, {{pojo}})"
       {{?}}
       v-show="({{pojo}}._.lstate & {{c.LSTATE_INCLUDED}}){{? it.item_show }}{{common.exprs(it.item_show, pojo, ' && ', true)}}{{?}}"
       v-class="active:({{pojo}}._.lstate & {{c.LSTATE_SELECTED}}){{? it.item_vclass }}{{common.kv_exprs(it.item_vclass, pojo, ', ', true, ' && ')}}{{?}}">
