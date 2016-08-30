@@ -2,6 +2,7 @@ declare function require(path: string) : any;
 
 import * as Vue from 'vue'
 import { Trie } from './trie'
+import { Pager, PojoStore, PojoState, SelectionFlags, SelectionType } from 'vueds/lib/store/'
 
 const numeral = require('numeral'),
     // browser sniffing from vuejs
@@ -246,7 +247,7 @@ export function toggleClass(el: Element, cls: string) {
 }
 /*export function toggleActive(el) {
     if (removeClass(el, 'active')) {
-        var vm = el.vue_vm || getFirstVm(el)
+        var vm = el.__vue__ || getFirstVm(el)
         if (vm && vm.handle(2))
             vm.$broadcast('vui', 2)
         if (el.className === 'modal' || el.className === 'dropdown')
@@ -255,7 +256,7 @@ export function toggleClass(el: Element, cls: string) {
         if (el.className === 'modal' || el.className === 'dropdown')
             document.modalId = el.id
         addClass(el, 'active')
-        var vm = el.vue_vm || getFirstVm(el)
+        var vm = el.__vue__ || getFirstVm(el)
         if (vm && vm.handle(1))
             vm.$broadcast('vui', 1)
     }
@@ -313,7 +314,7 @@ export function chainResolveRelativeElement(el: Element, array: string[], i: num
     
     return el
 }
-export function resolveElement(el: Element, value, vm): any {
+export function resolveElement(el: Element, value: any, vm?: any): any {
     if (!isNaN(value) || (vm && value.charAt(0) === '$' && !isNaN(value = vm.$get(value)))) {
         return resolveRelativeElement(el, value)
     }
@@ -331,6 +332,10 @@ export function resolveElementArray(el: Element, value, selectFromParent: boolea
     else if (selectFromParent) return el.parentElement.querySelectorAll(value)
     else return el.querySelectorAll(value)
 }
+export function resolveNextPageIdx(page: number, idx: number, array: any, pager: Pager): number {
+    return page !== pager.page_count ? idx : Math.min(idx, (pager.size % array.length) - 1)
+}
+// TODO remove this (prefer above)
 export function resolveNextPageIndex(pager, idx: number): number {
     /*if (idx === -1) return idx
     
@@ -342,121 +347,158 @@ export function resolveNextPageIndex(pager, idx: number): number {
     return Math.min(idx, remaining - 1)*/
     return pager.page !== pager.page_count ? idx : Math.min(idx, (pager.size % pager.array.length) - 1)
 }
-export function tableUp(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+// TODO move to different file
+export function selectIdx(idx: number, array: any[], store: PojoStore<any>, clickUpdate: boolean) {
+    let pojo = array[idx], flags = 0
+    if (clickUpdate) {
+        pojo = array[idx];
+        pojo['vstate'] |= PojoState.UPDATE
+        flags = SelectionFlags.CLICKED_UPDATE
+    }
+    store.select(pojo, flags, idx)
+}
+
+export function pageAndSelectIdx(page: number, idx: number, array: any[], store: PojoStore<any>, clickUpdate: boolean) {
+    let pojo = array[idx], flags = 0
+    if (clickUpdate) {
+        pojo = array[idx];
+        pojo['vstate'] |= PojoState.UPDATE
+        flags = SelectionFlags.CLICKED_UPDATE
+    }
+    store.$populate(SelectionType.SELECT, flags,
+        store.isMainArray(),
+        idx,
+        page)
+}
+
+export function tableUp(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
-    var index_hidden
+    let array = pager.array, index_hidden
     if (idx === -1) {
         index_hidden = pager.index_hidden
         // select the visible item at the bottom (last)
-        if (index_hidden) pager.$handle(8 + toAdd, index_hidden - 1)
+        if (index_hidden) selectIdx(index_hidden - 1, array, pager['store'], clickUpdate)
     } else if (idx >= col_size) {
-        pager.$handle(8 + toAdd, idx - col_size)
+        selectIdx(idx - col_size, array, pager['store'], clickUpdate)
     } else if (pager.page) {
         // move to previous page
-        pager.page--
-        pager.$handle(9 + toAdd, (col_size * (pager.array.length/col_size - 1)) + idx)
+        pageAndSelectIdx(--pager.page, (col_size * (array.length/col_size - 1)) + idx, 
+            array, pager['store'], clickUpdate)
     }
 }
-export function tableJumpUp(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+export function tableJumpUp(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
+    let array = pager.array
     if (idx === -1) {
-        pager.$handle(8 + toAdd, Math.min(col_size - 1, pager.index_hidden - 1))
+        selectIdx(Math.min(col_size - 1, pager.index_hidden - 1), array, pager['store'], clickUpdate)
     } else if (idx >= col_size) {
-        pager.$handle(8 + toAdd, idx % col_size)
+        selectIdx(idx % col_size, array, pager['store'], clickUpdate)
     } else if (pager.page) {
         // move to previous page
-        pager.page--
-        pager.$handle(9 + toAdd, (col_size * (pager.array.length/col_size - 1)) + (idx % col_size))
+        pageAndSelectIdx(--pager.page, (col_size * (pager.array.length/col_size - 1)) + (idx % col_size), 
+            array, pager['store'], clickUpdate)
     }
 }
-export function tableDown(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+export function tableDown(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
+    let array = pager.array
     if (idx === -1) {
-        pager.$handle(8 + toAdd, 0)
+        selectIdx(0, array, pager['store'], clickUpdate)
     } else if (idx + col_size < pager.index_hidden) {
-        pager.$handle(8 + toAdd, idx + col_size)
+        selectIdx(idx + col_size, array, pager['store'], clickUpdate)
     } else if (pager.page < pager.page_count) {
         // move to next page
-        pager.page++
-        if (pager.page !== pager.page_count) pager.$handle(9, idx % col_size)
-        else pager.$handle(9, Math.min(idx % col_size, (pager.size % pager.array.length) - 1))
+        let page = ++pager.page
+        pageAndSelectIdx(page, page === pager.page_count ?
+            Math.min(idx % col_size, (pager.size % pager.array.length) - 1) : (idx % col_size),
+            array, pager['store'], clickUpdate)
     }
 }
-export function tableJumpDown(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+export function tableJumpDown(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
-    var row_size = pager.array.length / col_size
+    let array = pager.array, 
+        row_size = pager.array.length / col_size
     if (idx === -1) {
-        pager.$handle(8 + toAdd, Math.min(col_size * (row_size-1), pager.index_hidden - 1))
+        selectIdx(Math.min(col_size * (row_size-1), pager.index_hidden - 1), array, pager['store'], clickUpdate)
     } else if (idx < col_size * (row_size-1)) {
         idx = col_size * (row_size-1) + (idx % col_size)
-        if (idx < pager.index_hidden) pager.$handle(8 + toAdd, idx)
+        if (idx < pager.index_hidden) selectIdx(idx, array, pager['store'], clickUpdate)
     } else if (pager.page < pager.page_count) {
         // move to next page
-        pager.page++
-        if (pager.page !== pager.page_count) pager.$handle(9, idx % col_size)
-        else pager.$handle(9, Math.min(idx % col_size, (pager.size % pager.array.length) - 1))
+        let page = ++pager.page
+        pageAndSelectIdx(page, page === pager.page_count ?
+            Math.min(idx % col_size, (pager.size % pager.array.length) - 1) : (idx % col_size),
+            array, pager['store'], clickUpdate)
     }
 }
-export function tableLeft(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+export function tableLeft(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
+    let array = pager.array
     if (idx === -1) {
-        pager.$handle(8 + toAdd, Math.min(col_size - 1, pager.index_hidden - 1))
+        selectIdx(Math.min(col_size - 1, pager.index_hidden - 1), array, pager['store'], clickUpdate)
     } else if (idx % col_size !== 0) {
-        pager.$handle(8 + toAdd, idx - 1)
+        selectIdx(idx - 1, array, pager['store'], clickUpdate)
     } else if (pager.page !== 0) {
         // move to previous page
-        pager.page--
-        pager.$handle(9 + toAdd, idx + col_size - 1)
+        pageAndSelectIdx(--pager.page, idx + col_size - 1, array, pager['store'], clickUpdate)
     }
 }
-export function tableJumpLeft(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+export function tableJumpLeft(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
+    let array = pager.array
     if (idx === -1) {
-        pager.$handle(8 + toAdd, 0)
+        selectIdx(0, array, pager['store'], clickUpdate)
     } else if (idx % col_size !== 0) {
-        pager.$handle(8 + toAdd, idx - (idx % col_size))
+        selectIdx(idx - (idx % col_size), array, pager['store'], clickUpdate)
     } else if (pager.page !== 0) {
         // move to previous page (same as left)
-        pager.page--
-        pager.$handle(9 + toAdd, idx + col_size - 1)
+        pageAndSelectIdx(--pager.page, idx + col_size - 1, array, pager['store'], clickUpdate)
     }
 }
-export function tableRight(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
+export function tableRight(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     
+    let array = pager.array
     if (idx === -1) {
-        pager.$handle(8 + toAdd, Math.min(col_size * (pager.array.length/col_size - 1), pager.index_hidden - 1))
-    } else if (pager.page === pager.page_count) {
-        if ((idx + 1) % col_size !== 0 && (idx + 1) < pager.index_hidden) pager.$handle(8 + toAdd, idx + 1)
-    } else if ((idx + 1) % col_size === 0) {
-        // move to next page
-        pager.page++
-        pager.$handle(9 + toAdd, resolveNextPageIndex(pager, idx - col_size + 1))
-    } else {
-        pager.$handle(8 + toAdd, idx + 1)
-    }
-}
-export function tableJumpRight(pager, col_size: number, flags: number, idx: number, e: Event, toAdd: number) {
-    e.preventDefault()
-    
-    if (idx === -1) {
-        pager.$handle(8 + toAdd, Math.min(col_size - 1, pager.index_hidden - 1))
+        selectIdx(Math.min(col_size * (pager.array.length/col_size - 1), pager.index_hidden - 1), 
+            array, pager['store'], clickUpdate)
     } else if (pager.page === pager.page_count) {
         if ((idx + 1) % col_size !== 0 && (idx + 1) < pager.index_hidden) {
-            pager.$handle(8 + toAdd, Math.min(idx - (idx % col_size) + col_size - 1, pager.index_hidden - 1))
+            selectIdx(idx + 1, array, pager['store'], clickUpdate)
+        }
+    } else if ((idx + 1) % col_size === 0) {
+        // move to next page
+        let page = ++pager.page
+        pageAndSelectIdx(page, resolveNextPageIdx(page, idx - col_size + 1, array, pager),
+            array, pager['store'], clickUpdate)
+    } else {
+        selectIdx(idx + 1, array, pager['store'], clickUpdate)
+    }
+}
+export function tableJumpRight(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
+    e.preventDefault()
+    
+    let array = pager.array
+    if (idx === -1) {
+        selectIdx(Math.min(col_size - 1, pager.index_hidden - 1), array, pager['store'], clickUpdate)
+    } else if (pager.page === pager.page_count) {
+        if ((idx + 1) % col_size !== 0 && (idx + 1) < pager.index_hidden) {
+            selectIdx(Math.min(idx - (idx % col_size) + col_size - 1, pager.index_hidden - 1), 
+                array, pager['store'], clickUpdate)
         }
     } else if ((idx + 1) % col_size == 0) {
         // move to next page (same as right)
-        pager.page++
-        pager.$handle(9 + toAdd, resolveNextPageIndex(pager, idx - col_size + 1))
+        let page = ++pager.page
+        pageAndSelectIdx(page, resolveNextPageIdx(page, idx - col_size + 1, array, pager),
+            array, pager['store'], clickUpdate)
     } else {
-        pager.$handle(8 + toAdd, idx - (idx % col_size) + col_size - 1)
+        selectIdx(idx - (idx % col_size) + col_size - 1, array, pager['store'], clickUpdate)
     }
 }
 export function extractFlagsLen(str: string): number {
@@ -510,10 +552,10 @@ export function putArgsTo(param, array: string[], i: number, flags: number): any
     return param
 }
 export function getFirstVm(el): any {
-    var vm = el.vue_vm
+    var vm = el.__vue__
     if(!vm) {
         el = getFirstChildElement(el)
-        vm = el ? el.vue_vm : null
+        vm = el ? el.__vue__ : null
     }
     return vm
 }
@@ -539,13 +581,13 @@ export function vmGetValue(obj, key: string) {
         ? obj.$parent.$get(key)
         : val
 }
-export function vmLookup(target, p): any {
+export function vmLookup(target, p?): any {
     var parent = p || target.parentElement,
         gparent = parent.parentElement,
         ggparent = gparent.parentElement,
         gggparent = ggparent.parentElement
     
-    return target.vue_vm || parent.vue_vm || gparent.vue_vm || ggparent.vue_vm || gggparent.vue_vm
+    return target.__vue__ || parent.__vue__ || gparent.__vue__ || ggparent.__vue__ || gggparent.__vue__
 }
 export function vmGetHandler(vm): any {
     while (!vm.handle) vm = vm.$parent
@@ -993,7 +1035,7 @@ export function deactivate() {
         if (prev && el.className === 'modal' && prev.className === 'modal-close') {
             fireEvent(prev, 'click')
         } else {
-            var vm = el.vue_vm || getFirstVm(el)
+            var vm = el.__vue__ || getFirstVm(el)
             if(vm && vm.handle(2)) vm.$broadcast('vui', 2)
         }
     }
