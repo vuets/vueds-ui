@@ -1,3 +1,15 @@
+export declare const enum ContentSlot {
+    FIRST = 0,
+    RPC_FIRST = 1,
+    RPC_LAST = 2,
+    BEFORE_NAV = 3,
+    NAV_FIRST = 4,
+    NAV_LAST = 5,
+    BEFORE_COUNT = 6,
+    COUNT_FIRST = 7,
+    COUNT_LAST = 8,
+    LAST = 9,
+}
 export interface Opts {
     /**
      * Defaults to 'pager'
@@ -5,7 +17,7 @@ export interface Opts {
     pager: string;
     flags?: number;
     top?: boolean;
-    content_loc?: number;
+    content_slot?: ContentSlot;
     attrs?: any;
     track_clicks?: boolean;
     without_sort?: boolean;
@@ -28,4 +40,4 @@ export declare function rpc_reload_btn(it: Opts): string;
 export declare function rpc_item(it: Opts): string;
 export declare function nav_item(it: Opts): string;
 export declare function count_item(it: Opts): string;
-export declare function main(it: Opts, body?: string): string;
+export declare function main(it: Opts, content?: string): string;
