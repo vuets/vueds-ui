@@ -1,6 +1,6 @@
 declare function require(path: string): any;
 
-import { include_if, when, anchor, tern_yes_no } from '../common'
+import { include_if, when, anchor, tern_yes_no, attrs } from '../common'
 
 import { PagerState } from 'vueds/lib/store'
 
@@ -171,19 +171,11 @@ function list_class(it: Opts): string {
     return ` ${it.list_class}`
 }
 
-function attrs(it: Opts): string {
-    var buf = ' '
-    for (var i in attrs) {
-        buf += i + '="' + attrs[i] + '"'
-    }
-    return buf
-}
-
 export function main(it: Opts, content?: string): string {
-    it._content = content || anchor
+    it._content = typeof content === 'string' ? content : anchor
     return `
 ${include_if(!it.without_msg && it.top, msg_fragment, it)}
-<div class="ui skimped tiny horizontal list${include_if(it.list_class, list_class, it)}"${include_if(it.attrs, attrs, it)}>
+<div class="ui skimped tiny horizontal list${include_if(it.list_class, list_class, it)}"${attrs(it.attrs)}>
   ${when(it.content_slot === ContentSlot.FIRST, it._content)}
   ${include_if(!it.without_rpc, rpc_item, it)}
   ${when(it.content_slot === ContentSlot.BEFORE_NAV, it._content)}
