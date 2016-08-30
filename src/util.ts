@@ -589,6 +589,14 @@ export function vmLookup(target, p?): any {
     
     return target.__vue__ || parent.__vue__ || gparent.__vue__ || ggparent.__vue__ || gggparent.__vue__
 }
+export function vfragLookup(target, p?): any {
+    var parent = p || target.parentElement,
+        gparent = parent.parentElement,
+        ggparent = gparent.parentElement,
+        gggparent = ggparent.parentElement
+    
+    return target.__v_frag || parent.__v_frag || gparent.__v_frag || ggparent.__v_frag || gggparent.__v_frag
+}
 export function vmGetHandler(vm): any {
     while (!vm.handle) vm = vm.$parent
 

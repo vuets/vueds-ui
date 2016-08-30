@@ -1,7 +1,7 @@
 declare function require(path: string): any;
 
 import {
-    screen, isInput, resolveElement, resolveNextPageIdx, vmLookup, fireEvent, table_compact_columns, 
+    screen, isInput, resolveElement, resolveNextPageIdx, vfragLookup, fireEvent, table_compact_columns, 
     selectIdx, pageAndSelectIdx, 
     tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight
 } from '../util'
@@ -409,13 +409,14 @@ export function bind() {
     
     this._swipe = function(e) {
         var target = e.target,
+            vfrag,
             vm
         if (isInput(target)) return
         current = self
         keymage.setScope('list')
         
-        vm = vmLookup(target)
-        if (!vm || !vm.hasOwnProperty('$index') || (vm !== self.vm && vm.$parent !== self.vm)) return
+        vfrag = vfragLookup(target)
+        if (!vfrag || !(vm = vfrag.scope) || !vm.hasOwnProperty('$index') || (vm !== self.vm && vm.$parent !== self.vm)) return
         
         switch(e.direction) {
             case 2: // right-to-left
@@ -429,15 +430,16 @@ export function bind() {
     this._dtap = function(e, dbltap, flagsIntersect) {
         var target = e.target, 
             parent = target.parentElement, 
-            vm = vmLookup(target, parent),
+            vfrag = vfragLookup(target, parent),
+            vm,
             trigger = target.getAttribute('dtap') || (target=parent).getAttribute('dtap')
         
         if (trigger) fireEvent(target, 'dtap')
         
-        if (!vm || !vm.hasOwnProperty('$index') || (vm !== self.vm && vm.$parent !== self.vm)) return
+        if (!vfrag || !(vm = vfrag.scope) || !vm.hasOwnProperty('$index') || (vm !== self.vm && vm.$parent !== self.vm)) return
         //if (vm.$parent.$data.pager !== self.pager && (!(vm=vm.$parent).$parent || vm.$parent.$data.pager !== self.pager)) return
         
-        var pojo = vm.$data.pojo
+        var pojo = vm[self.loop_var]
         if (!pojo) return
         if (flagsIntersect) {
             if (!(pojo.vstate & PojoState.UPDATE)) {
@@ -467,12 +469,13 @@ export function bind() {
             self._dtap(e, false, true)
             return
         }
-        
-        var vm = vmLookup(e.target)
-        if (!vm || !vm.hasOwnProperty('$index') || (vm !== self.vm && vm.$parent !== self.vm)) return
+
+        var vfrag = vfragLookup(e.target),
+            vm
+        if (!vfrag || !(vm = vfrag.scope) || !vm.hasOwnProperty('$index') || (vm !== self.vm && vm.$parent !== self.vm)) return
         //if (vm.$parent.$data.pager !== self.pager && (!(vm=vm.$parent).$parent || vm.$parent.$data.pager !== self.pager)) return
         
-        var pojo = vm.$data.pojo
+        var pojo = vm[self.loop_var]
         if (pojo) self.pager.store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
     }
     this._doubletap = function(e) {
@@ -498,12 +501,16 @@ export function bind() {
     hammer.on('tap', this._tap)
     hammer.on('doubletap', this._doubletap)
     
-    if (!self.arg) return
+    if (!self.arg) {
+        this.loop_var = 'pojo'
+        return
+    }
     
     var split_args = self.arg.split('__'), 
         len = split_args.length,
         i = 0
     
+    this.loop_var = split_args[i++]
     self.$flags = parseInt(split_args[i++], 10)
     
     if (i === len) return
