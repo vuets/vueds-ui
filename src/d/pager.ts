@@ -2,7 +2,7 @@ declare function require(path: string): any;
 
 import {
     screen, table_compact_columns, 
-} from '../util'
+} from '../screen_util'
 
 import { isInput, resolveElement, fireEvent } from '../dom_util'
 
