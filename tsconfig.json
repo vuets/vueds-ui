@@ -15,23 +15,10 @@
     "outDir": "lib"
   },
   "compileOnSave": false,
-  "files": [
-    "src/index.ts",
-    "src/trie.ts",
-    "src/util.ts",
-    "src/dom_util.ts",
-    "src/pager_util.ts",
-    "src/vm_util.ts",
-    "src/keymage.ts",
-    "src/v2/index.ts",
-    "src/d/disable.ts",
-    "src/d2/disable.ts",
-    "src/d/pclass.ts",
-    "src/d2/pclass.ts",
-    "src/d/pager.ts",
-    "src/gen/common.ts",
-    "src/tpl/common.ts",
-    "src/tpl/legacy/pager_controls.ts",
-    "src/tpl/legacy/list.ts"
+  "exclude": [
+    "node_modules",
+    "templates",
+    "lib",
+    "target"
   ]
 }
