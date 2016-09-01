@@ -9,7 +9,10 @@ import { isInput, resolveElement, fireEvent } from '../dom_util'
 import {
     selectIdx, pageAndSelectIdx, 
     listUp, listDown, 
-    tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight
+    tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight,
+    moveTopOrUp, moveBottomOrDown, moveLeft, moveRight,
+    pageFirst, pageLast, pageSort, pageReload,
+    pageNextOrLoad, pagePrevOrLoad
 } from '../pager_util'
 
 import { vfragLookup } from '../vm_util'
@@ -35,16 +38,18 @@ function moveUp(e) {
     
     if (!current || !(pager = current.pager).index_hidden) return
     
-    clickUpdate = !!(current.$flags & screen.flags)
-    if (current.col_size) tableUp(pager, current.col_size, current.table_flags, pager.index_selected, e, clickUpdate)
-    else listUp(pager, pager.index_selected, e, clickUpdate)
+    clickUpdate = !!(current.flags & screen.flags)
+    if (current.col_size)
+        tableUp(pager, current.col_size, current.table_flags, pager.index_selected, e, clickUpdate)
+    else
+        listUp(pager, pager.index_selected, e, clickUpdate)
 }
 
 function moveDown(e) {
     var target = e.target,
         attr = target.getAttribute('c-list'),
-        pager,
-        toAdd
+        pager: Pager,
+        clickUpdate: boolean
     
     if (attr && !(current = target.list_ctrl)) {
         target.list_ctrl = current = resolveElement(target, attr).list_ctrl
@@ -52,304 +57,27 @@ function moveDown(e) {
     
     if (!current || !(pager = current.pager).index_hidden) return
     
-    toAdd = current.$flags & screen.flags ? 10 : 0
-    if (current.col_size) tableDown(pager, current.col_size, current.table_flags, pager.index_selected, e, toAdd)
-    else listDown(pager, pager.index_selected, e, toAdd)
-}
-
-function moveTopOrUp(e) {
-    var pager
-    if (!current || !(pager = current.pager).index_hidden) return
-    
-    if (current.col_size) {
-        tableJumpUp(pager, current.col_size, current.table_flags, pager.index_selected, e,
-                !!(current.$flags & screen.flags))
-        return
-    }
-    
-    var index_selected = pager.index_selected,
-        clickUpdate = !!(current.$flags & screen.flags)
-    
-    if (!index_selected)
-        listUp(pager, index_selected, e, clickUpdate)
+    clickUpdate = !!(current.flags & screen.flags)
+    if (current.col_size)
+        tableDown(pager, current.col_size, current.table_flags, pager.index_selected, e, clickUpdate)
     else
-        selectIdx(0, pager.array, pager.store, clickUpdate)
+        listDown(pager, pager.index_selected, e, clickUpdate)
 }
-
-function moveBottomOrDown(e) {
-    var pager
-    if (!current || !(pager = current.pager).index_hidden) return
-    
-    if (current.col_size) {
-        tableJumpDown(pager, current.col_size, current.table_flags, pager.index_selected, e,
-                !!(current.$flags & screen.flags))
-        return
-    }
-    
-    var index_selected = pager.index_selected,
-        index_hidden = pager.index_hidden,
-        clickUpdate = !!(current.$flags & screen.flags)
-    if (index_selected === index_hidden - 1)
-        listDown(pager, index_selected, e, clickUpdate)
-    else
-        selectIdx(index_hidden - 1, pager.array, pager.store, clickUpdate)
-}
-
-function pageFirst(e) {
-    if (!current) return
-    
-    var pager = current.pager
-    if (current.col_size) {
-        if (pager.index_hidden) {
-            tableJumpLeft(pager, current.col_size, current.table_flags, pager.index_selected, e,
-                    !!(current.$flags & screen.flags))
-        }
-        return
-    }
-    
-    if (!pager.page) return
-    
-    e.preventDefault()
-
-    let store = pager['store'] as PojoStore<any>
-    pager.page = 0
-    if (current.$flags & 16) {
-        pageAndSelectIdx(0, pager.index_selected, pager.array, store, false)
-    } else {
-        store.repaint()
-    }
-}
-
-function pageLast(e) {
-    if (!current) return
-    
-    var pager = current.pager
-    if (current.col_size) {
-        if (pager.index_hidden) {
-            tableJumpRight(pager, current.col_size, current.table_flags, pager.index_selected, e,
-                    !!(current.$flags & screen.flags))
-        }
-        return
-    }
-    
-    if (pager.page === pager.page_count) return
-    
-    e.preventDefault()
-
-    let store = pager['store'] as PojoStore<any>,
-        page = pager.page_count
-    pager.page = page
-    if (current.$flags & 16) {
-        pageAndSelectIdx(page, Math.min(pager.index_selected, (pager.size % pager.array.length) - 1), 
-            pager.array, store, false)
-    } else {
-        store.repaint()
-    }
-}
-function pageSort(e) {
-    var pager
-    if (!current || (pager = current.pager).state & PagerState.LOADING || !pager.index_hidden) return
-    
-    e.preventDefault()
-    pager.state ^= PagerState.DESC
-    pager.store.repaint()
-}
-function pageNewer(e) {
-    var pager
-    if (!current || (pager = current.pager).state & PagerState.MASK_RPC_DISABLE) return
-    
-    e.preventDefault()
-    pager.store.requestNewer()
-}
-function pageOlder(e) {
-    var pager
-    if (!current || (pager = current.pager).state & PagerState.MASK_RPC_DISABLE || !pager.index_hidden) return
-    
-    e.preventDefault()
-    pager.store.requestOlder()
-}
-function pageReload(e) {
-    var pager
-    if (!current || current.$flags & 8 || (pager = current.pager).state & PagerState.MASK_RPC_DISABLE || 
-        !pager.index_hidden) return
-    
-    e.preventDefault()
-    pager.store.reload()
-}
-function pagePrevOrLoad(pager, e) {
-    if (pager.page) {
-        // goto previous
-        e.preventDefault()
-        let page = --pager.page
-        if (current.$flags & 16) {
-            pageAndSelectIdx(page, pager.index_selected, pager.array, pager.store, false)
-        } else {
-            pager.store.repaint()
-        }
-        return
-    }
-    // page unshift
-    if ((current.$flags & 1) || (pager.state & PagerState.MASK_RPC_DISABLE)) return
-    
-    if (pager.state & PagerState.DESC) {
-        e.preventDefault()
-        pager.store.requestNewer()
-    } else if (pager.index_hidden) {
-        // only allow load older if store is not empty
-        e.preventDefault()
-        pager.store.requestOlder()
-    }
-}
-function pageNextOrLoad(pager: Pager, e) {
-    let store = pager['store'] as PojoStore<any>,
-        page = pager.page
-    if (page < pager.page_count) {
-        // goto next
-        e.preventDefault()
-        page = ++pager.page
-        if (0 === (current.$flags & 16)) {
-            store.repaint()
-            return
-        }
-
-        pageAndSelectIdx(page, resolveNextPageIndex(page, pager.index_selected, pager), 
-            pager.array, store, false)
-        return
-    }
-
-    let state = pager.state
-    // page push
-    if ((current.$flags & 1) || (state & PagerState.MASK_RPC_DISABLE) || !pager.index_hidden) return
-    
-    e.preventDefault()
-
-    if (state & PagerState.DESC)
-        store.requestOlder()
-    else
-        store.requestNewer()
-}
-function moveLeft(e) {
-    if (!current) return
-    
-    var pager = current.pager
-    if (!current.col_size) {
-        pagePrevOrLoad(pager, e)
-    } else if (pager.index_hidden) {
-        tableLeft(pager, current.col_size, current.table_flags, pager.index_selected, e,
-                !!(current.$flags & screen.flags))
-    }
-}
-function moveRight(e) {
-    if (!current) return
-    
-    var pager = current.pager
-    if (!current.col_size) {
-        pageNextOrLoad(pager, e)
-    } else if (pager.index_hidden) {
-        tableRight(pager, current.col_size, current.table_flags, pager.index_selected, e,
-                !!(current.$flags & screen.flags))
-    }
-}
-
-/*var moveTop = function(e) {
-        var pager
-        if (!current || !(pager = current.pager).index_hidden || !pager.index_selected) return
-        
-        var toAdd = current.$flags & screen.flags ? 10 : 0
-        pager.$handle(8 + toAdd, 0)
-    },
-    moveBottom = function(e) {
-        var pager
-        if (!current || !(pager = current.pager).index_hidden || pager.index_selected === pager.index_hidden - 1) return
-        
-        var toAdd = current.$flags & screen.flags ? 10 : 0
-        pager.$handle(8 + toAdd, pager.index_hidden - 1)
-    },*/
-    /*pagePrev = function(e) {
-        var pager
-        if (!current || !(pager = current.pager).page) return
-        
-        e.preventDefault()
-        pager.page--
-        //pager.$handle(9, 0)
-        if (current.$flags & 16) {
-            pager.$handle(9, pager.index_selected)
-        } else {
-            pager.$handle(1)
-        }
-    },
-    pageNext = function(e) {
-        var pager
-        if (!current || (pager = current.pager).page === pager.page_count) return
-        
-        e.preventDefault()
-        pager.page++
-        //pager.$handle(9, 0)
-        if (current.$flags & 16) {
-            pager.$handle(9, util.resolveNextPageIndex(pager, pager.index_selected))
-        } else {
-            pager.$handle(1)
-        }
-    },*/
-    /*pageUnshift = function(e) {
-        var pager
-        if (!current || (pager = current.pager).state & c.MASK_RPC_DISABLE) return
-        
-        if (pager.state & c.STATE_DESC) {
-            e.preventDefault()
-            pager.$handle(2)
-        } else if (pager.index_hidden) {
-            // only allow load older if store is not empty
-            e.preventDefault()
-            pager.$handle(3)
-        }
-        
-        //e.preventDefault()
-        //pager.$handle(pager.state & c.STATE_DESC ? 2 : 3)
-    },
-    pagePush = function(e) {
-        var pager
-        if (!current || (pager = current.pager).state & c.MASK_RPC_DISABLE || !pager.index_hidden) return
-        
-        e.preventDefault()
-        pager.$handle(pager.state & c.STATE_DESC ? 3 : 2)
-    },*/
-    /*,
-    actions = {
-        '@': function(el) {
-            util.fireEvent(el, 'click')
-        },
-        '!': util.toggleActive
-    },
-    actionNew = function(e) {
-        var am // action mapping
-        if (!current || !(am = current.am) || !am.n) return
-        
-        actions[am.n.fn_key](document.getElementById(am.n.id))
-    }*/
 
 keymage.$('list', 'up', moveUp)
 keymage.$('list', 'down', moveDown)
-keymage.$('list', 'defmod-up', moveTopOrUp)
-keymage.$('list', 'defmod-down', moveBottomOrDown)
-//keymage.$('list', 'left', pagePrev)
-//keymage.$('list', 'right', pageNext)
-keymage.$('list', ['left', 'shift-up'], moveLeft)
-keymage.$('list', ['right', 'shift-down'], moveRight)
-keymage.$('list', ['defmod-left', 'defmod-shift-up'], pageFirst)
-keymage.$('list', ['defmod-right', 'defmod-shift-down'], pageLast)
-keymage.$('list', 'shift-space', pageSort)
-//keymage.$('list', '[', pageNewer)
-//keymage.$('list', ']', pageOlder)
-keymage.$('list', 'defmod-space', pageReload)
-//keymage.$('list', 'defmod-shift-down', pageUnshift)
-//keymage.$('list', 'defmod-shift-up', pagePush)
+keymage.$('list', 'defmod-up', (e) => { if (current) moveTopOrUp(e, current.pager, current) })
+keymage.$('list', 'defmod-down', (e) => { if (current) moveBottomOrDown(e, current.pager, current) })
+keymage.$('list', ['left', 'shift-up'], (e) => { if (current) moveLeft(e, current.pager, current) })
+keymage.$('list', ['right', 'shift-down'], (e) => { if (current) moveRight(e, current.pager, current) })
+keymage.$('list', ['defmod-left', 'defmod-shift-up'], (e) => { if (current) pageFirst(e, current.pager, current) })
+keymage.$('list', ['defmod-right', 'defmod-shift-down'], (e) => { if (current) pageLast(e, current.pager, current) })
+keymage.$('list', 'shift-space', (e) => { if (current) pageSort(e, current.pager, current) })
+keymage.$('list', 'defmod-space', (e) => { if (current) pageReload(e, current.pager, current) })
 
-// extra bindings for actions configured via directive args
-//keymage.$('list', 'alt-shift-n', actionNew)
 
 /*module.exports = {
-    $flags: 0,
+    flags: 0,
     col_size: 0,
     table_flags: 0,
     pager: null,
@@ -362,8 +90,8 @@ export function bind() {
     el.list_ctrl = self
     
     if (el.id) {
-        el.addEventListener('page-left', function(e) { current = self; pagePrevOrLoad(self.pager, e); })
-        el.addEventListener('page-right', function(e) { current = self; pageNextOrLoad(self.pager, e); })
+        el.addEventListener('page-left', function(e) { current = self; pagePrevOrLoad(e, self.pager, self); })
+        el.addEventListener('page-right', function(e) { current = self; pageNextOrLoad(e, self.pager, self); })
     }
     // TODO proper focus support
     this._focus = function(e) {
@@ -391,10 +119,10 @@ export function bind() {
         
         switch(e.direction) {
             case 2: // right-to-left
-                pageNextOrLoad(self.pager, e)
+                pageNextOrLoad(e, self.pager, current)
                 break
             case 4: // left-to-right
-                pagePrevOrLoad(self.pager, e)
+                pagePrevOrLoad(e, self.pager, current)
                 break;
         }
     }
@@ -429,14 +157,14 @@ export function bind() {
         if (isInput(e.target)) return
         keymage.setScope('list')
         
-        self._dtap(e, false, self.$flags & screen.flags)
+        self._dtap(e, false, self.flags & screen.flags)
     }
     this._tap = function(e) {
         current = self
         if (isInput(e.target)) return
         keymage.setScope('list')
         
-        if (self.$flags & screen.flags) {
+        if (self.flags & screen.flags) {
             self._dtap(e, false, true)
             return
         }
@@ -447,7 +175,7 @@ export function bind() {
         //if (vm.$parent.$data.pager !== self.pager && (!(vm=vm.$parent).$parent || vm.$parent.$data.pager !== self.pager)) return
         
         var pojo = vm[self.loop_var]
-        if (pojo) self.pager.store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
+        if (pojo) self.pager.store.select(pojo, SelectionFlags.CLICKED, vm.$index)
     }
     this._doubletap = function(e) {
         // TODO remove hack
@@ -465,7 +193,7 @@ export function bind() {
         // tap already handles this, which gets called before this function
         // keymage.setScope('list')
         
-        self._dtap(e, true, self.$flags & screen.flags)
+        self._dtap(e, true, self.flags & screen.flags)
     }
     hammer.on('swipe', this._swipe)
     hammer.on('press', this._press)
@@ -482,7 +210,7 @@ export function bind() {
         i = 0
     
     this.loop_var = split_args[i++]
-    self.$flags = parseInt(split_args[i++], 10)
+    self.flags = parseInt(split_args[i++], 10)
     
     if (i === len) return
     self.table_flags = parseInt(split_args[i++], 10)
