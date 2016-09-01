@@ -230,7 +230,7 @@ export function moveTopOrUp(e, pager: Pager, opts: Opts) {
 }
 
 export function moveBottomOrDown(e, pager: Pager, opts: Opts) {
-    if (pager.index_hidden) return
+    if (!pager.index_hidden) return
     
     if (opts.col_size) {
         tableJumpDown(pager, opts.col_size, opts.table_flags, pager.index_selected, e,
