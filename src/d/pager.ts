@@ -1,12 +1,17 @@
 declare function require(path: string): any;
 
 import {
-    screen, isInput, resolveElement, resolveNextPageIdx, vfragLookup, fireEvent, table_compact_columns, 
-    selectIdx, pageAndSelectIdx, 
-    tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight
+    screen, isInput, resolveElement, fireEvent, table_compact_columns, 
 } from '../util'
 
-import { Pager, PagerState, PojoStore, PojoState, SelectionFlags, SelectionType } from 'vueds/lib/store/'
+import {
+    selectIdx, pageAndSelectIdx, 
+    tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight
+} from '../pager_util'
+
+import { vfragLookup } from '../vm_util'
+
+import { Pager, PagerState, PojoStore, PojoState, SelectionFlags, SelectionType, resolveNextPageIndex } from 'vueds/lib/store/'
 
 import * as keymage from '../keymage'
 
@@ -231,31 +236,32 @@ function pagePrevOrLoad(pager, e) {
     }
 }
 function pageNextOrLoad(pager: Pager, e) {
-    let store = pager['store'] as PojoStore<any>
-    if (pager.page < pager.page_count) {
+    let store = pager['store'] as PojoStore<any>,
+        page = pager.page
+    if (page < pager.page_count) {
         // goto next
         e.preventDefault()
-        let page = ++pager.page
+        page = ++pager.page
         if (0 === (current.$flags & 16)) {
             store.repaint()
             return
         }
 
-        let array = pager.array
-        pageAndSelectIdx(page, resolveNextPageIdx(page, pager.index_selected, array, pager), 
-            array, store, false)
+        pageAndSelectIdx(page, resolveNextPageIndex(page, pager.index_selected, pager), 
+            pager.array, store, false)
         return
     }
+
+    let state = pager.state
     // page push
-    if ((current.$flags & 1) || (pager.state & PagerState.MASK_RPC_DISABLE) || !pager.index_hidden) return
+    if ((current.$flags & 1) || (state & PagerState.MASK_RPC_DISABLE) || !pager.index_hidden) return
     
     e.preventDefault()
-
-    if (pager.state & PagerState.DESC) {
+    
+    if (state & PagerState.DESC)
         store.requestOlder()
-    } else {
+    else
         store.requestNewer()
-    }
 }
 function moveLeft(e) {
     if (!current) return
