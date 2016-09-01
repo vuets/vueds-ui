@@ -143,13 +143,13 @@ export function bind() {
         if (flagsIntersect) {
             if (!(pojo.vstate & PojoState.UPDATE)) {
                 pojo.vstate |= PojoState.UPDATE
-                self.pager.store.select(pojo, SelectionFlags.CLICKED_UPDATE, pojo.$index)
+                self.pager.store.select(pojo, SelectionFlags.CLICKED_UPDATE, vm.$index)
             }
         } else if (dbltap && trigger) {
-            self.pager.store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
+            self.pager.store.select(pojo, SelectionFlags.CLICKED, vm.$index)
         } else {
             pojo.vstate ^= PojoState.UPDATE
-            self.pager.store.select(pojo, SelectionFlags.CLICKED_UPDATE, pojo.$index)
+            self.pager.store.select(pojo, SelectionFlags.CLICKED_UPDATE, vm.$index)
         }
     }
     this._press = function(e, dbltap) {
