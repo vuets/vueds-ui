@@ -1,4 +1,4 @@
-import { addClass, removeClass, resolveElement } from '../util'
+import { addClass, removeClass, resolveElement } from '../dom_util'
 
 export function bind() {
     if (!this.arg)

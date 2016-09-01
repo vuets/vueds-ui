@@ -1,4 +1,15 @@
 
+import { getFirstChildElement } from './dom_util'
+
+export function getFirstVm(el): any {
+    var vm = el.__vue__
+    if(!vm) {
+        el = getFirstChildElement(el)
+        vm = el ? el.__vue__ : null
+    }
+    return vm
+}
+
 export function getValue(obj, key: string): any {
     /* jshint eqeqeq: false */
     if (key.indexOf('.') < 0) {

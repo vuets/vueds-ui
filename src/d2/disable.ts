@@ -1,5 +1,5 @@
 import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
-import { addClass, removeClass } from '../util'
+import { addClass, removeClass } from '../dom_util'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     /*let value = dir.value,

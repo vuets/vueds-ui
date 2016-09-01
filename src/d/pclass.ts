@@ -1,4 +1,4 @@
-import { addClass, removeClass } from '../util'
+import { addClass, removeClass } from '../dom_util'
 
 export function bind() {
     this.prefix = this.arg || ''

@@ -1,8 +1,10 @@
 declare function require(path: string): any;
 
 import {
-    screen, isInput, resolveElement, fireEvent, table_compact_columns, 
+    screen, table_compact_columns, 
 } from '../util'
+
+import { isInput, resolveElement, fireEvent } from '../dom_util'
 
 import {
     selectIdx, pageAndSelectIdx, 
@@ -257,7 +259,7 @@ function pageNextOrLoad(pager: Pager, e) {
     if ((current.$flags & 1) || (state & PagerState.MASK_RPC_DISABLE) || !pager.index_hidden) return
     
     e.preventDefault()
-    
+
     if (state & PagerState.DESC)
         store.requestOlder()
     else
