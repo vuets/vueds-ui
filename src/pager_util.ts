@@ -23,6 +23,52 @@ export function pageAndSelectIdx(page: number, idx: number, array: any[], store:
         page)
 }
 
+// =====================================
+// list
+
+export function listUp(pager: Pager, index_selected: number, e: Event, clickUpdate: boolean) {
+    e.preventDefault()
+
+    let array = pager.array
+    
+    var index_hidden: number, pojo
+    if (index_selected === -1) {
+        index_hidden = pager.index_hidden
+        // select the visible item at the bottom (last)
+        if (index_hidden) selectIdx(index_hidden - 1, array, pager['store'], clickUpdate)
+    } else if (!pager.page) {
+        if (index_selected) selectIdx(index_selected - 1, array, pager['store'], clickUpdate)
+    } else if (index_selected) {
+        selectIdx(index_selected - 1, array, pager['store'], clickUpdate)
+    } else {
+        // move to previous page and select the last element
+        pageAndSelectIdx(--pager.page, array.length - 1, array, pager['store'], clickUpdate)
+    }
+    
+    // TODO focus item when not visible on view
+    //current.vm.$.repeat[index_selected].$el.focus()
+}
+
+export function listDown(pager: Pager, index_selected: number, e: Event, clickUpdate: boolean) {
+    e.preventDefault()
+
+    let array = pager.array
+
+    if (pager.page < pager.page_count) {
+        if (index_selected === (array.length - 1)) {
+            // move to next page and select the first element
+            pageAndSelectIdx(++pager.page, 0, array, pager['store'], clickUpdate)
+        } else {
+            selectIdx(index_selected + 1, array, pager['store'], clickUpdate)
+        }
+    } else if (pager.index_hidden - 1 > index_selected) {
+        selectIdx(index_selected + 1, array, pager['store'], clickUpdate)
+    }
+}
+
+// =====================================
+// table-like
+
 export function tableUp(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean) {
     e.preventDefault()
     

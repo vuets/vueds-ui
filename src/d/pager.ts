@@ -8,57 +8,20 @@ import { isInput, resolveElement, fireEvent } from '../dom_util'
 
 import {
     selectIdx, pageAndSelectIdx, 
+    listUp, listDown, 
     tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight
 } from '../pager_util'
 
 import { vfragLookup } from '../vm_util'
 
-import { Pager, PagerState, PojoStore, PojoState, SelectionFlags, SelectionType, resolveNextPageIndex } from 'vueds/lib/store/'
+import {
+    Pager, PagerState, PojoStore, PojoState, SelectionFlags, SelectionType, resolveNextPageIndex 
+} from 'vueds/lib/store/'
 
 import * as keymage from '../keymage'
 
 var Hammer = require('hammerjs'),
     current
-
-function _moveUp(pager: Pager, index_selected: number, e: Event, clickUpdate: boolean) {
-    e.preventDefault()
-
-    let array = pager.array
-    
-    var index_hidden: number, pojo
-    if (index_selected === -1) {
-        index_hidden = pager.index_hidden
-        // select the visible item at the bottom (last)
-        if (index_hidden) selectIdx(index_hidden - 1, array, pager['store'], clickUpdate)
-    } else if (!pager.page) {
-        if (index_selected) selectIdx(index_selected - 1, array, pager['store'], clickUpdate)
-    } else if (index_selected) {
-        selectIdx(index_selected - 1, array, pager['store'], clickUpdate)
-    } else {
-        // move to previous page and select the last element
-        pageAndSelectIdx(--pager.page, array.length - 1, array, pager['store'], clickUpdate)
-    }
-    
-    // TODO focus item when not visible on view
-    //current.vm.$.repeat[index_selected].$el.focus()
-}
-
-function _moveDown(pager: Pager, index_selected: number, e: Event, clickUpdate: boolean) {
-    e.preventDefault()
-
-    let array = pager.array
-
-    if (pager.page < pager.page_count) {
-        if (index_selected === (array.length - 1)) {
-            // move to next page and select the first element
-            pageAndSelectIdx(++pager.page, 0, array, pager['store'], clickUpdate)
-        } else {
-            selectIdx(index_selected + 1, array, pager['store'], clickUpdate)
-        }
-    } else if (pager.index_hidden - 1 > index_selected) {
-        selectIdx(index_selected + 1, array, pager['store'], clickUpdate)
-    }
-}
 
 function moveUp(e) {
     var target = e.target,
@@ -74,7 +37,7 @@ function moveUp(e) {
     
     clickUpdate = !!(current.$flags & screen.flags)
     if (current.col_size) tableUp(pager, current.col_size, current.table_flags, pager.index_selected, e, clickUpdate)
-    else _moveUp(pager, pager.index_selected, e, clickUpdate)
+    else listUp(pager, pager.index_selected, e, clickUpdate)
 }
 
 function moveDown(e) {
@@ -91,7 +54,7 @@ function moveDown(e) {
     
     toAdd = current.$flags & screen.flags ? 10 : 0
     if (current.col_size) tableDown(pager, current.col_size, current.table_flags, pager.index_selected, e, toAdd)
-    else _moveDown(pager, pager.index_selected, e, toAdd)
+    else listDown(pager, pager.index_selected, e, toAdd)
 }
 
 function moveTopOrUp(e) {
@@ -108,7 +71,7 @@ function moveTopOrUp(e) {
         clickUpdate = !!(current.$flags & screen.flags)
     
     if (!index_selected)
-        _moveUp(pager, index_selected, e, clickUpdate)
+        listUp(pager, index_selected, e, clickUpdate)
     else
         selectIdx(0, pager.array, pager.store, clickUpdate)
 }
@@ -127,7 +90,7 @@ function moveBottomOrDown(e) {
         index_hidden = pager.index_hidden,
         clickUpdate = !!(current.$flags & screen.flags)
     if (index_selected === index_hidden - 1)
-        _moveDown(pager, index_selected, e, clickUpdate)
+        listDown(pager, index_selected, e, clickUpdate)
     else
         selectIdx(index_hidden - 1, pager.array, pager.store, clickUpdate)
 }

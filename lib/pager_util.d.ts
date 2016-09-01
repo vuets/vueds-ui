@@ -1,6 +1,8 @@
 import { PojoStore, Pager } from 'vueds/lib/store/';
 export declare function selectIdx(idx: number, array: any[], store: PojoStore<any>, clickUpdate: boolean): void;
 export declare function pageAndSelectIdx(page: number, idx: number, array: any[], store: PojoStore<any>, clickUpdate: boolean): void;
+export declare function listUp(pager: Pager, index_selected: number, e: Event, clickUpdate: boolean): void;
+export declare function listDown(pager: Pager, index_selected: number, e: Event, clickUpdate: boolean): void;
 export declare function tableUp(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean): void;
 export declare function tableJumpUp(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean): void;
 export declare function tableDown(pager: Pager, col_size: number, flags: number, idx: number, e: Event, clickUpdate: boolean): void;
