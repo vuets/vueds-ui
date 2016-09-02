@@ -17,8 +17,6 @@ import {
     pageNextOrLoad, pagePrevOrLoad
 } from './pager_util'
 
-import { vfragLookup } from './vm_util'
-
 import {
     Pager, PagerState, PojoStore, PojoState, SelectionFlags, SelectionType, resolveNextPageIndex 
 } from 'vueds/lib/store/'
@@ -28,10 +26,18 @@ export interface Opts {
     col_size: number
     table_flags: number
 
-    loop_var: string
     hammer: any,
     pager: Pager
     vm: any
+}
+
+export function itemLookup(target, p?): any {
+    var parent = p || target.parentElement,
+        gparent = parent.parentElement,
+        ggparent = gparent.parentElement,
+        gggparent = ggparent.parentElement
+    
+    return target.pager_item || parent.pager_item || gparent.pager_item || ggparent.pager_item || gggparent.pager_item
 }
 
 var current: Opts
@@ -81,15 +87,12 @@ export function focus(e, opts: Opts) {
 
 export function swipe(e, opts: Opts) {
     var target = e.target,
-        vfrag,
-        vm
+        pojo
     if (isInput(target)) return
     current = opts
     keymage.setScope('pager')
     
-    vfrag = vfragLookup(target)
-    if (!vfrag || !(vm = vfrag.scope) || !vm.hasOwnProperty('$index') || 
-        (vm !== opts.vm && vm.$parent !== opts.vm)) return
+    if (!(pojo = itemLookup(target)) || pojo.$pager !== opts.pager) return
     
     switch(e.direction) {
         case 2: // right-to-left
@@ -104,29 +107,26 @@ export function swipe(e, opts: Opts) {
 export function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
     var target = e.target, 
         parent = target.parentElement, 
-        vfrag = vfragLookup(target, parent),
         pojo,
         store: PojoStore<any>,
-        vm,
         trigger = target.getAttribute('dtap') || (target=parent).getAttribute('dtap')
     
     if (trigger) fireEvent(target, 'dtap')
     
-    if (!vfrag || !(vm = vfrag.scope) || !vm.hasOwnProperty('$index') || 
-        (vm !== opts.vm && vm.$parent !== opts.vm) || !(pojo = vm[opts.loop_var])) return
+    if (!(pojo = itemLookup(target)) || pojo.$pager !== opts.pager) return
     
     store = opts.pager['store']
 
     if (flagsIntersect) {
         if (!(pojo.vstate & PojoState.UPDATE)) {
             pojo.vstate |= PojoState.UPDATE
-            store.select(pojo, SelectionFlags.CLICKED_UPDATE, vm.$index)
+            store.select(pojo, SelectionFlags.CLICKED_UPDATE, pojo.$index)
         }
     } else if (dbltap && trigger) {
-        store.select(pojo, SelectionFlags.CLICKED, vm.$index)
+        store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
     } else {
         pojo.vstate ^= PojoState.UPDATE
-        store.select(pojo, SelectionFlags.CLICKED_UPDATE, vm.$index)
+        store.select(pojo, SelectionFlags.CLICKED_UPDATE, pojo.$index)
     }
 }
 
@@ -148,15 +148,13 @@ export function tap(e, opts: Opts) {
         return
     }
 
-    var vfrag = vfragLookup(e.target),
-        pojo,
-        store: PojoStore<any>,
-        vm
-    if (!vfrag || !(vm = vfrag.scope) || !vm.hasOwnProperty('$index') || 
-        (vm !== opts.vm && vm.$parent !== opts.vm) || !(pojo = vm[opts.loop_var])) return
+    var pojo,
+        store: PojoStore<any>
+    
+    if (!(pojo = itemLookup(e.target)) || pojo.$pager !== opts.pager) return
     
     store = opts.pager['store']
-    store.select(pojo, SelectionFlags.CLICKED, vm.$index)
+    store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
 }
 
 export function doubletap(e, opts: Opts) {
@@ -179,12 +177,11 @@ export function doubletap(e, opts: Opts) {
 }
 
 /**
- * ```{loop_var}__{flags}__{table_flags?}```
+ * ```{flags}__{table_flags?}```
  */
 export function putArgsTo(opts: Opts, split_args: string[]) {
     let i = 0, len = split_args.length
     
-    opts.loop_var = split_args[i++]
     opts.flags = parseInt(split_args[i++], 10)
     
     if (i === len) return

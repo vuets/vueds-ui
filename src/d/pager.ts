@@ -14,8 +14,7 @@ export function bind() {
         flags: 0,
         col_size: 0,
         table_flags: 0,
-
-        loop_var: 'pojo',
+        
         hammer: hammer,
         pager: null,
         vm: this.vm,

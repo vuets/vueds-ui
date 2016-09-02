@@ -35,7 +35,7 @@ export function main(it: Opts, content: string): string {
     
     return `
 <ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
-  <li v-for="${pojo} in ${pager}.array" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
+  <li v-for="${pojo} in ${pager}.array" v-pager-item="${it.pojo}" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
       ${include_if(it.click_to_select, click_to_select, it)}
       v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
       :class="{ active: (${pojo}._.lstate & ${PojoListState.SELECTED})${exprs(it.item_class_exprs)} }">
