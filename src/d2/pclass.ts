@@ -16,4 +16,4 @@ export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     }
 }
 
-export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}
+//export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}

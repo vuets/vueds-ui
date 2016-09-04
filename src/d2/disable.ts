@@ -28,4 +28,4 @@ export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     else removeClass(el, 'disabled')
 }
 
-export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) { }
+//export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) { }

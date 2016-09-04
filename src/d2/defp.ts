@@ -4,12 +4,12 @@ import { defp } from 'vueds'
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     if (!dir.arg) {
         console.warn('arg is required for v-defp.')
+        return
     }
+
+    defp(el, dir.arg, dir.value)
 }
 
-export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    if (dir.arg && !dir.oldValue && dir.value)
-        defp(el, dir.arg, dir.value)
-}
+//export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}
 
-export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}
+//export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}
