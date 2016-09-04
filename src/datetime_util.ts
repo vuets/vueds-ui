@@ -1,62 +1,12 @@
 declare function require(path: string) : any;
 
-import { regexDate } from './util'
+import { regexDate, utcToLocal } from 'vueds/lib/util'
 
 const numeral = require('numeral'),
     MILLIS_PER_DAY = 1000 * 60 * 60 * 24,
     monthRegularArray = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ],
     monthLeapArray = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ],
     daysArray = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
-
-function getDateUTCOffset(date: Date): string {
-    var n = date.getTimezoneOffset() * -10 / 6,
-        r
-    if (n < 0) { 
-        r = (n - 10000).toString()
-        return r.charAt(0) + r.substr(2)
-    } else { 
-        r = (n + 10000).toString()
-        return '+' + r.substr(1)
-    }
-}
-
-export function getUTCOffset(): number {
-    var date = new Date()
-    date.setHours(0)
-    date.setMinutes(0)
-    date.setSeconds(0)
-    date.setMilliseconds(0)
-    
-    var offset = getDateUTCOffset(date)
-    if (offset.indexOf('+') === 0) {
-        return parseInt(offset.substring(1, offset.length - 2), 10)
-    } else if (offset.indexOf('-') === 0) {
-        return -parseInt(offset.substring(1, offset.length - 2), 10)
-    } else {
-        /*
-            * IE in some cases will return this value starting with undefined.  That means
-            * negative.
-            */
-        return -parseInt(offset.substring(10, offset.length - 2), 10)
-    }
-}
-
-export const UTC_OFFSET = getUTCOffset(),
-    HOST_RAW_OFFSET = UTC_OFFSET * 60 * 60 * 1000,
-    HOST_RAW_OFFSET_SECONDS = UTC_OFFSET * 60 * 60
-
-export function localToUtc(ts: number): number {
-    return ts + HOST_RAW_OFFSET
-}
-export function localToUtcSeconds(s: number): number {
-    return s + HOST_RAW_OFFSET_SECONDS
-}
-export function utcToLocal(ts: number): number {
-    return ts - HOST_RAW_OFFSET
-}
-export function utcToLocalSeconds(s: number): number {
-    return s - HOST_RAW_OFFSET_SECONDS
-}
 
 export function newTimeFormatArray(
         one, 

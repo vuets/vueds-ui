@@ -4,12 +4,7 @@ import * as Vue from 'vue'
 import { Trie } from './trie'
 
 export const vueVersion = Vue['default']['version'],
-    vue2 = vueVersion.charAt(0) === '2',
-    regexInt = /^-?[0-9]+$/,
-    regexDouble = /^-?[0-9]+(\.[0-9]+)?$/,
-    regexTime = /^[0-2]?[0-9]\:[0-5][0-9](\:[0-5][0-9])?$/,
-    regexDate = /^[1-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/,
-    regexDateTime = /^[1-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9] [0-2]?[0-9]\:[0-5][0-9]\:[0-5][0-9]$/
+    vue2 = vueVersion.charAt(0) === '2'
 
 export function extractFlagsLen(str: string): number {
     var len = 0,

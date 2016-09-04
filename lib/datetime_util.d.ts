@@ -1,9 +1,3 @@
-export declare function getUTCOffset(): number;
-export declare const UTC_OFFSET: number, HOST_RAW_OFFSET: number, HOST_RAW_OFFSET_SECONDS: number;
-export declare function localToUtc(ts: number): number;
-export declare function localToUtcSeconds(s: number): number;
-export declare function utcToLocal(ts: number): number;
-export declare function utcToLocalSeconds(s: number): number;
 export declare function newTimeFormatArray(one: any, ago: any, fromNow: any, aSecondAgo: any, justNow: any, seconds: any, minute: any, minutes: any, hour: any, hours: any, yesterday: any, tomorrow: any, days: any, lastWeek: any, nextWeek: any, weeks: any, lastMonth: any, nextMonth: any, months: any, lastYear: any, nextYear: any, years: any, lastCentury: any, nextCentury: any, centuries: any): any[];
 export declare const defaultTimeFormatArray: any[];
 export declare function prettyDate(ts: number, targetTimeFormatArray: string[], ago?: string, fromNow?: string): string;
