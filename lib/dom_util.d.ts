@@ -1,3 +1,4 @@
+import { FieldType } from 'vueds';
 export declare function setClass(el: any, cls: string): void;
 export declare function addClass(el: any, cls: any): void;
 export declare function isInput(el: Element): boolean;
@@ -17,3 +18,12 @@ export declare function getAbsoluteTop(el: any): number;
 export declare function positionTo(relativeTarget: any, popup: any): void;
 export declare function popTo(relativeTarget: any, popup: any): void;
 export declare function debounce(func: any, wait: any, immediate: any): () => any;
+export declare function updateSelect(el: any, value: any): void;
+export declare type FnUpdate = (el, value) => any;
+export declare function updateBoolCheckbox(el: any, value: any): void;
+export declare function updateBoolSelect(el: any, value: any): void;
+export declare function updateTime(el: any, value: any): void;
+export declare function updateDate(el: any, value: any): void;
+export declare function updateDateTime(el: any, value: any): void;
+export declare function updateValue(el: any, value: any): void;
+export declare function getFnUpdate(el: any, type: FieldType, flags: number): FnUpdate;
