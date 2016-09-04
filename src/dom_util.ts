@@ -1,3 +1,6 @@
+import { FieldType } from 'vueds'
+import { formatDate, formatTime, formatDateTime } from './datetime_util'
+
 const UA = window.navigator.userAgent.toLowerCase(), // browser sniffing from vuejs
     isIE = UA && UA.indexOf('trident') > 0,
     isIE9 = UA && UA.indexOf('msie 9.0') > 0,
@@ -448,3 +451,69 @@ document.addEventListener('click', function(e) {
         util.deactivate()
     }
 })*/
+
+export function updateSelect(el, value) {
+    if (!isIE9) {
+        el.value = value.toString()
+        return
+    }
+    
+    var options = el.options,
+        i = options.length,
+        v = value.toString()
+    
+    el.selectedIndex = -1
+    
+    while (i--) {
+        if (options[i].value === v) {
+            options[i].selected = true
+            break
+        }
+    }
+}
+
+export type FnUpdate = (el, value) => any
+
+export function updateBoolCheckbox(el, value) {
+    el.checked = !!value
+}
+
+export function updateBoolSelect(el, value) {
+    if (value === null)
+        el.selectedIndex = 0
+    else
+        updateSelect(el, value ? '1' : '0')
+}
+
+export function updateTime(el, value) {
+    el.value = !value ? '' : formatTime(value)
+}
+
+export function updateDate(el, value) {
+    el.value = !value ? '' : formatDate(value)
+}
+
+export function updateDateTime(el, value) {
+    el.value = !value ? '' : formatDateTime(value)
+}
+
+export function updateValue(el, value) {
+    //el.value = Vue.util._toString(value)
+    // TODO escape value
+    el.value = value
+}
+
+export function getFnUpdate(el, type: FieldType, flags: number): FnUpdate {
+    if (type === FieldType.BOOL)
+        return el.tagName === 'select' ? updateBoolSelect : updateBoolCheckbox
+    
+    if (type === FieldType.ENUM)
+        return updateSelect
+
+    switch (flags) {
+        case 1: return updateTime
+        case 2: return updateDate
+        case 4: return updateDateTime
+        default: return updateValue
+    }
+}
