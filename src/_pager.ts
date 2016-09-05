@@ -17,8 +17,10 @@ import {
     pageNextOrLoad, pagePrevOrLoad
 } from './pager_util'
 
+import { PojoState } from 'vueds'
+
 import {
-    Pager, PagerState, PojoStore, PojoState, SelectionFlags, SelectionType, resolveNextPageIndex 
+    Pager, PagerState, PojoStore, SelectionFlags, SelectionType, resolveNextPageIndex 
 } from 'vueds/lib/store/'
 
 export interface Opts {

@@ -1,4 +1,5 @@
-import { PojoState, PojoListState, SelectionFlags } from 'vueds/lib/store/'
+import { PojoState } from 'vueds'
+import { PojoListState, SelectionFlags } from 'vueds/lib/store/'
 import { when, attrs, exprs, or, append, include_if } from '../common'
 
 export interface Opts {

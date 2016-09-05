@@ -1,5 +1,6 @@
+import { PojoState } from 'vueds'
 import {
-    PojoStore, PojoState, Pager, PagerState, SelectionFlags, SelectionType, resolveNextPageIndex
+    PojoStore, Pager, PagerState, SelectionFlags, SelectionType, resolveNextPageIndex
 } from 'vueds/lib/store/'
 
 import { screen } from './screen_util'
