@@ -11,7 +11,7 @@ export declare function getFirstChildElement(el: any): any;
 export declare function resolveRelativeElement(el: any, str: string): any;
 export declare function chainResolveRelativeElement(el: Element, array: string[], i: number): any;
 export declare function resolveElement(el: Element, value: any, vm?: any): any;
-export declare function resolveElementArray(el: Element, value: any, selectFromParent: boolean, vm: any): any;
+export declare function resolveElementArray(el: Element, value: any, selectFromParent: boolean, vm?: any): any;
 export declare function fireEvent(el: any, type: string): void;
 export declare function getAbsoluteLeft(el: any): number;
 export declare function getAbsoluteTop(el: any): number;

@@ -8,3 +8,7 @@ export declare function attrs(obj: any): string;
 export declare function append(val: any, prefix?: string): string;
 export declare function prepend(val: any, suffix?: string): string;
 export declare function exprs(obj: any): string;
+/**
+ * Quotes the string arg unless it is an object/array literal
+ */
+export declare function quote(target: string | null | undefined): string;
