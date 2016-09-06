@@ -188,7 +188,7 @@ export function resolveElement(el: Element, value: any, vm?: any): any {
     else
         return document.getElementById(value)
 }
-export function resolveElementArray(el: Element, value, selectFromParent: boolean, vm): any {
+export function resolveElementArray(el: Element, value, selectFromParent: boolean, vm?: any): any {
     if (Array.isArray(value)) {
         return !value[0] ?
                 [chainResolveRelativeElement(el, value, 1)] :
