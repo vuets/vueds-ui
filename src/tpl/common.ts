@@ -50,3 +50,16 @@ export function exprs(obj: any): string {
     }
     return buf
 }
+
+/**
+ * Quotes the string arg unless it is an object/array literal
+ */
+export function quote(target: string | null | undefined): string {
+    if (!target) return ''
+
+    switch (target.charAt(0)) {
+        case '{': return target
+        case '[': return target
+        default: return "'" + target + "'"
+    }
+}
