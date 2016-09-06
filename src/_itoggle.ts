@@ -24,7 +24,7 @@ export function parseOpts(args: string[], array: any[], vm, el): Opts {
         class_def = args[i++],
         class_alt = i !== len ? args[i++] : ''
     
-    let opts = {
+    let opts: Opts = {
         type,
         class_def,
         class_alt,
