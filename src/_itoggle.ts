@@ -9,8 +9,8 @@ export interface Opts {
     array: any[]
     vm: any
     el: any
-    handler: any
 
+    handler: any
     index: number
     prevIndex: number|null
     el_icon: any
@@ -29,9 +29,11 @@ export function parseOpts(args: string[], array: any[], vm, el): Opts {
         class_def,
         class_alt,
         check_initial,
+
         array,
         vm,
         el,
+
         handler: null,
         index: 0,
         prevIndex: null,

@@ -175,16 +175,18 @@ export function resolveRelativeElement(el, str: string): any {
 
 // TODO optimize: parseInt is not necessary if the length is 1 (simply deduct 48)
 export function chainResolveRelativeElement(el: Element, array: string[], i: number): any {
-    for (var l = array.length; i < l; i++) el = resolveRelativeElement(el, array[i])
+    for (var l = array.length; i < l; i++)
+        el = resolveRelativeElement(el, array[i])
     
     return el
 }
 export function resolveElement(el: Element, value: any, vm?: any): any {
-    if (!isNaN(value) || (vm && value.charAt(0) === '$' && !isNaN(value = vm.$get(value)))) {
+    if (!isNaN(value) || (vm && value.charAt(0) === '$' && !isNaN(value = vm.$get(value))))
         return resolveRelativeElement(el, value)
-    }
-    else if (value.indexOf('__') !== -1) return chainResolveRelativeElement(el, value.split('__'), 0)
-    else return document.getElementById(value)
+    else if (value.indexOf('__') !== -1)
+        return chainResolveRelativeElement(el, value.split('__'), 0)
+    else
+        return document.getElementById(value)
 }
 export function resolveElementArray(el: Element, value, selectFromParent: boolean, vm): any {
     if (Array.isArray(value)) {
