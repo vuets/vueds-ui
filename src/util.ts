@@ -2,6 +2,7 @@ declare function require(path: string) : any;
 
 import * as Vue from 'vue'
 import { Trie } from './trie'
+import { EventFlags } from 'vueds'
 
 export const vueVersion = Vue['default']['version'],
     vue2 = vueVersion.charAt(0) === '2'
@@ -29,10 +30,10 @@ export function newChangeHandler(self): (e) => any {
     }
 }
 export function prevent(e: Event, flags: number): boolean {
-    switch (flags & 3) {
-        case 1: e.preventDefault(); return false
-        case 2: e.stopPropagation(); return true
-        case 3: e.preventDefault(); e.stopPropagation(); return false
+    switch (flags & EventFlags.PREVENT_BOTH) {
+        case EventFlags.PREVENT_DEFAULT: e.preventDefault(); return false
+        case EventFlags.PREVENT_PROPAGATION: e.stopPropagation(); return true
+        case EventFlags.PREVENT_BOTH: e.preventDefault(); e.stopPropagation(); return false
         default: return true
     }
 }
