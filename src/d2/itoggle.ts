@@ -8,7 +8,7 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
         return
     }
 
-    defp(el, 'itoggle', parseOpts(dir.arg.split('__'), dir.value, vnode.context, el))
+    defp(el, 'itoggle', parseOpts(dir.arg.split(','), dir.value, vnode.context, el))
 }
 
 /*export function update(el: any, { value, oldValue }: VNodeDirective, vnode: VNodeWithData) {

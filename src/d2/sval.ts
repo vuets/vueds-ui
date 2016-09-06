@@ -8,7 +8,7 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
         return
     }
 
-    let opts: Opts = parseOpts(dir.arg.split('__'), el)
+    let opts: Opts = parseOpts(dir.arg.split(','), el)
     defp(el, 'sval_opts', opts)
     opts.fn(el, dir.value)
 }

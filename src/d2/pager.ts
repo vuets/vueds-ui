@@ -27,7 +27,7 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     el.pager_opts = opts
 
     if (arg)
-        putArgsTo(opts, arg.split('__'))
+        putArgsTo(opts, arg.split(','))
     
     // TODO proper focus support
     el.addEventListener('focusin', opts.focus, true)

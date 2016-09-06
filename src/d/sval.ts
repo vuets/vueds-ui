@@ -6,7 +6,7 @@ export function bind() {
         return
     }
 
-    this.opts = parseOpts(this.arg.split('__'), this.el)
+    this.opts = parseOpts(this.arg.split(','), this.el)
 }
 
 export function update(value: any, oldValue: any) {

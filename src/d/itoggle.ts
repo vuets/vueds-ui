@@ -9,7 +9,7 @@ export function bind() {
 export function update(value: any, oldValue: any) {
     let opts = this.opts
     if (this.arg && !oldValue && value) {
-        this.opts = parseOpts(this.arg.split('__'), value, this.vm, this.el)
+        this.opts = parseOpts(this.arg.split(','), value, this.vm, this.el)
     }
 }
 
