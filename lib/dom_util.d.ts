@@ -1,6 +1,6 @@
 import { FieldType } from 'vueds';
 export declare function setClass(el: any, cls: string): void;
-export declare function addClass(el: any, cls: any): void;
+export declare function addClass(el: any, cls: string): void;
 export declare function isInput(el: Element): boolean;
 export declare function findupClass(el: Element, cls: string, limit: number): Element | null;
 export declare function hasClass(el: Element, cls: string): boolean;
