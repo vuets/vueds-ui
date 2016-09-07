@@ -24,7 +24,7 @@ export interface Opts {
     without_msg?: boolean;
     without_vclass?: boolean;
     _content?: string;
-    _ffid?: string;
+    ffid?: string;
 }
 export declare function fields(it: Opts, content?: string): string;
 export declare function msg(it: Opts): string;

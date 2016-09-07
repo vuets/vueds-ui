@@ -25,5 +25,6 @@ export declare function updateBoolSelect(el: any, value: any): void;
 export declare function updateTime(el: any, value: any): void;
 export declare function updateDate(el: any, value: any): void;
 export declare function updateDateTime(el: any, value: any): void;
-export declare function updateValue(el: any, value: any): void;
+export declare function updateString(el: any, value: any): void;
+export declare function updateNumber(el: any, value: any): void;
 export declare function getFnUpdate(el: any, type: FieldType, flags: number): FnUpdate;
