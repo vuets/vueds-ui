@@ -11,8 +11,8 @@ export const enum ContentSlot {
 export interface Opts {
     pojo: string
     on_submit: string
+    update?: boolean
     pager?: string
-    form_new?: boolean
     btn_text?: string
 
     content_slot?: ContentSlot
@@ -38,10 +38,20 @@ export function fields(it: Opts): string {
 </div>`
 }
 
+function msg_show_update(it: Opts): string {
+    return ` && (${it.pojo}._.state & ${PojoState.MASK_STATUS})`
+}
+
+// TODO v-show="${pojo}._.msg{{? it.update}} && (${pojo}._.state & {{c.MASK_STATUS}}){{?}}"
 export function msg(it: Opts): string {
+    let pojo = it.pojo
+
     return `
-<div>
-  TODO
+<div class="ui message"
+    v-show="${pojo}._.msg${include_if(it.update, msg_show_update, it)}"
+    v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
+  <i class="icon close" @click.prevent="${pojo}._.msg = null"></i>
+  <span v-text="${pojo}._.msg"></span>
 </div>`
 }
 
