@@ -1,4 +1,4 @@
-import { when, attrs, exprs, or, append, prepend, include_if, anchor, quote } from '../common'
+import { when, when_fn, attrs, exprs, or, append, prepend, include_if, anchor, quote } from '../common'
 import { PojoState } from 'vueds'
 import { PagerState } from 'vueds/lib/store'
 import { Flags } from '../../_close'
@@ -9,11 +9,15 @@ export const enum ContentSlot {
 }
 
 export interface Opts {
+    $d: any // descriptor
     pojo: string
     on_submit: string
     update?: boolean
     pager?: string
     btn_text?: string
+
+    exclude_fn?: (field: number, descriptor) => boolean
+    show_fn?: (field: number, descriptor) => string // returns an expression
 
     content_slot?: ContentSlot
     tag?: string // form
@@ -27,15 +31,133 @@ export interface Opts {
 
     without_fields?: boolean
     without_msg?: boolean
+    without_vclass?: boolean
 
     _content?: string
+    _ffid?: string // first field id
 }
 
-export function fields(it: Opts): string {
+const option_empty = '<option value=""></option>'
+
+function enum_options(fd: any): string {
+    let out = '',
+        arrayValue = fd.v,
+        arrayDisplay = fd.$v,
+        len = arrayValue.length,
+        i = 0
+    
+    for (i = 0; i < len; i++)
+        out += `<option value="${arrayValue[i]}">${arrayDisplay[i]}</option>`
+    
+    return out
+}
+
+function field_enum(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
     return `
-<div>
-  TODO
+<div class="fluid picker">
+  <select${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})">
+    ${when(!it.update, option_empty)}${enum_options(fd)}
+  </select>
 </div>`
+}
+
+// TODO call the change function?
+function field_bool(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+    return `
+<div class="ui checkbox">
+  <input${include_if(ffid, ffid_attr, ffid)} type="checkbox"
+      v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.${fd.$} = $event.target.checked" />
+</div>`
+}
+
+function field_textarea(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+    return `
+<div class="ui input">
+  <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})"></textarea>
+  ${include_if(fd.$h, help_text, fd)}
+  <div v-text="${pojo}._.vprops.${fd.$}"></div>
+</div>`
+}
+
+function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+    return `
+<div class="ui input">
+  <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
+      v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
+  ${include_if(fd.$h, help_text, fd)}
+  <div v-text="${pojo}._.vprops.${fd.$}"></div>
+</div>`
+}
+
+function help_text(fd): string {
+    return `<div class="help-text">${fd.$h}</div>`
+}
+
+function ffid_attr(ffid): string {
+    return ` id="${ffid}"`
+}
+
+function field_switch(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+    let t = fd.t
+    if (t === 1)
+        return field_bool(it, fd, idx, pojo, ffid)
+    
+    if (t === 16)
+        return field_enum(it, fd, idx, pojo, ffid)
+    
+    if (fd.ta)
+        return field_textarea(it, fd, idx, pojo, ffid)
+    
+    return field_default(it, fd, idx, pojo, ffid)
+}
+
+function show_field(it: Opts, expr: string): string {
+    return ` v-show="${expr}"`
+}
+
+function body(it: Opts, descriptor: any, pojo: string, root: any): string {
+    var array = descriptor.$fdf, 
+        mask = it.update ? 13 : 3, 
+        out = '',
+        exclude_fn = it.exclude_fn,
+        show_fn = it.show_fn,
+        ffid
+    
+    if (descriptor.$fmf) {
+        for (let f of descriptor.$fmf) {
+            out += body(it, descriptor[f].d,  pojo+'.'+f, root)
+        }
+    }
+
+    ffid = root._ffid
+    if (ffid && array.length)
+        root._ffid = null
+
+    for (var i = 0, len = array.length; i < len; i++) {
+        let fk = array[i],
+            fd = descriptor[fk],
+            f = fd._
+        if (!fd.t || (fd.a & mask) || (exclude_fn && exclude_fn(f, descriptor))) continue
+
+        out += `
+<div${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''} class="field${when(fd.m === 2, ' required')}"
+    v-sclass:error="${pojo}._.vprops.${fd.$}">
+  <label>${fd.$n}${when(fd.m === 2), ' *'}</label>
+  ${field_switch(it, fd, i, pojo, ffid)}
+</div>
+        `
+        ffid = null
+    }
+
+    return out
+}
+
+export function fields(it: Opts, content?: string): string {
+    return `
+${typeof content === 'string' ? content : anchor}
+${body(it, it.$d, it.pojo, it)}`
 }
 
 function msg_show_update(it: Opts): string {
@@ -98,7 +220,7 @@ ${
     v-clear v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
   ${include_if(it.title, title, it)}
   ${when(it.content_slot === ContentSlot.TOP, it._content)}
-  ${include_if(!it.without_fields, fields, it)}
+  ${!it.without_fields && body(it, it.$d, pojo, it) || ''}
   ${when(it.content_slot === ContentSlot.BEFORE_BUTTON, it._content)}
   ${include_if(!it.without_msg, msg, it)}
   <button type="submit" class="ui fluid submit button${append(it.btn_class)}"
