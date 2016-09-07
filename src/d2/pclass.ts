@@ -1,19 +1,20 @@
 import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
 import { addClass, removeClass } from '../dom_util'
 
-export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}
+function onUpdate(el, arg, value, oldValue) {
+    if (oldValue)
+        removeClass(el, arg + oldValue)
+    
+    if (value)
+        addClass(el, arg + value)
+}
+
+export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    onUpdate(el, dir.arg, dir.value, dir.oldValue)
+}
 
 export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    let prefix = dir.arg || '',
-        value = dir.value,
-        oldValue = dir.oldValue
-    
-    if (oldValue) {
-        removeClass(el, prefix + oldValue)
-    }
-    if (value) {
-        addClass(el, prefix + value)
-    }
+    onUpdate(el, dir.arg, dir.value, dir.oldValue)
 }
 
 //export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}

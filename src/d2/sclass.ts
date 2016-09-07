@@ -15,4 +15,4 @@ export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
         removeClass(el, dir.arg as string)
 }
 
-export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}
+//export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}

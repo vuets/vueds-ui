@@ -1,6 +1,6 @@
 import { addClass, removeClass } from '../dom_util'
 
-export function bind() {}
+//export function bind() {}
 
 export function update(value: any, oldValue: any) {
     if (value)
@@ -9,4 +9,4 @@ export function update(value: any, oldValue: any) {
         removeClass(this.el, this.arg)
 }
 
-export function unbind() {}
+//export function unbind() {}
