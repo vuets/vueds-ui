@@ -21,7 +21,7 @@ export function parseOpts(args: string[], target, el): Opts {
     let i = 0, 
         len = args.length,
         type = args[i++],
-        flags = parseInt(args[i++], 10)
+        flags = i === len ? 0 : parseInt(args[i++], 10)
     
     let opts: Opts = {
         type,
