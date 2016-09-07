@@ -455,20 +455,18 @@ document.addEventListener('click', function(e) {
 })*/
 
 export function updateSelect(el, value) {
+    // 0 is treated as null (not set).  The first value of enums should at least be 1.
+    let v = value ? value.toString() : ''
     if (!isIE9) {
-        el.value = value.toString()
+        el.value = v
         return
     }
     
-    var options = el.options,
-        i = options.length,
-        v = value.toString()
-    
     el.selectedIndex = -1
     
-    while (i--) {
-        if (options[i].value === v) {
-            options[i].selected = true
+    for (let o of el.options) {
+        if (o.value === v) {
+            o.selected = true
             break
         }
     }
@@ -499,10 +497,16 @@ export function updateDateTime(el, value) {
     el.value = !value ? '' : formatDateTime(value)
 }
 
-export function updateValue(el, value) {
+export function updateString(el, value) {
     //el.value = Vue.util._toString(value)
     // TODO escape value
     el.value = value
+}
+
+export function updateNumber(el, value) {
+    // only write '0' if the input field was not empty (not initial state)
+    if (value || el.value)
+        el.value = value
 }
 
 export function getFnUpdate(el, type: FieldType, flags: number): FnUpdate {
@@ -512,10 +516,13 @@ export function getFnUpdate(el, type: FieldType, flags: number): FnUpdate {
     if (type === FieldType.ENUM)
         return updateSelect
 
+    if (type === FieldType.STRING)
+        return updateString
+
     switch (flags) {
         case 1: return updateTime
         case 2: return updateDate
         case 4: return updateDateTime
-        default: return updateValue
+        default: return updateNumber
     }
 }
