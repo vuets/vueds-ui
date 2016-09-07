@@ -34,15 +34,15 @@ export interface Opts {
     without_vclass?: boolean
 
     _content?: string
-    _ffid?: string // first field id
+    ffid?: string // first field id
 }
 
 const option_empty = '<option value=""></option>'
 
 function enum_options(fd: any): string {
     let out = '',
-        arrayValue = fd.v,
-        arrayDisplay = fd.$v,
+        arrayValue = fd.v_fn(),
+        arrayDisplay = fd.$v_fn(),
         len = arrayValue.length,
         i = 0
     
@@ -126,14 +126,15 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
         ffid
     
     if (descriptor.$fmf) {
-        for (let f of descriptor.$fmf) {
-            out += body(it, descriptor[f].d,  pojo+'.'+f, root)
+        for (let fk of descriptor.$fmf) {
+            let fd = descriptor[fk]
+            out += body(it, fd.d_fn(), pojo+'.'+fd.$, root)
         }
     }
 
-    ffid = root._ffid
+    ffid = root.ffid
     if (ffid && array.length)
-        root._ffid = null
+        root.ffid = null
 
     for (var i = 0, len = array.length; i < len; i++) {
         let fk = array[i],
