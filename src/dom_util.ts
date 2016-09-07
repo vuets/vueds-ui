@@ -32,7 +32,7 @@ function getClass (el) {
 }
 
 //export const { addClass } = Vue.util
-export function addClass (el, cls) {
+export function addClass (el, cls: string) {
     if (el.classList) {
         el.classList.add(cls)
     } else {

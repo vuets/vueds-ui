@@ -7,6 +7,13 @@ export function when(cond: any, val?: string): string {
     return cond && val ? val : ''
 }
 
+// R is for result
+export function when_fn<A,B,T,R>(fn: (a: A, b: B) => R, a: A, b: B, 
+        out_fn: (t: T, r: R) => string, t: T): string {
+    let r = fn(a, b)
+    return r ? out_fn(t, r) : ''
+}
+
 export function include_if<T>(cond: any, fn: (it: T) => string, it: T): string {
     return cond ? fn(it) : ''
 }
