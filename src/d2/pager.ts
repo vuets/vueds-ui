@@ -7,6 +7,8 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let opts = el.pager_opts
-    if (opts)
+    if (opts) {
         cleanup(opts)
+        el.pager_opts = null
+    }
 }

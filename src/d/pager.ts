@@ -8,6 +8,8 @@ export function update(value: any, oldValue: any) {
 
 export function unbind() {
     let opts = this.el.pager_opts
-    if (opts)
+    if (opts) {
         cleanup(opts)
+        this.el.pager_opts = null
+    }
 }
