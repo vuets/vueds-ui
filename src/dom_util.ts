@@ -504,9 +504,10 @@ export function updateString(el, value) {
 }
 
 export function updateNumber(el, value) {
+    el.value = value || value === 0 ? value.toString() : ''
     // only write '0' if the input field was not empty (not initial state)
-    if (value || el.value)
-        el.value = value
+    //if (value || el.value)
+    //    el.value = value
 }
 
 export function getFnUpdate(el, type: FieldType, flags: number): FnUpdate {
