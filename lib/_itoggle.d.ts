@@ -12,3 +12,4 @@ export interface Opts {
     el_icon: any;
 }
 export declare function parseOpts(args: string[], array: any[], vm: any, el: any): Opts;
+export declare function cleanup(opts: Opts): void;
