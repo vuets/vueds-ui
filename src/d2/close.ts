@@ -13,6 +13,8 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let opts: Opts = el.close_
-    if (opts)
+    if (opts) {
         cleanup(opts)
+        el.close_ = null
+    }
 }

@@ -16,7 +16,9 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }*/
 
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    let opts: Opts = el['itoggle']
-    if (opts)
+    let opts: Opts = el.itoggle
+    if (opts) {
         cleanup(opts)
+        el.itoggle = null
+    }
 }
