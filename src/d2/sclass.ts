@@ -9,6 +9,11 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }
 
 export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    if (dir.value === dir.oldValue) {
+        //console.warn('sclass: vue2 update propagation bug')
+        return
+    }
+
     if (dir.value)
         addClass(el, dir.arg as string)
     else

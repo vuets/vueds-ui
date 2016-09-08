@@ -18,6 +18,11 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }
 
 export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    if (dir.value === dir.oldValue) {
+        //console.warn('disable: vue2 update propagation bug')
+        return
+    }
+
     doUpdate(el, dir.value)
 }
 

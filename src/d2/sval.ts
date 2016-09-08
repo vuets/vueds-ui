@@ -14,6 +14,11 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }
 
 export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    if (dir.value === dir.oldValue) {
+        //console.warn('sval: vue2 update propagation bug')
+        return
+    }
+
     let opts: Opts = el['sval_opts']
     if (opts)
         opts.fn(el, dir.value)

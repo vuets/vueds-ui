@@ -14,6 +14,11 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }
 
 export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    if (dir.value === dir.oldValue) {
+        //console.warn('pclass: vue2 update propagation bug')
+        return
+    }
+
     onUpdate(el, dir.arg, dir.value, dir.oldValue)
 }
 
