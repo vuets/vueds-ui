@@ -1,6 +1,6 @@
 import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
 import { defp } from 'vueds'
-import { parseOpts, Opts } from '../_itoggle'
+import { Opts, parseOpts, cleanup } from '../_itoggle'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     if (!dir.arg) {
@@ -18,5 +18,5 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let opts: Opts = el['itoggle']
     if (opts)
-        el.removeEventListener(opts.type, opts.handler)
+        cleanup(opts)
 }

@@ -1,4 +1,4 @@
-import { parseOpts, Opts } from '../_itoggle'
+import { Opts, parseOpts, cleanup } from '../_itoggle'
 
 export function bind() {
     if (!this.arg) {
@@ -16,5 +16,5 @@ export function update(value: any, oldValue: any) {
 export function unbind() {
     let opts: Opts = this.opts
     if (opts)
-        this.el.removeEventListener(opts.type, opts.handler)
+        cleanup(opts)
 }

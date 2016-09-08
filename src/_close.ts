@@ -39,6 +39,10 @@ export function parseOpts(args: string[], target, el): Opts {
     return opts
 }
 
+export function cleanup(opts: Opts) {
+    opts.el.removeEventListener(opts.type, opts.handler)
+}
+
 function handler(e) {
     var self: Opts = this,
         array = self.array,

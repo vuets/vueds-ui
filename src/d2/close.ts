@@ -1,6 +1,6 @@
 import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
 import { defp } from 'vueds'
-import { parseOpts, Opts } from '../_close'
+import { Opts, parseOpts, cleanup } from '../_close'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     if (!dir.arg) {
@@ -14,5 +14,5 @@ export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let opts: Opts = el.close_
     if (opts)
-        el.removeEventListener(opts.type, opts.handler)
+        cleanup(opts)
 }

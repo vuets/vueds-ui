@@ -45,6 +45,10 @@ export function parseOpts(args: string[], array: any[], vm, el): Opts {
     return opts
 }
 
+export function cleanup(opts: Opts) {
+    opts.el.removeEventListener(opts.type, opts.handler)
+}
+
 function resolveTarget(self: Opts, array_entry: any[], vm) {
     var obj = array_entry[0]
     return obj.nodeName ? obj : (array_entry[0] = resolveElement(self.el, obj, vm))
