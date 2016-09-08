@@ -1,4 +1,6 @@
-// common dependency for d/pager and d2/pager
+declare function require(path: string): any;
+
+const Hammer = require('hammerjs')
 
 import * as keymage from './keymage'
 
@@ -17,7 +19,7 @@ import {
     pageNextOrLoad, pagePrevOrLoad
 } from './pager_util'
 
-import { PojoState } from 'vueds'
+import { PojoState, defp } from 'vueds'
 
 import {
     Pager, PagerState, PojoStore, SelectionFlags, SelectionType, resolveNextPageIndex 
@@ -28,12 +30,92 @@ export interface Opts {
     col_size: number
     table_flags: number
 
-    hammer: any,
     pager: Pager
-    vm: any
+    hammer: any,
+    vm: any,
+    el: any
+
+    // listeners
+    //pageLeft: any
+    //pageRight: any
+    focus: any
 }
 
-export function itemLookup(target, p?): any {
+/**
+ * ```{flags}__{table_flags?}```
+ */
+function putArgsTo(opts: Opts, args: string[]) {
+    let i = 0, len = args.length
+    
+    opts.flags = parseInt(args[i++], 10)
+    
+    if (i === len) return
+    opts.table_flags = parseInt(args[i++], 10)
+    opts.col_size = table_compact_columns()
+}
+
+/**
+ * Add the property 'pager_opts' to el.
+ */
+export function attachOptsTo(el, args: string[]|undefined, pager: Pager, vm) {
+    let hammer = new Hammer(el)
+    let opts: Opts = {
+        flags: 0,
+        col_size: 0,
+        table_flags: 0,
+
+        pager,
+        hammer,
+        vm,
+        el,
+
+        //pageLeft: null,
+        //pageRight: null,
+        focus: null
+    }
+
+    if (args)
+        putArgsTo(opts, args)
+    
+    configureHammer(hammer, opts)
+    //if (el.id)
+    //    addCustomListenersTo(el, opts)
+    
+    el.addEventListener('focusin', opts.focus = focus.bind(opts), true)
+
+    defp(el, 'pager_opts', opts)
+}
+
+function configureHammer(hammer: any, opts: Opts) {
+    hammer.get('swipe').set({ velocity: 0.1/*, distance: 1*/ })
+    hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
+    hammer.get('doubletap').recognizeWith('tap')
+
+    hammer.on('swipe', swipe.bind(opts))
+    hammer.on('press', press.bind(opts))
+    hammer.on('tap', tap.bind(opts))
+    hammer.on('doubletap', doubletap.bind(opts))
+}
+
+/*function addCustomListenersTo(el, opts: Opts) {
+    let pageLeft = (e) => { current = opts; pagePrevOrLoad(e, opts.pager, opts); },
+        pageRight = (e) => { current = opts; pageNextOrLoad(e, opts.pager, opts); }
+    
+    el.addEventListener('page-left', opts.pageLeft = pageLeft)
+    el.addEventListener('page-right', opts.pageRight = pageRight)
+}*/
+
+export function cleanup(opts: Opts) {
+    let el = opts.el
+    el.removeEventListener('focusin', opts.focus)
+    opts.hammer.destroy()
+
+    //if (!opts.pageLeft) return
+    //el.removeEventListener('page-left', opts.pageLeft)
+    //el.removeEventListener('page-right', opts.pageRight)
+}
+
+function itemLookup(target, p?): any {
     var parent = p || target.parentElement,
         gparent = parent.parentElement,
         ggparent = gparent.parentElement,
@@ -44,7 +126,7 @@ export function itemLookup(target, p?): any {
 
 var current: Opts
 
-export function moveUp(e) {
+function moveUp(e) {
     var target = e.target,
         attr = target.getAttribute('c-list'),
         pager,
@@ -63,7 +145,7 @@ export function moveUp(e) {
         listUp(pager, pager.index_selected, e, clickUpdate)
 }
 
-export function moveDown(e) {
+function moveDown(e) {
     var target = e.target,
         attr = target.getAttribute('c-list'),
         pager: Pager,
@@ -82,31 +164,7 @@ export function moveDown(e) {
         listDown(pager, pager.index_selected, e, clickUpdate)
 }
 
-export function focus(e, opts: Opts) {
-    current = opts
-    keymage.setScope('pager')
-}
-
-export function swipe(e, opts: Opts) {
-    var target = e.target,
-        pojo
-    if (isInput(target)) return
-    current = opts
-    keymage.setScope('pager')
-    
-    if (!(pojo = itemLookup(target)) || pojo.$pager !== opts.pager) return
-    
-    switch(e.direction) {
-        case 2: // right-to-left
-            pageNextOrLoad(e, opts.pager, opts)
-            break
-        case 4: // left-to-right
-            pagePrevOrLoad(e, opts.pager, opts)
-            break;
-    }
-}
-
-export function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
+function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
     var target = e.target, 
         parent = target.parentElement, 
         pojo,
@@ -132,7 +190,36 @@ export function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
     }
 }
 
-export function press(e, opts: Opts) {
+// =====================================
+// context listeners
+
+function focus(e) {
+    current = this as Opts
+    keymage.setScope('pager')
+}
+
+function swipe(e) {
+    let opts: Opts = this,
+        target = e.target,
+        pojo
+    if (isInput(target)) return
+    current = opts
+    keymage.setScope('pager')
+    
+    if (!(pojo = itemLookup(target)) || pojo.$pager !== opts.pager) return
+    
+    switch(e.direction) {
+        case 2: // right-to-left
+            pageNextOrLoad(e, opts.pager, opts)
+            break
+        case 4: // left-to-right
+            pagePrevOrLoad(e, opts.pager, opts)
+            break;
+    }
+}
+
+function press(e) {
+    let opts: Opts = this
     current = opts
     if (isInput(e.target)) return
     keymage.setScope('pager')
@@ -140,7 +227,8 @@ export function press(e, opts: Opts) {
     select(e, opts, false, opts.flags & screen.flags)
 }
 
-export function tap(e, opts: Opts) {
+function tap(e) {
+    let opts: Opts = this
     current = opts
     if (isInput(e.target)) return
     keymage.setScope('pager')
@@ -159,7 +247,8 @@ export function tap(e, opts: Opts) {
     store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
 }
 
-export function doubletap(e, opts: Opts) {
+function doubletap(e) {
+    let opts: Opts = this
     // TODO remove hack
     if (e.target.hasOwnProperty('$l')) {
         // a date input with a date picker
@@ -176,43 +265,6 @@ export function doubletap(e, opts: Opts) {
     // keymage.setScope('pager')
     
     select(e, opts, true, opts.flags & screen.flags)
-}
-
-/**
- * ```{flags}__{table_flags?}```
- */
-export function putArgsTo(opts: Opts, split_args: string[]) {
-    let i = 0, len = split_args.length
-    
-    opts.flags = parseInt(split_args[i++], 10)
-    
-    if (i === len) return
-    opts.table_flags = parseInt(split_args[i++], 10)
-    opts.col_size = table_compact_columns()
-}
-
-export function addCustomListenersTo(el, opts: Opts) {
-    let pageLeft = (e) => { current = opts; pagePrevOrLoad(e, opts.pager, opts); },
-        pageRight = (e) => { current = opts; pageNextOrLoad(e, opts.pager, opts); }
-    
-    el.addEventListener('page-left', pageLeft)
-    el.addEventListener('page-right', pageRight)
-
-    opts['unbind'] = () => {
-        el.removeEventListener('page-left', pageLeft)
-        el.removeEventListener('page-right', pageRight)
-    }
-}
-
-export function configureHammer(hammer: any, opts: Opts) {
-    hammer.get('swipe').set({ velocity: 0.1/*, distance: 1*/ })
-    hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
-    hammer.get('doubletap').recognizeWith('tap')
-
-    hammer.on('swipe', (e) => swipe(e, opts))
-    hammer.on('press', (e) => press(e, opts))
-    hammer.on('tap', (e) => tap(e, opts))
-    hammer.on('doubletap', (e) => doubletap(e, opts))
 }
 
 // =====================================
