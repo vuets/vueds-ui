@@ -3,22 +3,14 @@ export interface Opts {
     flags: number;
     col_size: number;
     table_flags: number;
-    hammer: any;
     pager: Pager;
+    hammer: any;
     vm: any;
+    el: any;
+    focus: any;
 }
-export declare function itemLookup(target: any, p?: any): any;
-export declare function moveUp(e: any): void;
-export declare function moveDown(e: any): void;
-export declare function focus(e: any, opts: Opts): void;
-export declare function swipe(e: any, opts: Opts): void;
-export declare function select(e: any, opts: Opts, dbltap: boolean, flagsIntersect: number): void;
-export declare function press(e: any, opts: Opts): void;
-export declare function tap(e: any, opts: Opts): void;
-export declare function doubletap(e: any, opts: Opts): boolean | undefined;
 /**
- * ```{flags}__{table_flags?}```
+ * Add the property 'pager_opts' to el.
  */
-export declare function putArgsTo(opts: Opts, split_args: string[]): void;
-export declare function addCustomListenersTo(el: any, opts: Opts): void;
-export declare function configureHammer(hammer: any, opts: Opts): void;
+export declare function attachOptsTo(el: any, args: string[] | undefined, pager: Pager, vm: any): void;
+export declare function cleanup(opts: Opts): void;
