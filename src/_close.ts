@@ -17,10 +17,10 @@ export interface Opts {
     array: any[]|null
 }
 
-export function parseOpts(args: string[], target, el): Opts {
+export function parseOpts(args: string[]|any, target, el): Opts {
     let i = 0, 
-        len = args.length,
-        type = args[i++],
+        len = !args ? 0 : args.length,
+        type = i === len ? 'click' : args[i++],
         flags = i === len ? 0 : parseInt(args[i++], 10)
     
     let opts: Opts = {

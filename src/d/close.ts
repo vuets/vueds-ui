@@ -1,14 +1,8 @@
 import { Opts, parseOpts, cleanup } from '../_close'
 
-export function bind() {
-    if (!this.arg) {
-        console.warn('arg is required for v-close.')
-    }
-}
-
 export function update(value: any, oldValue: any) {
-    if (this.arg && !oldValue && value) {
-        this.opts = parseOpts(this.arg.split(','), value, this.el)
+    if (!oldValue && value) {
+        this.opts = parseOpts(this.arg && this.arg.split(','), value, this.el)
     }
 }
 

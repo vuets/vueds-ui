@@ -42,27 +42,20 @@ export interface Opts {
 }
 
 /**
- * ```{flags}__{table_flags?}```
- */
-function putArgsTo(opts: Opts, args: string[]) {
-    let i = 0, len = args.length
-    
-    opts.flags = parseInt(args[i++], 10)
-    
-    if (i === len) return
-    opts.table_flags = parseInt(args[i++], 10)
-    opts.col_size = table_compact_columns()
-}
-
-/**
  * Add the property 'pager_opts' to el.
  */
-export function attachOptsTo(el, args: string[]|undefined, pager: Pager, vm) {
-    let hammer = new Hammer(el)
+export function attachOptsTo(el, args: string[]|any, pager: Pager, vm) {
+    let i = 0,
+        len = !args? 0 : args.length,
+        flags = i === len ? 0 : parseInt(args[i++], 10),
+        table_flags = i === len ? 0 : parseInt(args[i++], 10),
+        col_size = table_flags === 0 ? 0 : table_compact_columns(),
+        hammer = new Hammer(el)
+    
     let opts: Opts = {
-        flags: 0,
-        col_size: 0,
-        table_flags: 0,
+        flags,
+        col_size,
+        table_flags,
 
         pager,
         hammer,
@@ -74,9 +67,6 @@ export function attachOptsTo(el, args: string[]|undefined, pager: Pager, vm) {
         focus: null
     }
 
-    if (args)
-        putArgsTo(opts, args)
-    
     configureHammer(hammer, opts)
     //if (el.id)
     //    addCustomListenersTo(el, opts)

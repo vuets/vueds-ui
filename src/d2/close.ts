@@ -3,12 +3,7 @@ import { defp } from 'vueds'
 import { Opts, parseOpts, cleanup } from '../_close'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    if (!dir.arg) {
-        console.warn('arg is required for v-close.')
-        return
-    }
-
-    defp(el, 'close_', parseOpts(dir.arg.split(','), dir.value, el))
+    defp(el, 'close_', parseOpts(dir.arg && dir.arg.split(','), dir.value, el))
 }
 
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
