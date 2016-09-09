@@ -9,5 +9,5 @@ export interface Opts {
     handler: any;
     array: any[] | null;
 }
-export declare function parseOpts(args: string[], target: any, el: any): Opts;
+export declare function parseOpts(args: string[] | any, target: any, el: any): Opts;
 export declare function cleanup(opts: Opts): void;
