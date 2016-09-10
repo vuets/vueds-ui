@@ -77,7 +77,7 @@ function field_textarea(it: Opts, fd: any, idx: number, pojo: string, ffid: any)
   <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})"></textarea>
   ${include_if(fd.$h, help_text, fd)}
-  <div v-text="${pojo}._.vprops.${fd.$}"></div>
+  <div v-text="${pojo}._['${fd._}']"></div>
 </div>`
 }
 
@@ -87,7 +87,7 @@ function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any):
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
       v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
   ${include_if(fd.$h, help_text, fd)}
-  <div v-text="${pojo}._.vprops.${fd.$}"></div>
+  <div v-text="${pojo}._['${fd._}']"></div>
 </div>`
 }
 
@@ -144,7 +144,7 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
 
         out += `
 <div${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''} class="field${when(fd.m === 2, ' required')}"
-    v-sclass:error="${pojo}._.vprops.${fd.$}">
+    v-sclass:error="${pojo}._['${fd._}']">
   <label>${fd.$n}${when(fd.m === 2), ' *'}</label>
   ${field_switch(it, fd, i, pojo, ffid)}
 </div>
