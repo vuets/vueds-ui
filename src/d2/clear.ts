@@ -7,7 +7,7 @@ function handle(e) {
     keymage.clearScope()
 }
 
-export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     el.addEventListener(dir.arg || 'focusin', handle, true)
 }
 

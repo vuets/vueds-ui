@@ -5,8 +5,11 @@ import { defp } from 'vueds'
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     if (!dir.arg) {
         console.warn('arg is required for v-sval.')
-        return
     }
+}
+
+export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+    if (!dir.arg) return
 
     let opts: Opts = parseOpts(dir.arg.split(','), el)
     defp(el, 'sval_opts', opts)

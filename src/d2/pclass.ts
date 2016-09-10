@@ -9,7 +9,7 @@ function onUpdate(el, arg, value, oldValue) {
         addClass(el, arg + value)
 }
 
-export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     onUpdate(el, dir.arg, dir.value, dir.oldValue)
 }
 

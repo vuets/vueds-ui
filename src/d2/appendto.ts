@@ -1,7 +1,7 @@
 import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
 import { resolveElement } from '../dom_util'
 
-export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let value = dir.value,
         vm = vnode.context,
         target,

@@ -13,7 +13,7 @@ function doUpdate(el, value) {
     else removeClass(el, 'disabled')
 }
 
-export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
+export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     doUpdate(el, dir.value)
 }
 
