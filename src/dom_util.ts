@@ -62,7 +62,11 @@ export function findupClass(el: Element, cls: string, limit: number): Element|nu
     return null
 }
 export function hasClass(el: Element, cls: string): boolean {
-    return hasClassList ? el.classList.contains(cls) : el.className.indexOf(cls) !== -1
+    if (hasClassList)
+        return el.classList.contains(cls)
+    
+    let str = ' ' + el.className + ' '
+    return str.indexOf(' ' + cls + ' ') !== -1
 }
 export function removeClass (el: Element, cls: string): boolean {
     let removed: boolean
@@ -368,7 +372,7 @@ export function popTo(relativeTarget, popup) {
     
     popup.style.visibility = 'visible'
 }
-export function debounce(func, wait, immediate): () => any {
+export function debounce(func, wait, immediate?): any {
     var timeout
     return function(): any {
         var context = this, args = arguments
