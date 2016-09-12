@@ -228,10 +228,11 @@ function tap(e) {
         return
     }
 
-    var pojo,
+    var pager = opts.pager,
+        pojo,
         store: PojoStore<any>
     
-    if (!(pojo = itemLookup(e.target)) || pojo.$pager !== opts.pager) return
+    if (!(pojo = itemLookup(e.target)) || pojo.$pager !== pager || pager.array[pojo.$index] === pager.pojo) return
     
     store = opts.pager['store']
     store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
