@@ -27,6 +27,14 @@ function click_to_select(it: Opts): string {
     return `@click="${it.pager}.store.select(${it.pojo}, ${SelectionFlags.CLICKED}, ${it.pojo}.$index)"`
 }
 
+function item_class_exprs(it: Opts): string {
+    return `:class="{ active: (${it.pojo}._.lstate & ${PojoListState.SELECTED})${exprs(it.item_class_exprs)} }"`
+}
+
+function item_class_expr(it: Opts): string {
+    return `v-sclass:active="(${it.pojo}._.lstate & ${PojoListState.SELECTED})"`
+}
+
 export function main(it: Opts, content: string): string {
     if (!it.pojo)
         it.pojo = 'pojo'
@@ -39,7 +47,7 @@ export function main(it: Opts, content: string): string {
   <li v-for="${pojo} in ${pager}.array" v-defp:pager_item="${it.pojo}" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
       ${include_if(it.click_to_select, click_to_select, it)}
       v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
-      :class="{ active: (${pojo}._.lstate & ${PojoListState.SELECTED})${exprs(it.item_class_exprs)} }">
+      ${it.item_class_exprs && item_class_exprs(it) || item_class_expr(it)}>
     ${content}
     <div v-show="${pojo}._.msg && !(${pager}.pojo._.vstate & ${PojoState.UPDATE})">
       <div class="ui message" v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
