@@ -43,13 +43,13 @@ function isPopupShown(suggest): boolean {
 }
 
 export interface Opts {
-    field: string,
-    flags: number,
-    fk: string,
-    fetch: any,
-    pojo: any,
-    vm: any,
-    el: any,
+    flags: number
+    pojo: any
+    field: string
+    fetch: any
+    fk: string
+    vm: any
+    el: any
 
     str: string
     empty: boolean
@@ -85,21 +85,20 @@ function onSelect(message: ds.ACResult, flags: SelectionFlags) {
     self.pojo[self.field] = message.id || message.value
 }
 
-export function parseOpts(args: string[], pojo, fetch, vm, el): Opts {
+export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts {
     let i = 0,
-        len = args.length,
-        field = args[i++],
+        len = !args ? 0 : args.length,
         flags = i === len ? 0 : parseInt(args[i++], 10),
         descriptor = pojo.$d,
         $ = descriptor.$,
         fk = $ ? $[field] : field
 
     let opts = {
-        field,
         flags,
-        fk,
         pojo,
+        field,
         fetch,
+        fk,
         vm,
         el,
 

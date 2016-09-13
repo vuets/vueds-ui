@@ -7,10 +7,10 @@ export function bind() {
 export function update(value: any, oldValue: any) {
     if (oldValue) return
 
-    if (this.arg && value && value.pojo && value.fetch)
-        this.suggest = parseOpts(this.arg.split(','), value.pojo, value.fetch, this.vm, this.el)
+    if (value && value.pojo && value.field && value.fetch)
+        this.suggest = parseOpts(this.arg && this.arg.split(','), value.pojo, value.field, value.fetch, this.vm, this.el)
     else
-        console.warn('Must provide arg: field[,flags] and value: { pojo: obj, fetch: function }')
+        console.warn('Must provide value: { pojo: obj, field: string, fetch: function }')
 }
 
 export function unbind() {
