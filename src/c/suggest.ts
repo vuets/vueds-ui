@@ -8,7 +8,8 @@ import { Flags } from '../_pager'
 var instance: Suggest
 
 export interface Opts {
-    fetch(req: ds.ParamRangeKey, pager: Pager)
+    str: string
+    fetch(req: ds.ParamRangeKey, str: string)
     onSelect(message: ds.ACResult, flags: SelectionFlags)
 }
 
@@ -38,30 +39,28 @@ export class Suggest {
                 return ds.ACResult.$createObservable()
             },
             onSelect(message: ds.ACResult, flags: SelectionFlags): number {
-                let message_ = message['_']
-                console.log('selected: ' + message.name + ' | ' + message_.lstate)
-                self.opts && self.opts.onSelect(message, flags)
+                self.opts.onSelect(message, flags)
                 return 0
             },
             fetch(req: ds.ParamRangeKey, pager: Pager) {
-                self.opts && self.opts.fetch(req, pager)
+                let opts = self.opts
+                opts.fetch(req, opts.str)
             }
         })).pager
     }
-
-    static mounted(self: Suggest) {
-        self.add('foo', 'bar', 1)
-        self.add('baz', 'zoo', 1)
+    /*static mounted(self: Suggest) {
+        //self.add('foo', 'bar', 1)
+        //self.add('baz', 'zoo', 1)
     }
 
     add(name: string, value: string, id?: number) {
         let str = ds.ACResult.$stringify(ds.ACResult.$create(name, value, id))
         this.pstore.add(JSON.parse(str) as ds.ACResult, true, true)
-    }
+    }*/
 }
 export default component({
     created(this: Suggest) { Suggest.created(this) },
-    mounted(this: Suggest) { Suggest.mounted(this) },
+    //mounted(this: Suggest) { Suggest.mounted(this) },
     template: `
 <div class="suggest" v-pager:${Flags.SUGGEST}="pager">
   <ul class="ui small divided selection list">
