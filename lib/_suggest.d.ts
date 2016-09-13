@@ -21,7 +21,6 @@ export interface Opts {
     unwatch: any;
     onSelect: any;
     focusNT: any;
-    hideSuggestNT: any;
     focusout: any;
     click: any;
     input: any;
