@@ -88,7 +88,7 @@ export interface Opts {
 
     // next tick
     focusNT: any
-    hideSuggestNT: any
+    //hideSuggestNT: any
 
     // listeners
     //focusin: any
@@ -173,7 +173,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         onSelect: null,
 
         focusNT: null,
-        hideSuggestNT: null,
+        //hideSuggestNT: null,
         //focusin: null,
         focusout: null,
         click: null,
@@ -184,7 +184,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
     opts.unwatch = vm.$watch(newWatchFn(pojo, fk), onUpdate.bind(opts))
     opts.onSelect = onSelect.bind(opts)
     opts.focusNT = focusNT.bind(opts)
-    opts.hideSuggestNT = hideSuggestNT.bind(opts)
+    //opts.hideSuggestNT = hideSuggestNT.bind(opts)
 
     //el.addEventListener('focusin', opts.focusin = focusin.bind(opts))
     el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
@@ -217,12 +217,12 @@ export function cleanup(opts: Opts) {
     //    hidePopup(getInstance(), true)
 }*/
 
-function hideSuggestNT() {
+/*function hideSuggestNT() {
     let suggest = getInstance()
     if (this === suggest.opts && hideSuggest(suggest, true)) {
         // hidden
     }
-}
+}*/
 
 function focusout(e) {
     let self: Opts = this,
@@ -241,6 +241,7 @@ function focusout(e) {
             self.pojo[self.field] = self.pending_value
         }
         self.pending_name = null
+        hideSuggest(suggest, true)
     } else if (text === (name = self.pojo._[self.fk])) {
         addClass(self.el.parentElement, 'suggested') // redudant
     } else if (self.update) {
@@ -253,8 +254,8 @@ function focusout(e) {
         addClass(self.el.parentElement, 'suggested')
     }
 
-    if (self === suggest.opts)
-        window.setTimeout(self.hideSuggestNT, 100)
+    //if (self === suggest.opts)
+    //    window.setTimeout(self.hideSuggestNT, 100)
 }
 
 function click(e) {
@@ -293,10 +294,10 @@ function input(e) {
         showSuggest(getInstance(), self)
     } else {
         self.disabled = true
-        self.fetch(ds.ParamRangeKey.$create(false, 11), value)
+        self.fetch(ds.PS.$create(value, ds.ParamRangeKey.$create(false, 11))) // TODO do not hardcode page size
             .then(data => {
                 self.disabled = false
-
+                
                 if (value !== self.el.value) {
                     Vue.nextTick(self.input)
                     return true
@@ -319,11 +320,10 @@ function input(e) {
                 return true
             })
             .then(undefined, err => {
-                // ignore
                 self.disabled = false
-                if (value !== self.el.value) {
+                
+                if (value !== self.el.value)
                     Vue.nextTick(self.input)
-                }
             })
     }
 }

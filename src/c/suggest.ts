@@ -9,7 +9,7 @@ var instance: Suggest
 
 export interface Opts {
     str: string
-    fetch(req: ds.ParamRangeKey, str: string)
+    fetch(req: ds.PS)
     onSelect(message: ds.ACResult, flags: SelectionFlags)
 }
 
@@ -17,10 +17,22 @@ export function getInstance(): Suggest {
     return instance
 }
 
+function cbFetchSuccess(this: Suggest, data) {
+    this.pstore.cbFetchSuccess(data['1'])
+    return true
+}
+
+function cbFetchFailed(this: Suggest, err) {
+    this.pstore.cbFetchFailed(err)
+}
+
 export class Suggest {
     pager: Pager
     pstore: PojoStore<ds.ACResult>
     opts: Opts
+
+    cbFetchSuccess: any
+    cbFetchFailed: any
     
     constructor() {
         nullp(this, 'pager')
@@ -29,6 +41,10 @@ export class Suggest {
     
     static created(self: Suggest) {
         instance = self
+
+        self.cbFetchSuccess = cbFetchSuccess.bind(self)
+        self.cbFetchFailed = cbFetchFailed.bind(self)
+
         self.pager = defp(self, 'pstore', new PojoStore([], {
             desc: false,
             pageSize: 10,
@@ -43,8 +59,18 @@ export class Suggest {
                 return 0
             },
             fetch(req: ds.ParamRangeKey, pager: Pager) {
-                let opts = self.opts
-                opts.fetch(req, opts.str)
+                let opts = self.opts,
+                    store: PojoStore<ds.ACResult> = pager['store'],
+                    startObj: ds.ACResult,
+                    pgstart
+
+                if (req.startKey) {
+                    startObj = store.startObj
+                    pgstart = startObj['name'] || startObj['1']
+                }
+                
+                opts.fetch(ds.PS.$create(opts.str, req, undefined, pgstart))
+                    .then(self.cbFetchSuccess).then(undefined, self.cbFetchFailed)
             }
         })).pager
     }
