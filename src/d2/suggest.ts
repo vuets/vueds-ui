@@ -3,9 +3,9 @@ import { defp } from 'vueds'
 import { Opts, parseOpts, cleanup } from '../_suggest'
 
 export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    let params = dir.value
-    if (dir.arg && params.pojo && params.fetch)
-        defp(el, 'suggest_', parseOpts(dir.arg.split(','), params.pojo, params.fetch, vnode.context, el))
+    let value = dir.value
+    if (dir.arg && value.pojo && value.fetch)
+        defp(el, 'suggest_', parseOpts(dir.arg.split(','), value.pojo, value.fetch, vnode.context, el))
     else
         console.warn('Must provide arg: field[,flags] and value: { pojo: obj, fetch: function }')
 }

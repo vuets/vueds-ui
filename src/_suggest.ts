@@ -56,7 +56,7 @@ export interface Opts {
     disabled: boolean
     cache: any
 
-    watch_fn: any
+    unwatch: any
     onSelect: any
 
     focusin: any
@@ -108,7 +108,7 @@ export function parseOpts(args: string[], pojo, fetch, vm, el): Opts {
         disabled: false,
         cache: emptyArray,
 
-        watch_fn: null,
+        unwatch: null,
         onSelect: null,
 
         focusin: null,
@@ -117,7 +117,7 @@ export function parseOpts(args: string[], pojo, fetch, vm, el): Opts {
         input: null
     }
 
-    opts.watch_fn = vm.$watch(newWatchFn(pojo, fk), onUpdate.bind(opts))
+    opts.unwatch = vm.$watch(newWatchFn(pojo, fk), onUpdate.bind(opts))
     opts.onSelect = onSelect.bind(opts)
 
     el.addEventListener('focusin', opts.focusin = focusin.bind(opts))
@@ -135,6 +135,7 @@ export function cleanup(opts: Opts) {
     //el.removeEventListener('focusout', opts.focusout)
     //el.removeEventListener('click', opts.click)
     el.removeEventListener('input', opts.input)
+    opts.unwatch()
 }
 
 function focusin(e) {
