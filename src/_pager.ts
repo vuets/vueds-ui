@@ -8,7 +8,7 @@ import {
     screen, table_compact_columns, 
 } from './screen_util'
 
-import { isInput, resolveElement, fireEvent } from './dom_util'
+import { isInput, resolveElement, fireEvent, removeClass } from './dom_util'
 
 import {
     selectIdx, pageAndSelectIdx, 
@@ -24,6 +24,10 @@ import { PojoState, defp } from 'vueds'
 import {
     Pager, PagerState, PojoStore, SelectionFlags, SelectionType, resolveNextPageIndex 
 } from 'vueds/lib/store/'
+
+export const enum Flags {
+    SUGGEST = 16
+}
 
 export interface Opts {
     flags: number
@@ -210,8 +214,10 @@ function swipe(e) {
 
 function press(e) {
     let opts: Opts = this
+    
+    if (isInput(e.target) || (opts.flags & Flags.SUGGEST)) return
+    
     current = opts
-    if (isInput(e.target)) return
     keymage.setScope('pager')
     
     select(e, opts, false, opts.flags & screen.flags)
@@ -230,16 +236,25 @@ function tap(e) {
 
     var pager = opts.pager,
         pojo,
-        store: PojoStore<any>
+        store: PojoStore<any>,
+        //key,
+        suggest
     
-    if (!(pojo = itemLookup(e.target)) || pojo.$pager !== pager || pager.array[pojo.$index] === pager.pojo) return
+    if (!(pojo = itemLookup(e.target)) || pojo.$pager !== pager) return
     
     store = opts.pager['store']
+    //key = pojo[store.$k] || pojo[store.k]
+    suggest = !!(opts.flags & Flags.SUGGEST)
+
+    if (!suggest && pager.array[pojo.$index] === pager.pojo/* && pager.prev_key === key*/) return
+
     store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
+
+    if (suggest)
+        removeClass(opts.el.parentElement, 'active')
 }
 
 function doubletap(e) {
-    let opts: Opts = this
     // TODO remove hack
     if (e.target.hasOwnProperty('$l')) {
         // a date input with a date picker
@@ -249,7 +264,11 @@ function doubletap(e) {
         //e.stopPropagation()
         return false
     }
-    
+
+    let opts: Opts = this
+    if (opts.flags & Flags.SUGGEST)
+        return false
+
     current = opts
     if (isInput(e.target)) return
     // tap already handles this, which gets called before this function
