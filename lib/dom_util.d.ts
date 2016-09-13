@@ -17,7 +17,7 @@ export declare function getAbsoluteLeft(el: any): number;
 export declare function getAbsoluteTop(el: any): number;
 export declare function positionTo(relativeTarget: any, popup: any): void;
 export declare function popTo(relativeTarget: any, popup: any): void;
-export declare function debounce(func: any, wait: any, immediate: any): () => any;
+export declare function debounce(func: any, wait: any, immediate?: any): any;
 export declare function updateSelect(el: any, value: any): void;
 export declare type FnUpdate = (el, value) => any;
 export declare function updateBoolCheckbox(el: any, value: any): void;

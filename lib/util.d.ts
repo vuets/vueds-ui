@@ -1,5 +1,4 @@
 import { Trie } from './trie';
-export declare const vueVersion: any, vue2: boolean;
 export declare function extractFlagsLen(str: string): number;
 export declare function newChangeHandler(self: any): (e) => any;
 export declare function prevent(e: Event, flags: number): boolean;
