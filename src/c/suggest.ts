@@ -74,19 +74,9 @@ export class Suggest {
             }
         })).pager
     }
-    /*static mounted(self: Suggest) {
-        //self.add('foo', 'bar', 1)
-        //self.add('baz', 'zoo', 1)
-    }
-
-    add(name: string, value: string, id?: number) {
-        let str = ds.ACResult.$stringify(ds.ACResult.$create(name, value, id))
-        this.pstore.add(JSON.parse(str) as ds.ACResult, true, true)
-    }*/
 }
 export default component({
     created(this: Suggest) { Suggest.created(this) },
-    //mounted(this: Suggest) { Suggest.mounted(this) },
     template: `
 <div class="suggest" v-pager:${Flags.SUGGEST}="pager">
   <ul class="ui small divided selection list">
