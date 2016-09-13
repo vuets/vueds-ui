@@ -1,11 +1,8 @@
 declare function require(path: string) : any;
 
 import * as Vue from 'vue'
-import { Trie } from './trie'
 import { EventFlags } from 'vueds'
-
-export const vueVersion = Vue['default']['version'],
-    vue2 = vueVersion.charAt(0) === '2'
+import { Trie } from './trie'
 
 export function extractFlagsLen(str: string): number {
     var len = 0,
