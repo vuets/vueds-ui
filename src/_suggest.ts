@@ -1,13 +1,15 @@
+import * as Vue from 'vue'
 import { SelectionType, SelectionFlags } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as keymage from './keymage'
 import { getInstance } from './c/suggest'
 import { removeClass, addClass, hasClass, popTo, debounce } from './dom_util'
+import { listDown, listUp, moveTopOrUp, moveBottomOrDown } from './pager_util'
 
 function hidePopup(suggest, conditional?: boolean): boolean {
     let popup = suggest.$el.parentElement
     
-    if (conditional && hasClass(popup, 'active'))
+    if (conditional && !hasClass(popup, 'active'))
         return false
     
     popup.style.visibility = 'hidden'
@@ -17,7 +19,8 @@ function hidePopup(suggest, conditional?: boolean): boolean {
 }
 function showPopup(suggest, self: Opts) {
     let popup = suggest.$el.parentElement
-    
+    suggest.pstore.replace(self.cache, SelectionType.RESET)
+
     addClass(popup, 'active')
     popTo(self.el, popup)
 }
@@ -30,6 +33,8 @@ function togglePopup(suggest, self: Opts): boolean {
         removeClass(popup, 'active')
         show = false
     } else {
+        if (!suggest.pstore.isSameArray(self.cache))
+            suggest.pstore.replace(self.cache, SelectionType.RESET)
         addClass(popup, 'active')
         popTo(self.el, popup)
     }
@@ -42,6 +47,10 @@ function isPopupShown(suggest): boolean {
     return hasClass(popup, 'active')
 }
 
+export const enum Flags {
+    UPDATE = 16
+}
+
 export interface Opts {
     flags: number
     pojo: any
@@ -51,18 +60,27 @@ export interface Opts {
     vm: any
     el: any
 
+    col_size: number
+    table_flags: number
+
+    update: boolean
     str: string
     empty: boolean
     disabled: boolean
     cache: any
 
+    pending_name: any
+    pending_value: any
+
     unwatch: any
     onSelect: any
 
+    focusNT: any // next tick
     focusin: any
     focusout: any
     click: any
     input: any
+    keyup: any
 }
 
 const emptyArray = []
@@ -76,13 +94,31 @@ function newWatchFn(pojo, fk) {
 
 function onUpdate(this: Opts, value, oldValue) {
     this.el.value = value
+    if (value)
+        addClass(this.el.parentElement, 'suggested')
+    else
+        removeClass(this.el.parentElement, 'suggested')
+}
+
+function focusNT() {
+    this.el.focus()
 }
 
 function onSelect(message: ds.ACResult, flags: SelectionFlags) {
-    let self: Opts = this
-    //self.el.value = message.name
-    self.pojo._[self.fk] = message.name
-    self.pojo[self.field] = message.id || message.value
+    let self: Opts = this,
+        name = message.name,
+        value = message.id || message.value
+    if (!flags) {
+        self.pending_name = name
+        self.pending_value = value
+        self.el.value = name
+    } else {
+        self.pending_name = null
+        self.pojo._[self.fk] = name
+        self.pojo[self.field] = value
+    }
+
+    Vue.nextTick(self.focusNT)
 }
 
 export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts {
@@ -102,28 +138,39 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         vm,
         el,
 
+        col_size: 0,
+        table_flags: 0,
+
+        update: !!(flags & Flags.UPDATE),
         str: '',
         empty: true,
         disabled: false,
         cache: emptyArray,
 
+        pending_name: null,
+        pending_value: null,
+
         unwatch: null,
         onSelect: null,
 
+        focusNT: null,
         focusin: null,
         focusout: null,
         click: null,
-        input: null
+        input: null,
+        keyup: null
     }
 
     opts.unwatch = vm.$watch(newWatchFn(pojo, fk), onUpdate.bind(opts))
     opts.onSelect = onSelect.bind(opts)
+    opts.focusNT = focusNT.bind(opts)
 
     el.addEventListener('focusin', opts.focusin = focusin.bind(opts))
-    //el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
-    ////el.addEventListener('focusout', opts.focusout = debounce(focusout.bind(opts), 200))
-    //el.addEventListener('click', opts.click = click.bind(opts))
+    el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
+    //el.addEventListener('focusout', opts.focusout = debounce(focusout.bind(opts), 200))
+    el.addEventListener('click', opts.click = click.bind(opts))
     el.addEventListener('input', opts.input = input.bind(opts))
+    el.addEventListener('keyup', opts.keyup = keyup.bind(opts))
 
     return opts
 }
@@ -131,9 +178,10 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
 export function cleanup(opts: Opts) {
     let el = opts.el
     el.removeEventListener('focusin', opts.focusin)
-    //el.removeEventListener('focusout', opts.focusout)
-    //el.removeEventListener('click', opts.click)
+    el.removeEventListener('focusout', opts.focusout)
+    el.removeEventListener('click', opts.click)
     el.removeEventListener('input', opts.input)
+    el.removeEventListener('keyup', opts.keyup)
     opts.unwatch()
 }
 
@@ -150,43 +198,20 @@ function focusin(e) {
 
 function focusout(e) {
     let self: Opts = this,
-        suggest = getInstance(),
-        pager = suggest.pager
+        name = self.pending_name
     
-    if (isPopupShown(suggest)) {
-        // could have selected, check clicks
-    } else if (pager.index_selected === -1) {
-        self.el.value = ''
-    } else if (pager.pojo.name !== self.el.value) {
-        // resetSuggest
-    } else {
-        // selectSuggest
+    if (name) {
+        if (self.el.value === name) {
+            self.pojo._[self.fk] = self.pending_name
+            self.pojo[self.field] = self.pending_value
+        }
+        self.pending_name = null
+    } else if (self.update && self.el.value !== (name = self.pojo._[self.fk])) {
+        self.el.value = name
     }
+
+    hidePopup(getInstance(), true)
 }
-
-/*function verifySelectionClick(self: Opts, suggest, obj, selected, clicks) {
-    if (clicks !== suggest.pager.$clicks) return
-    
-    if (self === current && suggest.$el.parentElement) {
-        // hide if still visible
-        util.hidePopup(true)
-    }
-    
-    if (self.str_selected !== self.el.value) resetSuggest(self, obj, selected)
-    else if (selected) selectSuggest(selected, self, obj)
-    //else console.log('noop')
-}*
-
-function focusout(e) {
-    let self: Opts = this,
-        suggest = getInstance(),
-        obj = getOwner(self),
-        selected = self.selected
-    
-    if (isPopupShown(suggest)) verifySelectionClick(self, suggest, obj, selected, pager.$clicks)
-    else if (self.str_selected !== self.el.value) resetSuggest(self, obj, selected)
-    else if (selected) selectSuggest(selected, self, obj)
-}*/
 
 function click(e) {
     e.preventDefault()
@@ -221,10 +246,10 @@ function input(e) {
         hidePopup(getInstance())
     } else if (value === self.str) {
         // simply re-typed the single letter char
-        getInstance().pstore.replace(self.cache)
         showPopup(getInstance(), self)
     } else {
         el.disabled = self.disabled = true
+        removeClass(self.el.parentElement, 'suggested')
         self.fetch(ds.ParamRangeKey.$create(false, 11), value)
             .then(data => {
                 let array = data['1'],
@@ -236,9 +261,9 @@ function input(e) {
                 if (empty) {
                     self.cache = emptyArray
                 } else {
-                    self.cache = array
-                    suggest.pstore.replace(array, SelectionType.RESET)
+                    self.cache = array.reverse()
                     showPopup(suggest, self)
+                    Vue.nextTick(self.focusNT)
                 }
 
                 el.disabled = self.disabled = false
@@ -249,4 +274,64 @@ function input(e) {
                 el.disabled = self.disabled = false
             })
     }
+}
+
+function keyup(e) {
+    let self: Opts = this,
+        suggest,
+        pager
+    switch (e.which) {
+        //case 8: // backspace
+        //    return self._input(e)
+        case 13:
+            // do not propagate the enter key event
+            if (!togglePopup(getInstance(), self) && self.el.value === self.pending_name) {
+                self.pojo._[self.fk] = self.pending_name
+                self.pojo[self.field] = self.pending_value
+                self.pending_name = null
+            }
+            /*if (self.el.value) {
+                togglePopup(getInstance(), self)
+            } else if (!self.update && self.pojo[self.field]) {
+                // reset suggest
+            }*/
+            break
+        case 27: // escape
+            /*if (!util.hidePopup(true) && self.from_editable) {
+                getOwner(self).vmessage['f'+self.field_key] = false
+            }*/
+            //self.pending_name = null
+            hidePopup(getInstance(), true)
+            break
+        /*case 37: // left
+            if (!util.isPopupShown()) return true
+            if (e.ctrlKey) pageFirst(e)
+            else pagePrev(e)
+            break*/
+        case 38: // up
+            suggest = getInstance()
+            pager = suggest.pager
+            if (e.ctrlKey) moveTopOrUp(e, pager, self)
+            else listUp(pager, pager.index_selected, e, false)
+            break
+        /*case 39: // right
+            if (!util.isPopupShown()) return true
+            if (e.ctrlKey) pageLast(e)
+            else pageNext(e)
+            break*/
+        case 40: // down
+            suggest = getInstance()
+            pager = suggest.pager
+            if (e.ctrlKey) moveBottomOrDown(e, pager, self)
+            else listDown(pager, pager.index_selected, e, false)
+            break
+        default:
+            //if (e.which >= 65 && e.which <= 90)
+            //    return self._input(e)
+            return true
+    }
+    
+    e.preventDefault()
+    e.stopPropagation()
+    return false
 }

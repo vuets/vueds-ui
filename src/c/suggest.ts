@@ -30,7 +30,7 @@ export class Suggest {
     static created(self: Suggest) {
         instance = self
         self.pager = defp(self, 'pstore', new PojoStore([], {
-            desc: true,
+            desc: false,
             pageSize: 10,
             descriptor: ds.ACResult.$descriptor,
             keyProperty: '2',
