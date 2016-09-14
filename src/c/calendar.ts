@@ -138,19 +138,17 @@ export default component({
     created(this: Calendar) { Calendar.created(this) },
     mounted(this: Calendar) { Calendar.mounted(this) },
     template: `
-<div class="ui calendar" v-pager:0,0,7="pager">
-  <ul>
-    <li class="header"><span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></li>
-    <li class="weekday">Mon</li>
-    <li class="weekday">Tue</li>
-    <li class="weekday">Wed</li>
-    <li class="weekday">Thu</li>
-    <li class="weekday">Fri</li>
-    <li class="weekday">Sat</li>
-    <li class="weekday">Sun</li>
-    <li v-for="pojo in pager.array" v-defp:pager_item="pojo" class="day"
-        v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
-        v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
-  </ul>
-</div>`
+<ul class="ui calendar" v-pager:0,0,7="pager">
+  <li class="header"><span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></li>
+  <li class="weekday">Sun</li>
+  <li class="weekday">Mon</li>
+  <li class="weekday">Tue</li>
+  <li class="weekday">Wed</li>
+  <li class="weekday">Thu</li>
+  <li class="weekday">Fri</li>
+  <li class="weekday">Sat</li>
+  <li v-for="pojo in pager.array" v-defp:pager_item="pojo" class="day"
+      v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
+      v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
+</ul>`
 }, Calendar)

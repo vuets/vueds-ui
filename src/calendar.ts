@@ -148,7 +148,7 @@ export function getCalendar(opts: Opts, y: number, m: number): DateItem[] {
         otherMonth = 0,
         otherYear= 0
 
-    while (i < max) {
+    for (; i < max; i++) {
         currentDate = i + 1;
         currentDay = ((i < 1 ? 7 + i : i) + firstDay) % 7;
         if (currentDate >= 1 && currentDate <= lastDate) {
@@ -162,7 +162,6 @@ export function getCalendar(opts: Opts, y: number, m: number): DateItem[] {
                 weekNumber: -1
             }, opts, currentDay, currentWeekNumber)
 
-            i++
             continue
         }
 
@@ -193,8 +192,6 @@ export function getCalendar(opts: Opts, y: number, m: number): DateItem[] {
             selected: false,
             weekNumber: -1
         }, opts, currentDay, currentWeekNumber)
-
-        i++
     }
 
     return calendar
