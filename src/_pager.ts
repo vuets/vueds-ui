@@ -53,7 +53,7 @@ export function attachOptsTo(el, args: string[]|any, pager: Pager, vm) {
         len = !args? 0 : args.length,
         flags = i === len ? 0 : parseInt(args[i++], 10),
         table_flags = i === len ? 0 : parseInt(args[i++], 10),
-        col_size = table_flags === 0 ? 0 : table_compact_columns(),
+        col_size = i === len ? (table_flags === 0 ? 0 : table_compact_columns()) : parseInt(args[i++], 10),
         hammer = new Hammer(el)
     
     let opts: Opts = {

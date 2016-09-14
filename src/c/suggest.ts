@@ -51,7 +51,7 @@ export class Suggest {
             descriptor: ds.ACResult.$descriptor,
             keyProperty: '2',
             $keyProperty: 'value',
-            createObservable(so: StateObject) {
+            createObservable(so: StateObject, idx: number) {
                 return ds.ACResult.$createObservable()
             },
             onSelect(message: ds.ACResult, flags: SelectionFlags): number {
