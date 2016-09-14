@@ -28,7 +28,6 @@ function hideSuggest(suggest, conditional?: boolean): boolean {
     $hide(popup)
     return true
 }
-
 function showSuggest(suggest, self: Opts) {
     let popup = suggest.$el.parentElement,
         style = popup.style
@@ -76,7 +75,7 @@ export interface Opts {
 
     update: boolean
     str: string
-    empty: boolean
+    str_fetch: string
     disabled: boolean
     cache: any
 
@@ -85,6 +84,9 @@ export interface Opts {
 
     unwatch: any
     onSelect: any
+
+    cbFetchSuccess: any
+    cbFetchFailed: any
 
     // next tick
     focusNT: any
@@ -162,7 +164,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
 
         update: !!(flags & Flags.UPDATE),
         str: '',
-        empty: true,
+        str_fetch: '',
         disabled: false,
         cache: emptyArray,
 
@@ -171,6 +173,9 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
 
         unwatch: null,
         onSelect: null,
+
+        cbFetchSuccess: null,
+        cbFetchFailed: null,
 
         focusNT: null,
         //hideSuggestNT: null,
@@ -183,12 +188,15 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
 
     opts.unwatch = vm.$watch(newWatchFn(pojo, fk), onUpdate.bind(opts))
     opts.onSelect = onSelect.bind(opts)
+
+    opts.cbFetchSuccess = cbFetchSuccess.bind(opts)
+    opts.cbFetchFailed = cbFetchFailed.bind(opts)
+
     opts.focusNT = focusNT.bind(opts)
     //opts.hideSuggestNT = hideSuggestNT.bind(opts)
 
     //el.addEventListener('focusin', opts.focusin = focusin.bind(opts))
     el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
-    //el.addEventListener('focusout', opts.focusout = debounce(focusout.bind(opts), 200))
     el.addEventListener('click', opts.click = click.bind(opts))
     el.addEventListener('input', opts.input = debounce(input.bind(opts), 250))
     el.addEventListener('keyup', opts.keyup = keyup.bind(opts))
@@ -276,6 +284,43 @@ function click(e) {
     }
 }
 
+function cbFetchSuccess(data) {
+    let self: Opts = this,
+        value = self.str_fetch
+    
+    self.disabled = false
+    
+    if (value !== self.el.value) {
+        Vue.nextTick(self.input)
+        return true
+    }
+
+    let array = data['1'],
+        suggest = getInstance()
+    
+    suggest.opts = self
+    self.str = value
+    if (!array || !array.length) {
+        self.cache = emptyArray
+        hideSuggest(suggest, true)
+    } else {
+        self.cache = array.reverse()
+        showSuggest(suggest, self)
+        Vue.nextTick(self.focusNT)
+    }
+
+    return true
+}
+
+function cbFetchFailed(err) {
+    let self: Opts = this
+
+    self.disabled = false
+    
+    if (self.str_fetch !== self.el.value)
+        Vue.nextTick(self.input)
+}
+
 function input(e) {
     let self: Opts = this,
         el = self.el,
@@ -287,44 +332,16 @@ function input(e) {
         // the new input has whitespace, replace with trimmed string
         el.value = value
     } else if (!value) {
-        self.empty = true
         hideSuggest(getInstance())
     } else if (value === self.str) {
         // simply re-typed the single letter char
         showSuggest(getInstance(), self)
     } else {
+        self.str_fetch = value
         self.disabled = true
-        self.fetch(ds.PS.$create(value, ds.ParamRangeKey.$create(false, 11))) // TODO do not hardcode page size
-            .then(data => {
-                self.disabled = false
-                
-                if (value !== self.el.value) {
-                    Vue.nextTick(self.input)
-                    return true
-                }
-
-                let array = data['1'],
-                    suggest = getInstance()
-                
-                suggest.opts = self
-                self.str = value
-                if (!array || !array.length) {
-                    self.cache = emptyArray
-                    hideSuggest(suggest, true)
-                } else {
-                    self.cache = array.reverse()
-                    showSuggest(suggest, self)
-                    Vue.nextTick(self.focusNT)
-                }
-
-                return true
-            })
-            .then(undefined, err => {
-                self.disabled = false
-                
-                if (value !== self.el.value)
-                    Vue.nextTick(self.input)
-            })
+        // TODO do not hardcode page size
+        self.fetch(ds.PS.$create(value, ds.ParamRangeKey.$create(false, 11)))
+            .then(self.cbFetchSuccess).then(undefined, self.cbFetchFailed)
     }
 }
 
