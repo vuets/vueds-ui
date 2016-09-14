@@ -85,7 +85,7 @@ function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any):
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
-      v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
+      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="${pojo}._['${fd._}']"></div>
 </div>`
