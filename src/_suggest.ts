@@ -276,8 +276,10 @@ function click(e) {
         self: Opts = this,
         text: string
 
-    if (self === suggest.opts && isSuggestShown(suggest))
+    if (self === suggest.opts && isSuggestShown(suggest)) {
+        hideSuggest(suggest)
         return
+    }
     
     text = self.el.value
     
