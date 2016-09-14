@@ -270,13 +270,12 @@ function click(e) {
     e.preventDefault()
     e.stopPropagation()
     let suggest = getInstance(),
-        self: Opts,
+        self: Opts = this,
         text: string
 
-    if (isSuggestShown(suggest))
+    if (self === suggest.opts && isSuggestShown(suggest))
         return
     
-    self = this
     text = self.el.value
     
     if (text && text === self.str && self.cache.length) {
@@ -354,7 +353,11 @@ function keyup(e) {
         //    return self._input(e)
         case 13:
             // do not propagate the enter key event
-            if (!toggleSuggest(getInstance(), self) && self.el.value === self.pending_name) {
+            suggest = getInstance()
+            if (self !== suggest.opts && self.cache.length) {
+                // show your results.
+                showSuggest(suggest, self)
+            } else if (!toggleSuggest(suggest, self) && self.el.value === self.pending_name) {
                 self.pojo._[self.fk] = self.pending_name
                 self.pojo[self.field] = self.pending_value
                 self.pending_name = null
