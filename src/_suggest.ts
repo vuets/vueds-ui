@@ -69,6 +69,7 @@ export interface Opts {
     fk: string
     vm: any
     el: any
+    pojo_: any
 
     col_size: number
     table_flags: number
@@ -103,9 +104,9 @@ export interface Opts {
 const emptyArray = []
 //var current: Opts, previous: Opts
 
-function newWatchFn(pojo, fk) {
+function newWatchFn(pojo_, fk) {
     return function() {
-        return pojo._[fk]
+        return pojo_[fk]
     }
 }
 
@@ -129,14 +130,14 @@ function onSelect(message: ds.ACResult, flags: SelectionFlags) {
         self.pending_name = name
         self.pending_value = value
         self.el.value = name
-    } else if (name === self.pojo._[self.fk]) {
+    } else if (name === self.pojo_[self.fk]) {
         self.pending_name = null
         self.el.value = name // redudant
         addClass(this.el.parentElement, 'suggested')
         Vue.nextTick(self.focusNT)
     } else {
         self.pending_name = null
-        self.pojo._[self.fk] = name
+        self.pojo_[self.fk] = name
         self.pojo[self.field] = value
         Vue.nextTick(self.focusNT)
     }
@@ -146,6 +147,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
     let i = 0,
         len = !args ? 0 : args.length,
         flags = i === len ? 0 : parseInt(args[i++], 10),
+        pojo_ = pojo._,
         descriptor = pojo.$d,
         $ = descriptor.$,
         fk = $ ? $[field] : field
@@ -158,6 +160,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         fk,
         vm,
         el,
+        pojo_,
 
         col_size: 0,
         table_flags: 0,
@@ -186,7 +189,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         keyup: null
     }
 
-    opts.unwatch = vm.$watch(newWatchFn(pojo, fk), onUpdate.bind(opts))
+    opts.unwatch = vm.$watch(newWatchFn(pojo_, fk), onUpdate.bind(opts))
     opts.onSelect = onSelect.bind(opts)
 
     opts.cbFetchSuccess = cbFetchSuccess.bind(opts)
@@ -241,16 +244,16 @@ function focusout(e) {
     if (name) {
         if (!self.update && text !== name) {
             removeClass(self.el.parentElement, 'suggested')
-        } else if (name === self.pojo._[self.fk]) {
+        } else if (name === self.pojo_[self.fk]) {
             self.el.value = name // redudant on non update
             addClass(self.el.parentElement, 'suggested')
         } else {
-            self.pojo._[self.fk] = name
+            self.pojo_[self.fk] = name
             self.pojo[self.field] = self.pending_value
         }
         self.pending_name = null
         hideSuggest(suggest, true)
-    } else if (text === (name = self.pojo._[self.fk])) {
+    } else if (text === (name = self.pojo_[self.fk])) {
         addClass(self.el.parentElement, 'suggested') // redudant
     } else if (self.update) {
         self.el.value = name
@@ -358,7 +361,7 @@ function keyup(e) {
                 // show your results.
                 showSuggest(suggest, self)
             } else if (!toggleSuggest(suggest, self) && self.el.value === self.pending_name) {
-                self.pojo._[self.fk] = self.pending_name
+                self.pojo_[self.fk] = self.pending_name
                 self.pojo[self.field] = self.pending_value
                 self.pending_name = null
             }
