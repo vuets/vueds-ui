@@ -1,5 +1,5 @@
 import { FieldType } from 'vueds'
-import { formatDate, formatTime, formatDateTime } from './datetime_util'
+import { formatDate, formatTime, formatDateTime } from 'vueds/lib/datetime_util'
 
 const UA = window.navigator.userAgent.toLowerCase(), // browser sniffing from vuejs
     isIE = UA && UA.indexOf('trident') > 0,
