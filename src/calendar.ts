@@ -7,8 +7,6 @@ export interface YMD {
 }
 
 export interface Opts {
-    startDate: YMD
-    endDate?: YMD
     weekStart: number // 0
     // on by default
     //siblingMonths: boolean
@@ -111,7 +109,9 @@ export interface Item extends YMD {
     weekNumber: number
 }
 
-function addItemTo(array: Item[], item: Item, opts: Opts, currentDay: number, currentWeekNumber: number|null): number {
+function addItemTo(array: Item[], item: Item,
+        currentDay: number, currentWeekNumber: number|null,
+        startDate: YMD, endDate?: YMD): number {
     let weekNumber: number
     if (currentWeekNumber === null)
         weekNumber = calculateWeekNumber(item)
@@ -123,14 +123,14 @@ function addItemTo(array: Item[], item: Item, opts: Opts, currentDay: number, cu
         weekNumber = currentWeekNumber
     
     item.weekNumber = weekNumber
-    item.selected = isDateSelected(item, opts.startDate, opts.endDate)
+    item.selected = isDateSelected(item, startDate, endDate)
 
     array.push(item)
 
     return weekNumber
 }
 
-export function getCalendar(opts: Opts, y: number, m: number): Item[] {
+export function getCalendar(y: number, m: number, opts: Opts, startDate: YMD, endDate?: YMD): Item[] {
     let calendar: Item[] = [],
         date = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0)),
         year = date.getUTCFullYear(),
@@ -160,7 +160,7 @@ export function getCalendar(opts: Opts, y: number, m: number): Item[] {
                 siblingMonth: false,
                 selected: false,
                 weekNumber: -1
-            }, opts, currentDay, currentWeekNumber)
+            }, currentDay, currentWeekNumber, startDate, endDate)
 
             continue
         }
@@ -191,7 +191,7 @@ export function getCalendar(opts: Opts, y: number, m: number): Item[] {
             siblingMonth: true,
             selected: false,
             weekNumber: -1
-        }, opts, currentDay, currentWeekNumber)
+        }, currentDay, currentWeekNumber, startDate, endDate)
     }
 
     return calendar
