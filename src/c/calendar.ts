@@ -100,7 +100,8 @@ export class Calendar {
         let today = defp(self, 'date', new Date()),
             year = today.getUTCFullYear(),
             month = today.getUTCMonth(),
-            day = today.getUTCDay()
+            day = today.getUTCDate()
+        
         let opts: cal.Opts = defp(self, 'opts', {
             startDate: { year, month, day },
             weekStart: 0
