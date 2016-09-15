@@ -55,6 +55,7 @@ export declare class Calendar {
     constructor();
     static created(self: Calendar): void;
     static mounted(self: Calendar): void;
+    page(next: boolean): void;
 }
 declare var _default: any;
 export default _default;
