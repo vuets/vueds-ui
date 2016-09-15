@@ -23,22 +23,22 @@ export function isLeapYear(year: number): boolean {
     return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)
 }
 
-export function isDateSelected(opts: Opts, date: YMD): boolean {
-	if (date.year === opts.startDate.year && date.month === opts.startDate.month && date.day === opts.startDate.day)
+export function isDateSelected(date: YMD, startDate: YMD, endDate?: YMD): boolean {
+	if (date.year === startDate.year && date.month === startDate.month && date.day === startDate.day)
 		return true
-    else if (!opts.endDate)
+    else if (!endDate)
         return false
-    else if (date.year === opts.startDate.year && date.month === opts.startDate.month && date.day < opts.startDate.day)
+    else if (date.year === startDate.year && date.month === startDate.month && date.day < startDate.day)
         return false
-    else if (date.year === opts.endDate.year && date.month === opts.endDate.month && date.day > opts.endDate.day)
+    else if (date.year === endDate.year && date.month === endDate.month && date.day > endDate.day)
         return false
-    else if (date.year === opts.startDate.year && date.month < opts.startDate.month)
+    else if (date.year === startDate.year && date.month < startDate.month)
         return false
-    else if (date.year === opts.endDate.year && date.month > opts.endDate.month)
+    else if (date.year === endDate.year && date.month > endDate.month)
         return false
-    else if (date.year < opts.startDate.year)
+    else if (date.year < startDate.year)
         return false
-    else if (date.year > opts.endDate.year)
+    else if (date.year > endDate.year)
         return false
     else
         return true
@@ -123,7 +123,7 @@ function addItemTo(array: Item[], item: Item, opts: Opts, currentDay: number, cu
         weekNumber = currentWeekNumber
     
     item.weekNumber = weekNumber
-    item.selected = isDateSelected(opts, item)
+    item.selected = isDateSelected(item, opts.startDate, opts.endDate)
 
     array.push(item)
 
