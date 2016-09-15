@@ -210,6 +210,6 @@ export default component({
   <li v-for="pojo in pager.array" v-defp:pager_item="pojo" class="day"
       v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
       v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
-  <div style="clear:both"></div>
+  <div class="footer"></div>
 </ul>`
 }, Calendar)
