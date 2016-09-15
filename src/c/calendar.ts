@@ -1,6 +1,6 @@
 import { component } from 'vuets'
 import { defp, nullp, initObservable } from 'vueds'
-import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState } from 'vueds/lib/store/'
+import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as cal from '../calendar'
 
@@ -84,31 +84,79 @@ function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
+interface Entry {
+    key: string
+    val: cal.YMD,
+    array: any
+}
+
+function getEntry(year: number, month: number, opts: cal.Opts, startDate: cal.YMD, cache: any): Entry {
+    let key = year + '/' + month,
+        entry: Entry = cache[key]
+    
+    if (!entry)
+        cache[key] = entry = { key, val: { year, month, day: -1 }, array: cal.getCalendar(year, month, opts, startDate) }
+    
+    return entry
+}
+
+function repaint(self: Calendar, next: boolean) {
+    let config = self.config,
+        current = config.current,
+        entry: Entry
+    if (next) {
+        if (current.month === 11)
+            entry = getEntry(current.year + 1, 0, config.opts, config.startDate, config.cache)
+        else
+            entry = getEntry(current.year, current.month + 1, config.opts, config.startDate, config.cache)
+    } else if (current.month) {
+        entry = getEntry(current.year, current.month - 1, config.opts, config.startDate, config.cache)
+    } else {
+        entry = getEntry(current.year - 1, 11, config.opts, config.startDate, config.cache)
+    }
+    
+    let ymd = entry.val
+    config.current = ymd
+    self.year = ymd.year
+    self.month = months[ymd.month]
+    self.pstore.replace(entry.array, SelectionType.RESET)
+}
+
+export interface Config {
+    today: Date
+    startDate: cal.YMD
+    current: cal.YMD
+    opts: cal.Opts
+    cache: any
+}
+
 export class Calendar {
     pager: Pager
     pstore: PojoStore<Item>
-    opt: cal.Opts
-    date: Date
+    config: Config
     month = ''
-    year = ''
+    year = 0
     
     constructor() {
         nullp(this, 'pager')
     }
     
     static created(self: Calendar) {
-        let today = defp(self, 'date', new Date()),
+        let today = new Date(),
             year = today.getUTCFullYear(),
             month = today.getUTCMonth(),
-            day = today.getUTCDate()
+            day = today.getUTCDate(),
+            startDate: cal.YMD = { year, month, day }
         
-        let opts: cal.Opts = defp(self, 'opts', {
-            startDate: { year, month, day },
-            weekStart: 0
+        let config: Config = defp(self, 'config', {
+            today,
+            startDate,
+            current: startDate,
+            opts: { weekStart: 0 },
+            cache: {}
         })
-        let array = cal.getCalendar(opts, year, month) as any
 
-        self.pager = defp(self, 'pstore', new PojoStore(array, {
+        self.pager = defp(self, 'pstore', new PojoStore(getEntry(year, month, config.opts, startDate, config.cache).array, {
             desc: true,
             pageSize: 35,
             descriptor: Item.$descriptor,
@@ -123,12 +171,15 @@ export class Calendar {
                 return 0
             },
             fetch(req: ds.ParamRangeKey, pager: Pager) {
-                // TODO
+                // not used
+            },
+            page(next: boolean, pager: Pager) {
+                repaint(self, next)
             }
         })).pager
 
         self.month = months[month]
-        self.year = String(year)
+        self.year = year
     }
 
     static mounted(self: Calendar) {
