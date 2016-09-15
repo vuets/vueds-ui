@@ -104,14 +104,14 @@ export function calculateWeekNumber(date: YMD): number {
 	return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000)
 }
 
-export interface DateItem extends YMD {
+export interface Item extends YMD {
     siblingMonth: boolean
     selected: boolean
     weekDay: number
     weekNumber: number
 }
 
-function addItemTo(array: DateItem[], item: DateItem, opts: Opts, currentDay: number, currentWeekNumber: number|null): number {
+function addItemTo(array: Item[], item: Item, opts: Opts, currentDay: number, currentWeekNumber: number|null): number {
     let weekNumber: number
     if (currentWeekNumber === null)
         weekNumber = calculateWeekNumber(item)
@@ -130,8 +130,8 @@ function addItemTo(array: DateItem[], item: DateItem, opts: Opts, currentDay: nu
     return weekNumber
 }
 
-export function getCalendar(opts: Opts, y: number, m: number): DateItem[] {
-    let calendar: DateItem[] = [],
+export function getCalendar(opts: Opts, y: number, m: number): Item[] {
+    let calendar: Item[] = [],
         date = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0)),
         year = date.getUTCFullYear(),
         month = date.getUTCMonth(),

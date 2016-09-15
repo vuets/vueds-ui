@@ -2,7 +2,7 @@ import { component } from 'vuets'
 import { defp, nullp, initObservable } from 'vueds'
 import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
-import { Opts, getCalendar, DateItem } from '../calendar'
+import * as cal from '../calendar'
 
 /**
  * 
@@ -63,7 +63,7 @@ export namespace Item {
     }
 }
 
-function mergeFrom(src: DateItem, descriptor: any, target: Item): Item {
+function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
     let flags = 0,
         target_flags = target.flags,
         day = src.day
@@ -87,7 +87,7 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 export class Calendar {
     pager: Pager
     pstore: PojoStore<Item>
-    opt: Opts
+    opt: cal.Opts
     date: Date
     month = ''
     year = ''
@@ -101,11 +101,11 @@ export class Calendar {
             year = today.getUTCFullYear(),
             month = today.getUTCMonth(),
             day = today.getUTCDay()
-        let opts: Opts = defp(self, 'opts', {
+        let opts: cal.Opts = defp(self, 'opts', {
             startDate: { year, month, day },
             weekStart: 0
         })
-        let array = getCalendar(opts, year, month) as any
+        let array = cal.getCalendar(opts, year, month) as any
 
         self.pager = defp(self, 'pstore', new PojoStore(array, {
             desc: true,
