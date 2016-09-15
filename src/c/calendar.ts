@@ -185,13 +185,21 @@ export class Calendar {
     static mounted(self: Calendar) {
         self.pstore.repaint()
     }
+
+    page(next: boolean) {
+        repaint(this, next)
+    }
 }
 export default component({
     created(this: Calendar) { Calendar.created(this) },
     mounted(this: Calendar) { Calendar.mounted(this) },
     template: `
 <ul class="ui calendar" v-pager:0,0,7="pager">
-  <li class="header"><span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></li>
+  <li class="header">
+    <i class="l icon left-circled" @click.prevent="page(false)"></i>
+    <span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></span>
+    <i class="r icon right-circled" @click.prevent="page(true)"></i>
+  </li>
   <li class="weekday">Sun</li>
   <li class="weekday">Mon</li>
   <li class="weekday">Tue</li>
