@@ -1,5 +1,5 @@
 import { PojoStore, Pager } from 'vueds/lib/store/';
-import { Opts } from '../calendar';
+import * as cal from '../calendar';
 /**
  *
  * message Item {
@@ -39,13 +39,19 @@ export declare namespace Item {
         };
     };
 }
+export interface Config {
+    today: Date;
+    startDate: cal.YMD;
+    current: cal.YMD;
+    opts: cal.Opts;
+    cache: any;
+}
 export declare class Calendar {
     pager: Pager;
     pstore: PojoStore<Item>;
-    opt: Opts;
-    date: Date;
+    config: Config;
     month: string;
-    year: string;
+    year: number;
     constructor();
     static created(self: Calendar): void;
     static mounted(self: Calendar): void;
