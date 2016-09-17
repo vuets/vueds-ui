@@ -1,6 +1,7 @@
 import * as Vue from 'vue'
 import { SelectionType, SelectionFlags } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
+import * as rpc from 'vueds/lib/rpc/'
 import * as keymage from './keymage'
 import { getInstance } from './c/suggest'
 import { removeClass, addClass, hasClass, positionTo, debounce } from './dom_util'
@@ -143,6 +144,10 @@ function onSelect(message: ds.ACResult, flags: SelectionFlags) {
     }
 }
 
+function postPS(req: ds.PS) {
+    return rpc.post(this, ds.PS.$stringify(req))
+}
+
 export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts {
     let i = 0,
         len = !args ? 0 : args.length,
@@ -156,7 +161,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         flags,
         pojo,
         field,
-        fetch,
+        fetch: typeof fetch === 'string' ? postPS.bind(fetch) : fetch,
         fk,
         vm,
         el,
