@@ -4,58 +4,29 @@ import { ds } from 'vueds/lib/ds/'
 import * as rpc from 'vueds/lib/rpc/'
 import * as keymage from './keymage'
 import { getInstance } from './c/suggest'
-import { removeClass, addClass, hasClass, positionTo, debounce } from './dom_util'
+import { removeClass, addClass, debounce, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
 import { listDown, listUp, moveTopOrUp, moveBottomOrDown } from './pager_util'
 
-function $show(popup, self: Opts) {
-    let style = popup.style
-    style.visibility = 'hidden'
-    addClass(popup, 'active')
-    positionTo(self.el, popup)
-    style.visibility = 'visible'
-}
-
-function $hide(popup) {
-    popup.style.visibility = 'hidden'
-    removeClass(popup, 'active')
-}
-
-function hideSuggest(suggest, conditional?: boolean): boolean {
-    let popup = suggest.$el.parentElement
-    
-    if (conditional && !hasClass(popup, 'active'))
-        return false
-    
-    $hide(popup)
-    return true
-}
-function showSuggest(suggest, self: Opts) {
-    let popup = suggest.$el.parentElement,
-        style = popup.style
-    
+function showSuggest(suggest, self: Opts, popup?: any) {
     suggest.pstore.replace(self.cache, SelectionType.RESET)
     suggest.opts = self
-    $show(popup, self)
+    showPopup(popup || getPopup(), suggest.$el, self.el)
 }
-function toggleSuggest(suggest, self: Opts): boolean {
-    let popup = suggest.$el.parentElement,
+function toggleSuggest(suggest, self: Opts, p?: any): boolean {
+    let popup = p || getPopup(),
         show = true,
         array
     
-    if (hasClass(popup, 'active')) {
-        $hide(popup)
+    if (hidePopup(popup)) {
         show = false
     } else if ((array = self.cache).length) {
         if (!suggest.pstore.isSameArray(array))
             suggest.pstore.replace(array, SelectionType.RESET)
         suggest.opts = self
-        $show(popup, self)
+        showPopup(popup, suggest.$el, self.el)
     }
     
     return show
-}
-function isSuggestShown(suggest): boolean {
-    return hasClass(suggest.$el.parentElement, 'active')
 }
 
 export const enum Flags {
@@ -257,7 +228,7 @@ function focusout(e) {
             self.pojo[self.field] = self.pending_value
         }
         self.pending_name = null
-        hideSuggest(suggest, true)
+        hidePopup(getPopup())
     } else if (text === (name = self.pojo_[self.fk])) {
         addClass(self.el.parentElement, 'suggested') // redudant
     } else if (self.update) {
@@ -279,17 +250,16 @@ function click(e) {
     e.stopPropagation()
     let suggest = getInstance(),
         self: Opts = this,
-        text: string
+        text: string,
+        popup
 
-    if (self === suggest.opts && isSuggestShown(suggest)) {
-        hideSuggest(suggest)
+    if (self === suggest.opts && hidePopup(popup = getPopup()))
         return
-    }
     
     text = self.el.value
     
     if (text && text === self.str && self.cache.length) {
-        showSuggest(suggest, self)
+        showSuggest(suggest, self, popup)
     }
 }
 
@@ -311,7 +281,7 @@ function cbFetchSuccess(data) {
     self.str = value
     if (!array || !array.length) {
         self.cache = emptyArray
-        hideSuggest(suggest, true)
+        hidePopup(getPopup())
     } else {
         self.cache = array.reverse()
         showSuggest(suggest, self)
@@ -341,7 +311,7 @@ function input(e) {
         // the new input has whitespace, replace with trimmed string
         el.value = value
     } else if (!value) {
-        hideSuggest(getInstance())
+        hidePopup(getPopup())
     } else if (value === self.str) {
         // simply re-typed the single letter char
         showSuggest(getInstance(), self)
@@ -383,7 +353,7 @@ function keyup(e) {
                 getOwner(self).vmessage['f'+self.field_key] = false
             }*/
             //self.pending_name = null
-            hideSuggest(getInstance(), true)
+            hidePopup(getPopup())
             break
         /*case 37: // left
             if (!util.isPopupShown()) return true
@@ -391,9 +361,9 @@ function keyup(e) {
             else pagePrev(e)
             break*/
         case 38: // up
-            suggest = getInstance()
-            if (!isSuggestShown(suggest)) break
+            if (!visiblePopup(getPopup())) break
 
+            suggest = getInstance()
             pager = suggest.pager
             if (e.ctrlKey) moveTopOrUp(e, pager, self)
             else listUp(pager, pager.index_selected, e, false)
@@ -404,9 +374,9 @@ function keyup(e) {
             else pageNext(e)
             break*/
         case 40: // down
-            suggest = getInstance()
-            if (!isSuggestShown(suggest)) break
+            if (!visiblePopup(getPopup())) break
 
+            suggest = getInstance()
             pager = suggest.pager
             if (e.ctrlKey) moveBottomOrDown(e, pager, self)
             else listDown(pager, pager.index_selected, e, false)
