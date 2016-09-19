@@ -1,20 +1,10 @@
 import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
 import * as keymage from '../keymage'
-import { removeClass } from '../dom_util'
-
-var initialized = false,
-    popup
+import { getPopup, hidePopup } from '../dom_util'
 
 function handle(e) {
     keymage.clearScope()
-    
-    if (!initialized) {
-        initialized = true
-        popup = document.getElementById('popup')
-    }
-    
-    if (popup)
-        removeClass(popup, 'active')
+    hidePopup(getPopup())
 }
 
 export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
