@@ -1,3 +1,4 @@
+import * as Vue from 'vue'
 import { component } from 'vuets'
 import { defp, nullp, initObservable } from 'vueds'
 import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
@@ -63,6 +64,14 @@ export namespace Item {
     }
 }
 
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+var instance: Calendar
+
+export function getInstance(): Calendar {
+    return instance
+}
+
 function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
     let flags = 0,
         target_flags = target.flags,
@@ -82,8 +91,6 @@ function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
     return target
 }
 
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
 interface Entry {
     key: string
     val: cal.YMD,
@@ -98,6 +105,12 @@ function getEntry(year: number, month: number, opts: cal.Opts, startDate: cal.YM
         cache[key] = entry = { key, val: { year, month, day: -1 }, array: cal.getCalendar(year, month, opts, startDate) }
     
     return entry
+}
+
+function selectNT(this: Calendar) {
+    let current = this.config.selected_item
+    current['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
+    //this.pstore.select(this.config.selected_item, SelectionFlags.FORCE)
 }
 
 function repaint(self: Calendar, next: boolean) {
@@ -115,17 +128,29 @@ function repaint(self: Calendar, next: boolean) {
         entry = getEntry(current.year - 1, 11, config.opts, config.startDate, config.cache)
     }
     
-    let ymd = entry.val
+    let ymd = entry.val,
+        selected_date = config.selected_date
     config.current = ymd
     self.year = ymd.year
     self.month = months[ymd.month]
     self.pstore.replace(entry.array, SelectionType.RESET)
+
+    if (selected_date && ymd.year === selected_date.year && ymd.month === selected_date.month) {
+        Vue.nextTick(config.selectNT)
+    }
+}
+
+export interface Opts {
+    onSelect(message: Item, flags: SelectionFlags)
 }
 
 export interface Config {
     today: Date
     startDate: cal.YMD
     current: cal.YMD
+    selected_item: Item|any
+    selected_date: cal.YMD|null
+    selectNT: any
     opts: cal.Opts
     cache: any
 }
@@ -134,14 +159,18 @@ export class Calendar {
     pager: Pager
     pstore: PojoStore<Item>
     config: Config
+    opts: Opts
     month = ''
     year = 0
     
     constructor() {
         nullp(this, 'pager')
+        defp(this, 'opts', null)
     }
     
     static created(self: Calendar) {
+        instance = self
+
         let today = new Date(),
             year = today.getUTCFullYear(),
             month = today.getUTCMonth(),
@@ -152,6 +181,9 @@ export class Calendar {
             today,
             startDate,
             current: startDate,
+            selected_item: null,
+            selected_date: null,
+            selectNT: selectNT.bind(self),
             opts: { weekStart: 0 },
             cache: {}
         })
@@ -167,7 +199,15 @@ export class Calendar {
                 return Item.$createObservable(String(idx))
             },
             onSelect(message: Item, flags: SelectionFlags): number {
-                // TODO
+                //if (flags === SelectionFlags.FORCE) return 0
+
+                let config = self.config,
+                    opts = self.opts
+                
+                config.selected_item = message
+                config.selected_date = config.current
+
+                opts && opts.onSelect(message, flags)
                 return 0
             },
             fetch(req: ds.ParamRangeKey, pager: Pager) {
@@ -192,7 +232,8 @@ export class Calendar {
 }
 export default component({
     created(this: Calendar) { Calendar.created(this) },
-    mounted(this: Calendar) { Calendar.mounted(this) },
+    mounted(this: Calendar) { Calendar.mounted(this) }, // vue 2.0
+    ready(this: Calendar) { Calendar.mounted(this) }, // vue 1.0
     template: `
 <ul class="ui calendar" v-pager:0,0,7="pager">
   <li class="header">
