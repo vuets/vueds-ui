@@ -163,9 +163,14 @@ function keydown(e) {
     switch (e.which) {
         case Keys.ENTER:
             calendar = getInstance()
-            if (!toggleCalendar(calendar, self) && self.pending) {
+            if (toggleCalendar(calendar, self)) {
+                // shown
+            } else if (self.pending) {
                 self.pending = false
-                self.pojo[self.field] = toUTC(getInstance().config)
+                self.pojo[self.field] = toUTC(calendar.config)
+            } else if (!self.update && !self.pojo[self.field]) {
+                // assign today's value
+                self.pojo[self.field] = localToUtc(calendar.config.today.getTime())
             }
             break
         case Keys.ESCAPE:
