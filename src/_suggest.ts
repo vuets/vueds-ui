@@ -70,7 +70,7 @@ export interface Opts {
     focusout: any
     click: any
     input: any
-    keyup: any
+    keydown: any
 }
 
 const emptyArray = []
@@ -162,7 +162,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         focusout: null,
         click: null,
         input: null,
-        keyup: null
+        keydown: null
     }
 
     opts.unwatch = vm.$watch(newWatchFn(pojo_, fk), onUpdate.bind(opts))
@@ -178,7 +178,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
     el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
     el.addEventListener('click', opts.click = click.bind(opts))
     el.addEventListener('input', opts.input = debounce(input.bind(opts), 250))
-    el.addEventListener('keyup', opts.keyup = keyup.bind(opts))
+    el.addEventListener('keydown', opts.keydown = keydown.bind(opts))
 
     return opts
 }
@@ -189,7 +189,7 @@ export function cleanup(opts: Opts) {
     el.removeEventListener('focusout', opts.focusout)
     el.removeEventListener('click', opts.click)
     el.removeEventListener('input', opts.input)
-    el.removeEventListener('keyup', opts.keyup)
+    el.removeEventListener('keydown', opts.keydown)
     opts.unwatch()
 }
 
@@ -325,7 +325,7 @@ function input(e) {
     }
 }
 
-function keyup(e) {
+function keydown(e) {
     let self: Opts = this,
         suggest,
         pager
