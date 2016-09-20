@@ -90,7 +90,7 @@ function onUpdate(this: Opts, value, oldValue) {
         removeClass(this.el.parentElement, 'suggested')
 }
 
-function focusNT() {
+function focusNT(this: Opts) {
     this.el.focus()
 }
 
