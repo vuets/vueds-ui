@@ -78,7 +78,7 @@ export function toYMD(date: Date): YMD {
     return {
         year: date.getUTCFullYear(),
         month: date.getUTCMonth(),
-        day: date.getUTCDate()
+        day: date.getUTCDay()
     }
 }
 
