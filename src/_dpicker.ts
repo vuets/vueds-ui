@@ -1,0 +1,207 @@
+import * as Vue from 'vue'
+import { Calendar, Config, Item, getInstance, update, goto } from './c/calendar'
+import { localToUtc } from 'vueds/lib/util'
+import { Pager, SelectionFlags } from 'vueds/lib/store/'
+import { Keys, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
+import { pageFirst, pageLast, tableDown, tableUp, moveLeft, moveRight, moveTopOrUp, moveBottomOrDown } from './pager_util'
+
+export const enum Flags {
+    UPDATE = 16
+}
+
+export interface Opts {
+    flags: number
+    update: boolean
+
+    pojo: any
+    field: string
+    el: any
+
+    col_size: number
+    table_flags: number
+
+    pending: boolean
+
+    focusNT: any
+    onSelect: any
+
+    focusout: any
+    click: any
+    keyup: any
+}
+
+export function parseOpts(args: string[]|any, pojo, field, el): Opts {
+    let i = 0,
+        len = !args ? 0 : args.length,
+        flags = i === len ? 0 : parseInt(args[i++], 10)
+    
+    let opts: Opts = {
+        flags,
+        update: 0 !== (flags & Flags.UPDATE),
+
+        pojo,
+        field,
+        el,
+
+        col_size: 7,
+        table_flags: 0,
+
+        pending: false,
+
+        focusNT: null,
+        onSelect: null,
+
+        focusout: null,
+        click: null,
+        keyup: null
+    }
+
+    opts.focusNT = focusNT.bind(opts)
+    opts.onSelect = onSelect.bind(opts)
+    el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
+    el.addEventListener('click', opts.click = click.bind(opts))
+    el.addEventListener('keyup', opts.keyup = keyup.bind(opts))
+
+    return opts
+}
+
+export function cleanup(opts: Opts) {
+    let el = opts.el
+
+    el.removeEventListener('focusout', opts.focusout)
+    el.removeEventListener('click', opts.click)
+    el.removeEventListener('keyup', opts.keyup)
+}
+
+function focusNT(this: Opts) {
+    this.el.focus()
+}
+
+function toUTC(config: Config, selectedItem?: boolean): number {
+    let current = config.current,
+        date = new Date(current.year, current.month, selectedItem ? config.selected_item.day : config.selected_day)
+    
+    return localToUtc(date.getTime())
+}
+
+function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
+    let self: Opts = this,
+        pending = flags === 0
+    
+    self.pending = pending
+    if (pending) return
+    
+    self.pojo[self.field] = toUTC(getInstance().config, true)
+    Vue.nextTick(self.focusNT)
+}
+
+function showCalendar(calendar: Calendar|any, self: Opts, popup?: any) {
+    var date: Date,
+        val
+
+    if (self.update) {
+        date = new Date(self.pojo[self.field])
+        goto(calendar, date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    } else if ((val = self.pojo[self.field])) {
+        date = new Date(val)
+        goto(calendar, date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    } else {
+        update(calendar, calendar.config.startDate)
+    }
+    
+    calendar.opts = self
+    showPopup(popup || getPopup(), calendar.$el, self.el)
+}
+function toggleCalendar(calendar, self: Opts, p?: any): boolean {
+    let popup = p || getPopup(),
+        show = true,
+        array
+    
+    if (hidePopup(popup)) {
+        show = false
+    } else {
+        showCalendar(calendar, self, popup)
+    }
+    
+    return show
+}
+
+function focusout(e) {
+    let self: Opts = this
+
+    if (self.pending) {
+        self.pending = false
+        self.pojo[self.field] = toUTC(getInstance().config)
+        hidePopup(getPopup())
+    }
+}
+
+function click(e) {
+    let calendar = getInstance(),
+        self: Opts = this,
+        popup = getPopup()
+    
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (self === calendar.opts) {
+        toggleCalendar(calendar, self, popup)
+    } else {
+        showCalendar(calendar, self, popup)
+    }
+}
+
+function keyup(e) {
+    let self: Opts = this,
+        calendar: Calendar,
+        pager: Pager
+
+    switch (e.which) {
+        case Keys.ENTER:
+            calendar = getInstance()
+            if (!toggleCalendar(calendar, self) && self.pending) {
+                self.pojo[self.field] = toUTC(getInstance().config)
+            }
+            break
+        case Keys.ESCAPE:
+            hidePopup(getPopup())
+            break
+        case Keys.LEFT:
+            calendar = getInstance()
+            if (self !== calendar.opts || !visiblePopup(getPopup())) return true
+
+            pager = calendar.pager
+            if (e.ctrlKey) pageFirst(e, pager, self)
+            else moveLeft(e, pager, self)
+            break
+        case Keys.UP:
+            if (!visiblePopup(getPopup())) break
+
+            calendar = getInstance()
+            pager = calendar.pager
+            if (e.ctrlKey) moveTopOrUp(e, pager, self)
+            else tableUp(pager, self.col_size, 0, pager.index_selected, e, false)            
+            break
+        case Keys.RIGHT:
+            calendar = getInstance()
+            if (self !== calendar.opts || !visiblePopup(getPopup())) return true
+
+            pager = calendar.pager
+            if (e.ctrlKey) pageLast(e, pager, self)
+            else moveRight(e, pager, self)
+            break
+        case Keys.DOWN:
+            if (!visiblePopup(getPopup())) break
+
+            calendar = getInstance()
+            pager = calendar.pager
+            if (e.ctrlKey) moveBottomOrDown(e, pager, self)
+            else tableDown(pager, self.col_size, 0, pager.index_selected, e, false) 
+            break
+        default:
+            return true
+    }
+    e.preventDefault()
+    e.stopPropagation()
+    return false
+}
