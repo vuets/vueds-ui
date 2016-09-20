@@ -49,6 +49,7 @@ export namespace Item {
             id,
             day: 0,
             flags: 0,
+            month: 0,
             _: null//, $d: null
         } as Item
     }
@@ -72,9 +73,10 @@ export function getInstance(): Calendar {
     return instance
 }
 
-function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
+function mergeFrom(src: cal.Item, descriptor: any, target: Item|any): Item {
     let flags = 0,
         target_flags = target.flags,
+        month = src.month,
         day = src.day
     
     if (src.selected)
@@ -87,6 +89,9 @@ function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
     
     if (day !== target.day)
         target.day = day
+    
+    if (month !== target.month)
+        target.month = month
     
     return target
 }

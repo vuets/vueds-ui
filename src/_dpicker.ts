@@ -82,7 +82,8 @@ function focusNT(this: Opts) {
 
 function toUTC(config: Config): number {
     let selected_date = config.selected_date as any,
-        date = new Date(selected_date.year, selected_date.month, config.selected_item.day)
+        selected_item = config.selected_item,
+        date = new Date(selected_date.year, selected_item.month, selected_item.day)
     
     return localToUtc(date.getTime())
 }
