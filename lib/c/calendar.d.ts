@@ -1,4 +1,4 @@
-import { PojoStore, Pager } from 'vueds/lib/store/';
+import { PojoStore, Pager, SelectionFlags } from 'vueds/lib/store/';
 import * as cal from '../calendar';
 /**
  *
@@ -39,10 +39,28 @@ export declare namespace Item {
         };
     };
 }
+export declare function getInstance(): Calendar;
+export interface Entry {
+    key: string;
+    val: cal.YMD;
+    array: any;
+    firstDayIdx: number;
+}
+export declare function goto(self: Calendar, year: number, month: number, day: number): void;
+export declare function update(self: Calendar, target: cal.YMD): boolean;
+export interface Opts {
+    onSelect(message: Item, flags: SelectionFlags): any;
+}
 export interface Config {
     today: Date;
     startDate: cal.YMD;
     current: cal.YMD;
+    current_entry: Entry;
+    selected_item: Item | any;
+    selected_date: cal.YMD | null;
+    selected_day: number;
+    selectItemNT: any;
+    selectDayNT: any;
     opts: cal.Opts;
     cache: any;
 }
@@ -50,6 +68,7 @@ export declare class Calendar {
     pager: Pager;
     pstore: PojoStore<Item>;
     config: Config;
+    opts: Opts;
     month: string;
     year: number;
     constructor();

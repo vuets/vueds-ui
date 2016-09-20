@@ -1,4 +1,20 @@
 import { FieldType } from 'vueds';
+export declare const enum Keys {
+    BACKSPACE = 8,
+    ENTER = 13,
+    ESCAPE = 27,
+    LEFT = 37,
+    UP = 38,
+    RIGHT = 39,
+    DOWN = 40,
+}
+export declare function getPopup(): any;
+/**
+ * Returns true if the popup is visible.
+ */
+export declare function visiblePopup(popup: any): boolean;
+export declare function hidePopup(popup: any): boolean;
+export declare function showPopup(popup: any, contentEl: any, positionEl: any): void;
 export declare function setClass(el: any, cls: string): void;
 export declare function addClass(el: any, cls: string): void;
 export declare function isInput(el: Element): boolean;
