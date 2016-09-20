@@ -125,15 +125,16 @@ function selectDayNT(this: Calendar) {
     let config = this.config,
         current = config.current,
         current_entry = config.current_entry,
-        selected_item = config.selected_item,
+        //selected_item = config.selected_item,
         // selected_day is 1-based
         idx = current_entry.firstDayIdx + config.selected_day - 1
     
-    if (selected_item && idx === selected_item.$index) {
+    /*if (selected_item && idx === selected_item.$index) {
         selected_item['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
     } else {
         this.pstore.select(this.pager.array[idx], SelectionFlags.FORCE)
-    }
+    }*/
+    this.pstore.select(this.pager.array[idx], SelectionFlags.FORCE)
 }
 
 export function goto(self: Calendar, year: number, month: number, day: number) {
