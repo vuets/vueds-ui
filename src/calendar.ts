@@ -158,12 +158,18 @@ export function addItemsTo(array: Item[], y: number, m: number, opts: Opts, star
         currentDate: number,
         otherMonth = 0,
         otherYear = 0,
-        firstDayIndex = -1
+        firstDayIndexPending = true,
+        firstDayIndex = 0
 
     for (; i < max; i++) {
         currentDate = i + 1;
         currentDay = ((i < 1 ? 7 + i : i) + firstDay) % 7;
         if (currentDate >= 1 && currentDate <= lastDate) {
+            if (firstDayIndexPending) {
+                firstDayIndexPending = false
+                firstDayIndex = array.length
+            }
+
             currentWeekNumber = addItemTo(array, {
                 day: currentDate,
                 weekDay: currentDay,
@@ -173,9 +179,6 @@ export function addItemsTo(array: Item[], y: number, m: number, opts: Opts, star
                 selected: false,
                 weekNumber: -1
             }, currentDay, currentWeekNumber, startDate, endDate)
-
-            if (firstDayIndex === -1)
-                firstDayIndex = i
 
             continue
         }
