@@ -5,7 +5,10 @@ import * as rpc from 'vueds/lib/rpc/'
 import * as keymage from './keymage'
 import { getInstance } from './c/suggest'
 import { Keys, removeClass, addClass, debounce, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
-import { listDown, listUp, moveTopOrUp, moveBottomOrDown } from './pager_util'
+import {
+    pageFirst, pageLast, pagePrevOrLoad, pageNextOrLoad,
+    listDown, listUp, moveTopOrUp, moveBottomOrDown
+} from './pager_util'
 
 function showSuggest(suggest, self: Opts, popup?: any) {
     suggest.pstore.replace(self.cache, SelectionType.RESET)
@@ -356,11 +359,14 @@ function keydown(e) {
             //self.pending_name = null
             hidePopup(getPopup())
             break
-        /*case Keys.LEFT:
-            if (!util.isPopupShown()) return true
-            if (e.ctrlKey) pageFirst(e)
-            else pagePrev(e)
-            break*/
+        case Keys.LEFT:
+            if (!visiblePopup(getPopup())) return true
+
+            suggest = getInstance()
+            pager = suggest.pager
+            if (e.ctrlKey) pageFirst(e, pager, self)
+            else pagePrevOrLoad(e, pager, self)
+            break
         case Keys.UP:
             if (!visiblePopup(getPopup())) break
 
@@ -369,11 +375,14 @@ function keydown(e) {
             if (e.ctrlKey) moveTopOrUp(e, pager, self)
             else listUp(pager, pager.index_selected, e, false)
             break
-        /*case Keys.RIGHT:
-            if (!util.isPopupShown()) return true
-            if (e.ctrlKey) pageLast(e)
-            else pageNext(e)
-            break*/
+        case Keys.RIGHT:
+            if (!visiblePopup(getPopup())) return true
+
+            suggest = getInstance()
+            pager = suggest.pager
+            if (e.ctrlKey) pageLast(e, pager, self)
+            else pageNextOrLoad(e, pager, self)
+            break
         case Keys.DOWN: // down
             if (!visiblePopup(getPopup())) break
 
