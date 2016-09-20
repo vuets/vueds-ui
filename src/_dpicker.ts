@@ -27,7 +27,7 @@ export interface Opts {
 
     focusout: any
     click: any
-    keyup: any
+    keydown: any
 }
 
 export function parseOpts(args: string[]|any, pojo, field, el): Opts {
@@ -53,14 +53,14 @@ export function parseOpts(args: string[]|any, pojo, field, el): Opts {
 
         focusout: null,
         click: null,
-        keyup: null
+        keydown: null
     }
 
     opts.focusNT = focusNT.bind(opts)
     opts.onSelect = onSelect.bind(opts)
     el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
     el.addEventListener('click', opts.click = click.bind(opts))
-    el.addEventListener('keyup', opts.keyup = keyup.bind(opts))
+    el.addEventListener('keydown', opts.keydown = keydown.bind(opts))
 
     return opts
 }
@@ -70,16 +70,16 @@ export function cleanup(opts: Opts) {
 
     el.removeEventListener('focusout', opts.focusout)
     el.removeEventListener('click', opts.click)
-    el.removeEventListener('keyup', opts.keyup)
+    el.removeEventListener('keydown', opts.keydown)
 }
 
 function focusNT(this: Opts) {
     this.el.focus()
 }
 
-function toUTC(config: Config, selectedItem?: boolean): number {
-    let current = config.current,
-        date = new Date(current.year, current.month, selectedItem ? config.selected_item.day : config.selected_day)
+function toUTC(config: Config): number {
+    let selected_date = config.selected_date as any,
+        date = new Date(selected_date.year, selected_date.month, config.selected_item.day)
     
     return localToUtc(date.getTime())
 }
@@ -91,7 +91,7 @@ function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
     self.pending = pending
     if (pending) return
     
-    self.pojo[self.field] = toUTC(getInstance().config, true)
+    self.pojo[self.field] = toUTC(getInstance().config)
     Vue.nextTick(self.focusNT)
 }
 
@@ -151,7 +151,7 @@ function click(e) {
     }
 }
 
-function keyup(e) {
+function keydown(e) {
     let self: Opts = this,
         calendar: Calendar,
         pager: Pager
@@ -160,6 +160,7 @@ function keyup(e) {
         case Keys.ENTER:
             calendar = getInstance()
             if (!toggleCalendar(calendar, self) && self.pending) {
+                self.pending = false
                 self.pojo[self.field] = toUTC(getInstance().config)
             }
             break
