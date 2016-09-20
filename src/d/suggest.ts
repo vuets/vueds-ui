@@ -1,9 +1,5 @@
 import { Opts, parseOpts, cleanup } from '../_suggest'
 
-export function bind() {
-
-}
-
 export function update(value: any, oldValue: any) {
     if (oldValue) return
 
