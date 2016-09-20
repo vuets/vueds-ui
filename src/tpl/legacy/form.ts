@@ -1,7 +1,8 @@
 import { when, when_fn, attrs, exprs, or, append, prepend, include_if, anchor, quote } from '../common'
-import { PojoState } from 'vueds'
+import { PojoState, FieldType } from 'vueds'
 import { PagerState } from 'vueds/lib/store'
-import { Flags } from '../../_close'
+import * as $close from '../../_close'
+import * as $dpicker from '../../_dpicker'
 
 export const enum ContentSlot {
     TOP = 0,
@@ -81,6 +82,20 @@ function field_textarea(it: Opts, fd: any, idx: number, pojo: string, ffid: any)
 </div>`
 }
 
+function dpicker(it: Opts, fd: any, pojo: string): string {
+    return ` v-dpicker:${it.update ? $dpicker.Flags.UPDATE : 0}="{ pojo: ${pojo}, field: '${fd.$ || fd._}' }"`
+}
+
+function field_num(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+    return `
+<div class="ui input">
+  <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(it, fd, pojo) || ''}
+      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
+  ${include_if(fd.$h, help_text, fd)}
+  <div v-text="${pojo}._['${fd._}']"></div>
+</div>`
+}
+
 function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
@@ -101,12 +116,15 @@ function ffid_attr(ffid): string {
 
 function field_switch(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
     let t = fd.t
-    if (t === 1)
+    if (t === FieldType.BOOL)
         return field_bool(it, fd, idx, pojo, ffid)
     
-    if (t === 16)
+    if (t === FieldType.ENUM)
         return field_enum(it, fd, idx, pojo, ffid)
     
+    if (t !== FieldType.STRING)
+        return field_num(it, fd, idx, pojo, ffid)
+
     if (fd.ta)
         return field_textarea(it, fd, idx, pojo, ffid)
     
@@ -185,7 +203,7 @@ export function toggle_el(it: Opts): string {
 }
 
 function close_el(it: Opts): string {
-    return `<i class="icon close" v-close:click,${Flags.SELECT_FROM_PARENT}="${quote(it.close_el)}"></i>`
+    return `<i class="icon close" v-close:click,${$close.Flags.SELECT_FROM_PARENT}="${quote(it.close_el)}"></i>`
 }
 
 export function title(it: Opts): string {
