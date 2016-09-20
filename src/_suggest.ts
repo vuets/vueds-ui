@@ -221,7 +221,7 @@ function focusout(e) {
         if (!self.update && text !== name) {
             removeClass(self.el.parentElement, 'suggested')
         } else if (name === self.pojo_[self.fk]) {
-            self.el.value = name // redudant on non update
+            self.el.value = name // redundant on non update
             addClass(self.el.parentElement, 'suggested')
         } else {
             self.pojo_[self.fk] = name
@@ -230,7 +230,7 @@ function focusout(e) {
         self.pending_name = null
         hidePopup(getPopup())
     } else if (text === (name = self.pojo_[self.fk])) {
-        addClass(self.el.parentElement, 'suggested') // redudant
+        addClass(self.el.parentElement, 'suggested') // redundant
     } else if (self.update) {
         self.el.value = name
         addClass(self.el.parentElement, 'suggested')

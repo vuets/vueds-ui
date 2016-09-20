@@ -135,7 +135,7 @@ function selectDayNT(this: Calendar) {
     }
 }
 
-function goto(self: Calendar, year: number, month: number, day: number) {
+export function goto(self: Calendar, year: number, month: number, day: number) {
     let config = self.config,
         entry = getEntry(year, month, config.opts, config.startDate, config.cache),
         ymd = entry.val,
