@@ -91,52 +91,88 @@ function mergeFrom(src: cal.Item, descriptor: any, target: Item): Item {
     return target
 }
 
-interface Entry {
+export interface Entry {
     key: string
     val: cal.YMD,
     array: any
+    firstDayIdx: number
 }
 
 function getEntry(year: number, month: number, opts: cal.Opts, startDate: cal.YMD, cache: any): Entry {
     let key = year + '/' + month,
-        entry: Entry = cache[key]
+        entry: Entry = cache[key],
+        array
     
-    if (!entry)
-        cache[key] = entry = { key, val: { year, month, day: -1 }, array: cal.getCalendar(year, month, opts, startDate) }
+    if (!entry) {
+        array = []
+        cache[key] = entry = {
+            key, 
+            val: { year, month, day: -1 },
+            array,
+            firstDayIdx: cal.addItemsTo(array, year, month, opts, startDate)
+        }
+    }
     
     return entry
 }
 
-function selectNT(this: Calendar) {
-    let current = this.config.selected_item
-    current['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
-    //this.pstore.select(this.config.selected_item, SelectionFlags.FORCE)
+function selectItemNT(this: Calendar) {
+    let selected_item = this.config.selected_item
+    selected_item['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
 }
 
-function repaint(self: Calendar, next: boolean) {
-    let config = self.config,
+function selectDayNT(this: Calendar) {
+    let config = this.config,
         current = config.current,
-        entry: Entry
-    if (next) {
-        if (current.month === 11)
-            entry = getEntry(current.year + 1, 0, config.opts, config.startDate, config.cache)
-        else
-            entry = getEntry(current.year, current.month + 1, config.opts, config.startDate, config.cache)
-    } else if (current.month) {
-        entry = getEntry(current.year, current.month - 1, config.opts, config.startDate, config.cache)
-    } else {
-        entry = getEntry(current.year - 1, 11, config.opts, config.startDate, config.cache)
-    }
+        current_entry = config.current_entry,
+        selected_item = config.selected_item,
+        idx = current_entry.firstDayIdx + config.selected_day
     
-    let ymd = entry.val,
+    if (idx === selected_item.$index) {
+        selected_item['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
+    } else {
+        this.pstore.select(this.pstore.get(idx), SelectionFlags.FORCE)
+    }
+}
+
+function goto(self: Calendar, year: number, month: number, day: number) {
+    let config = self.config,
+        entry = getEntry(year, month, config.opts, config.startDate, config.cache),
+        ymd = entry.val,
         selected_date = config.selected_date
     config.current = ymd
+    config.current_entry = entry
     self.year = ymd.year
     self.month = months[ymd.month]
     self.pstore.replace(entry.array, SelectionType.RESET)
 
-    if (selected_date && ymd.year === selected_date.year && ymd.month === selected_date.month) {
-        Vue.nextTick(config.selectNT)
+    if (day !== -1) {
+        config.selected_day = day
+        Vue.nextTick(config.selectDayNT)
+    } else if (selected_date && ymd.year === selected_date.year && ymd.month === selected_date.month) {
+        Vue.nextTick(config.selectItemNT)
+    }
+}
+
+export function update(self: Calendar, target: cal.YMD): boolean {
+    if (self.config.current === target)
+        return false
+    
+    goto(self, target.year, target.month, target.day)
+    return true
+}
+
+function repaint(self: Calendar, next: boolean) {
+    let current = self.config.current
+    if (next) {
+        if (current.month === 11)
+            goto(self, current.year + 1, 0, -1)
+        else
+            goto(self, current.year, current.month + 1, -1)
+    } else if (current.month) {
+        goto(self, current.year, current.month - 1, -1)
+    } else {
+        goto(self, current.year - 1, 11, -1)
     }
 }
 
@@ -148,9 +184,12 @@ export interface Config {
     today: Date
     startDate: cal.YMD
     current: cal.YMD
+    current_entry: Entry
     selected_item: Item|any
     selected_date: cal.YMD|null
-    selectNT: any
+    selected_day: number
+    selectItemNT: any
+    selectDayNT: any
     opts: cal.Opts
     cache: any
 }
@@ -175,20 +214,26 @@ export class Calendar {
             year = today.getUTCFullYear(),
             month = today.getUTCMonth(),
             day = today.getUTCDate(),
-            startDate: cal.YMD = { year, month, day }
+            startDate: cal.YMD = { year, month, day },
+            opts = { weekStart: 0 },
+            cache = {},
+            current_entry = getEntry(year, month, opts, startDate, cache)
         
         let config: Config = defp(self, 'config', {
             today,
             startDate,
             current: startDate,
+            current_entry,
             selected_item: null,
             selected_date: null,
-            selectNT: selectNT.bind(self),
-            opts: { weekStart: 0 },
-            cache: {}
+            selected_day: -1,
+            selectItemNT: selectItemNT.bind(self),
+            selectDayNT: selectDayNT.bind(self),
+            opts,
+            cache
         })
 
-        self.pager = defp(self, 'pstore', new PojoStore(getEntry(year, month, config.opts, startDate, config.cache).array, {
+        self.pager = defp(self, 'pstore', new PojoStore(current_entry.array, {
             desc: true,
             pageSize: 35,
             descriptor: Item.$descriptor,
