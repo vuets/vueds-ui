@@ -70,6 +70,18 @@ export function compare(leftDate: YMD, rightDate: YMD): number {
         return 0
 }
 
+export function toUTC(date: YMD): number {
+    return Date.UTC(date.year, date.month, date.day, 0, 0, 0, 0)
+}
+
+export function toYMD(date: Date): YMD {
+    return {
+        year: date.getUTCFullYear(),
+        month: date.getUTCMonth(),
+        day: date.getUTCDate()
+    }
+}
+
 export function calculateWeekNumber(date: YMD): number {
 	// Creates the requested date
 	var current = new Date(Date.UTC(date.year, date.month, date.day, 0, 0, 0, 0))
@@ -130,9 +142,8 @@ function addItemTo(array: Item[], item: Item,
     return weekNumber
 }
 
-export function getCalendar(y: number, m: number, opts: Opts, startDate: YMD, endDate?: YMD): Item[] {
-    let calendar: Item[] = [],
-        date = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0)),
+export function addItemsTo(array: Item[], y: number, m: number, opts: Opts, startDate: YMD, endDate?: YMD): number {
+    let date = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0)),
         year = date.getUTCFullYear(),
         month = date.getUTCMonth(),
         firstDay = date.getUTCDay(),
@@ -146,13 +157,14 @@ export function getCalendar(y: number, m: number, opts: Opts, startDate: YMD, en
         currentDay: number,
         currentDate: number,
         otherMonth = 0,
-        otherYear= 0
+        otherYear = 0,
+        firstDayIndex = -1
 
     for (; i < max; i++) {
         currentDate = i + 1;
         currentDay = ((i < 1 ? 7 + i : i) + firstDay) % 7;
         if (currentDate >= 1 && currentDate <= lastDate) {
-            currentWeekNumber = addItemTo(calendar, {
+            currentWeekNumber = addItemTo(array, {
                 day: currentDate,
                 weekDay: currentDay,
                 month: month,
@@ -161,6 +173,9 @@ export function getCalendar(y: number, m: number, opts: Opts, startDate: YMD, en
                 selected: false,
                 weekNumber: -1
             }, currentDay, currentWeekNumber, startDate, endDate)
+
+            if (firstDayIndex === -1)
+                firstDayIndex = i
 
             continue
         }
@@ -183,7 +198,7 @@ export function getCalendar(y: number, m: number, opts: Opts, startDate: YMD, en
             currentDate = i - lastDate + 1;
         }
 
-        currentWeekNumber = addItemTo(calendar, {
+        currentWeekNumber = addItemTo(array, {
             day: currentDate,
             weekDay: currentDay,
             month: otherMonth,
@@ -194,5 +209,5 @@ export function getCalendar(y: number, m: number, opts: Opts, startDate: YMD, en
         }, currentDay, currentWeekNumber, startDate, endDate)
     }
 
-    return calendar
+    return firstDayIndex
 }
