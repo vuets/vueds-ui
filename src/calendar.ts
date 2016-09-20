@@ -70,9 +70,9 @@ export function compare(leftDate: YMD, rightDate: YMD): number {
         return 0
 }
 
-export function toUTC(date: YMD): number {
-    return Date.UTC(date.year, date.month, date.day, 0, 0, 0, 0)
-}
+/*export function toUTC(date: YMD, day?: number): number {
+    return Date.UTC(date.year, date.month, day || date.day, 0, 0, 0, 0)
+}*/
 
 export function toYMD(date: Date): YMD {
     return {
