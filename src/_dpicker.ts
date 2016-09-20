@@ -5,7 +5,7 @@ import { Pager, SelectionFlags } from 'vueds/lib/store/'
 import { Keys, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
 import {
     pageFirst, pageLast, moveLeft, moveRight,
-    moveTopOrUp, moveBottomOrDown
+    tableDown, tableUp, moveTopOrUp, moveBottomOrDown
 } from './pager_util'
 
 export const enum Flags {
