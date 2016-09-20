@@ -4,7 +4,7 @@ import { ds } from 'vueds/lib/ds/'
 import * as rpc from 'vueds/lib/rpc/'
 import * as keymage from './keymage'
 import { getInstance } from './c/suggest'
-import { removeClass, addClass, debounce, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
+import { Keys, removeClass, addClass, debounce, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
 import { listDown, listUp, moveTopOrUp, moveBottomOrDown } from './pager_util'
 
 function showSuggest(suggest, self: Opts, popup?: any) {
@@ -246,12 +246,13 @@ function focusout(e) {
 }
 
 function click(e) {
-    e.preventDefault()
-    e.stopPropagation()
     let suggest = getInstance(),
         self: Opts = this,
         text: string,
         popup
+
+    e.preventDefault()
+    e.stopPropagation()
 
     if (self === suggest.opts && hidePopup(popup = getPopup()))
         return
@@ -329,9 +330,9 @@ function keyup(e) {
         suggest,
         pager
     switch (e.which) {
-        //case 8: // backspace
+        //case Keys.BACKSPACE:
         //    return self._input(e)
-        case 13:
+        case Keys.ENTER:
             // do not propagate the enter key event
             suggest = getInstance()
             if (self !== suggest.opts && self.cache.length) {
@@ -348,19 +349,19 @@ function keyup(e) {
                 // reset suggest
             }*/
             break
-        case 27: // escape
+        case Keys.ESCAPE:
             /*if (!util.hidePopup(true) && self.from_editable) {
                 getOwner(self).vmessage['f'+self.field_key] = false
             }*/
             //self.pending_name = null
             hidePopup(getPopup())
             break
-        /*case 37: // left
+        /*case Keys.LEFT:
             if (!util.isPopupShown()) return true
             if (e.ctrlKey) pageFirst(e)
             else pagePrev(e)
             break*/
-        case 38: // up
+        case Keys.UP:
             if (!visiblePopup(getPopup())) break
 
             suggest = getInstance()
@@ -368,12 +369,12 @@ function keyup(e) {
             if (e.ctrlKey) moveTopOrUp(e, pager, self)
             else listUp(pager, pager.index_selected, e, false)
             break
-        /*case 39: // right
+        /*case Keys.RIGHT:
             if (!util.isPopupShown()) return true
             if (e.ctrlKey) pageLast(e)
             else pageNext(e)
             break*/
-        case 40: // down
+        case Keys.DOWN: // down
             if (!visiblePopup(getPopup())) break
 
             suggest = getInstance()

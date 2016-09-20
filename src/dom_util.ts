@@ -10,6 +10,16 @@ const UA = window.navigator.userAgent.toLowerCase(), // browser sniffing from vu
     //clearTimeout = window.clearTimeout,
     hasClassList = 'classList' in document.documentElement
 
+export const enum Keys {
+    BACKSPACE = 8,
+    ENTER = 13,
+    ESCAPE = 27,
+    LEFT = 37,
+    UP = 38,
+    RIGHT = 39,
+    DOWN = 40
+}
+
 var popup_
 
 export function getPopup(): any {
