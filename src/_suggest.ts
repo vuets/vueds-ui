@@ -141,7 +141,7 @@ export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts 
         col_size: 0,
         table_flags: 0,
 
-        update: !!(flags & Flags.UPDATE),
+        update: 0 !== (flags & Flags.UPDATE),
         str: '',
         str_fetch: '',
         disabled: false,
