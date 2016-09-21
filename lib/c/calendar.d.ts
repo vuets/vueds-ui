@@ -53,6 +53,7 @@ export interface Opts {
 }
 export interface Config {
     today: Date;
+    todayUTC: number;
     startDate: cal.YMD;
     current: cal.YMD;
     current_entry: Entry;
