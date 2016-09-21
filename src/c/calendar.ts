@@ -123,7 +123,8 @@ function getEntry(year: number, month: number, opts: cal.Opts, startDate: cal.YM
 
 function selectItemNT(this: Calendar) {
     let selected_item = this.config.selected_item
-    selected_item['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
+    //selected_item['_'].lstate = PojoListState.INCLUDED | PojoListState.SELECTED
+    this.pstore.select(selected_item, SelectionFlags.FORCE)
 }
 
 function selectDayNT(this: Calendar) {
