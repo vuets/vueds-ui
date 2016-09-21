@@ -1,6 +1,7 @@
 import * as Vue from 'vue'
 import { component } from 'vuets'
 import { defp, nullp, initObservable } from 'vueds'
+import { localToUtc } from 'vueds/lib/util'
 import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as cal from '../calendar'
@@ -190,6 +191,7 @@ export interface Opts {
 
 export interface Config {
     today: Date
+    todayUTC: number,
     startDate: cal.YMD
     current: cal.YMD
     current_entry: Entry
@@ -218,10 +220,12 @@ export class Calendar {
     static created(self: Calendar) {
         instance = self
 
-        let today = new Date(),
-            year = today.getUTCFullYear(),
-            month = today.getUTCMonth(),
-            day = today.getUTCDate(),
+        let now = new Date(),
+            year = now.getUTCFullYear(),
+            month = now.getUTCMonth(),
+            day = now.getUTCDate(),
+            today = new Date(year, month, day),
+            todayUTC = localToUtc(today.getTime()),
             startDate: cal.YMD = { year, month, day },
             opts = { weekStart: 0 },
             cache = {},
@@ -229,6 +233,7 @@ export class Calendar {
         
         let config: Config = defp(self, 'config', {
             today,
+            todayUTC,
             startDate,
             current: startDate,
             current_entry,

@@ -170,7 +170,7 @@ function keydown(e) {
                 self.pojo[self.field] = toUTC(calendar.config)
             } else if (!self.update && !self.pojo[self.field]) {
                 // assign today's value
-                self.pojo[self.field] = localToUtc(calendar.config.today.getTime())
+                self.pojo[self.field] = calendar.config.todayUTC
             }
             break
         case Keys.ESCAPE:
