@@ -1,10 +1,13 @@
+// ported from enquire.js
+import { noop } from 'vueds/lib/util'
+
 /**
  * Helper function for iterating over a collection
  *
  * @param collection
  * @param fn
  */
-function each(collection: any[], fn: Function) {
+/*function each(collection: any[], fn: Function) {
     var i = 0,
         length = collection.length
     
@@ -12,7 +15,7 @@ function each(collection: any[], fn: Function) {
         // allow early exit
         if (false === fn(collection[i], i)) break
     }
-}
+}*/
 
 /**
  * Helper function for determining whether target object is a function
@@ -20,63 +23,55 @@ function each(collection: any[], fn: Function) {
  * @param target the object under test
  * @return {Boolean} true if function, false otherwise
  */
-function isFunction(target) {
-    return typeof target === 'function';
-}
+/*function isFunction(target) {
+    return typeof target === 'function'
+}*/
 
-interface QueryHandlerOpts {
+export interface Opts {
     match: Function
-    unmatch: Function
-    setup: Function
+    unmatch?: Function
+    setup?: Function
+    destroy?: Function
     deferSetup?: boolean
 }
 
-class QueryHandler {
-    initialized = false
-
-    constructor(private options: any) {
-        !options.deferSetup && this.setup();
-    }
-
-    setup() {
-        if (this.options.setup)
-            this.options.setup()
-        
+function matchLazySetup(this: QueryHandler) {
+    if (!this.initialized) {
         this.initialized = true
+        this.setup()
     }
+    
+    this.opts.match()
+}
 
-    on() {
-        !this.initialized && this.setup()
-        this.options.match && this.options.match()
-    }
+class QueryHandler {
+    initialized: boolean
+    setup: Function
+    match: Function
+    unmatch: Function
+    destroy: Function
 
-    off() {
-        this.options.unmatch && this.options.unmatch()
-    }
-
-    destroy() {
-        this.options.destroy ? this.options.destroy() : this.off()
-    }
-
-    equals(target): boolean {
-        return this.options === target || this.options.match === target
+    constructor(public opts: Opts) {
+        this.initialized = !opts.deferSetup
+        this.setup = opts.setup || noop
+        this.match = this.initialized ? opts.match : matchLazySetup.bind(this)
+        this.unmatch = opts.unmatch || noop
+        this.destroy = opts.destroy || this.unmatch
     }
 }
 
-function mqListener(this: MediaQuery, mql: MediaQueryList) {
+function matchHandlers(handlers: QueryHandler[]) {
+    for (let handler of handlers)
+        handler.match()
+}
+
+function unmatchHandlers(handlers: QueryHandler[]) {
+    for (let handler of handlers)
+        handler.unmatch()
+}
+
+function cbSetMql(this: MediaQuery, mql: MediaQueryList) {
     this.mql = mql
-}
-
-function cbClear(handler) {
-    handler.destroy()
-}
-
-function cbOn(handler) {
-    handler.on()
-}
-
-function cbOff(handler) {
-    handler.off()
 }
 
 /**
@@ -86,31 +81,28 @@ class MediaQuery {
     handlers: QueryHandler[] = []
     mql: MediaQueryList
     listener: any
-    cbRemoveHandler: any
-    constructor(private query: string, private isUnconditional: boolean) {
+    constructor(public query: string, public isUnconditional: boolean) {
         this.mql = matchMedia(query)
-        this.listener = mqListener.bind(this)
+        this.listener = cbSetMql.bind(this)
     }
 
     matches(): boolean {
-        return this.mql.matches || this.isUnconditional;
+        return this.mql.matches || this.isUnconditional
     }
 
-    addHandler(handler) {
-        const qh = new QueryHandler(handler)
+    addHandler(opts: Opts) {
+        const qh = new QueryHandler(opts)
         this.handlers.push(qh)
-
-        this.matches() && qh.on()
+        this.matches() && qh.match()
     }
 
-    removeHandler(handler) {
+    removeHandler(opts: Opts) {
         let handlers = this.handlers,
             len = handlers.length,
-            i = 0,
-            h
+            i = 0
         for (; i < len; i++) {
-            h = handlers[i]
-            if (!h.equals(handler))
+            let h = handlers[i]
+            if (opts !== h.opts)
                 continue
             
             h.destroy()
@@ -120,13 +112,17 @@ class MediaQuery {
     }
 
     clear() {
-        each(this.handlers, cbClear)
+        for (let handler of this.handlers)
+            handler.destroy()
         this.mql.removeListener(this.listener)
         this.handlers.length = 0 //clear array
     }
 
     assess() {
-        each(this.handlers, this.matches ? cbOn : cbOff)
+        if (this.matches)
+            matchHandlers(this.handlers)
+        else
+            unmatchHandlers(this.handlers)
     }
 }
 
@@ -134,15 +130,12 @@ interface MediaQueryMap {
     [index: string]: MediaQuery|null
 }
 
-export interface Opts {
-    match: Function
-    unmatch: Function
-}
+
 
 /**
- * Registers a handler for the given media query
+ * Registers a handler for the given media query.
  */
-export class MediaQueryDispatch {
+export class MediaQueryRegistry {
     private queries: MediaQueryMap = {}
     private browserIsIncapable: boolean
     constructor() {
@@ -163,7 +156,7 @@ export class MediaQueryDispatch {
         return this
     }
     
-    unregister(q: string, handler: any) {
+    unregister(q: string, handler?: Opts) {
         const query = this.queries[q]
         if (!query) return this
 
@@ -179,4 +172,4 @@ export class MediaQueryDispatch {
     }
 }
 
-export default new MediaQueryDispatch()
+export default new MediaQueryRegistry()
