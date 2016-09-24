@@ -70,8 +70,9 @@ function unmatchHandlers(handlers: QueryHandler[]) {
         handler.unmatch()
 }
 
-function cbSetMql(this: MediaQuery, mql: MediaQueryList) {
+function cbAssess(this: MediaQuery, mql: MediaQueryList) {
     this.mql = mql
+    this.assess()
 }
 
 /**
@@ -83,20 +84,20 @@ class MediaQuery {
     listener: any
     constructor(public query: string, public isUnconditional: boolean) {
         this.mql = matchMedia(query)
-        this.listener = cbSetMql.bind(this)
+        this.listener = cbAssess.bind(this)
     }
 
     matches(): boolean {
         return this.mql.matches || this.isUnconditional
     }
 
-    addHandler(opts: Opts) {
+    add(opts: Opts) {
         const qh = new QueryHandler(opts)
         this.handlers.push(qh)
         this.matches() && qh.match()
     }
 
-    removeHandler(opts: Opts) {
+    remove(opts: Opts) {
         let handlers = this.handlers,
             len = handlers.length,
             i = 0
@@ -145,23 +146,23 @@ export class MediaQueryRegistry {
         this.browserIsIncapable = !matchMedia('only all').matches
     }
 
-    register(q: string, options: Opts, shouldDegrade?: boolean) {
+    register(q: string, entry: Opts, shouldDegrade?: boolean) {
         let queries = this.queries,
             query = queries[q]
         
         if (!query)
             queries[q] = query = new MediaQuery(q, !!shouldDegrade && this.browserIsIncapable)
         
-        query.addHandler(options)
+        query.add(entry)
         return this
     }
     
-    unregister(q: string, handler?: Opts) {
+    unregister(q: string, entry?: Opts) {
         const query = this.queries[q]
         if (!query) return this
 
-        if (handler) {
-            query.removeHandler(handler)
+        if (entry) {
+            query.remove(entry)
         } else {
             query.clear()
             this.queries[q] = null
