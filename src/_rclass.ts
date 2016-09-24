@@ -1,5 +1,6 @@
 import enquire from './enquire'
 import { addClass, removeClass } from './dom_util'
+import { screen } from './screen_util'
 
 export interface Opts {
     clazz: string
@@ -23,10 +24,11 @@ export function parseOpts(args: string[], el): Opts {
     let i = 0, 
         len = args.length,
         clazz = args[i++],
-        query = args[i++],
+        type = args[i++],
+        query = screen[type] || type,
         flags = 0 === len ? 0 : parseInt(args[i++], 10),
         reverse = 0 !== (flags & Flags.UNMATCH)
-        
+    
     let opts: Opts = {
         clazz,
         query, 
@@ -37,11 +39,11 @@ export function parseOpts(args: string[], el): Opts {
     }
 
     if (reverse) {
-        opts.match = cbRemoveClass.bind(this)
-        opts.unmatch = cbAddClass.bind(this)
+        opts.match = cbRemoveClass.bind(opts)
+        opts.unmatch = cbAddClass.bind(opts)
     } else {
-        opts.match = cbAddClass.bind(this)
-        opts.unmatch = cbRemoveClass.bind(this)
+        opts.match = cbAddClass.bind(opts)
+        opts.unmatch = cbRemoveClass.bind(opts)
     }
 
     enquire.register(query, opts)
