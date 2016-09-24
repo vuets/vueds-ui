@@ -7,3 +7,12 @@ export declare const screen: {
 export declare function date_columns(): number;
 export declare function date_compact_columns(): number;
 export declare function table_compact_columns(): number;
+export declare const desk_entry: {
+    match(): void;
+    unmatch(): void;
+};
+export declare const lap_entry: {
+    match(): void;
+    unmatch(): void;
+};
+export declare function registerDefaults(): void;
