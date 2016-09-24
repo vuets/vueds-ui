@@ -85,6 +85,7 @@ class MediaQuery {
     constructor(public query: string, public isUnconditional: boolean) {
         this.mql = matchMedia(query)
         this.listener = cbAssess.bind(this)
+        this.mql.addListener(this.listener)
     }
 
     matches(): boolean {
@@ -120,7 +121,7 @@ class MediaQuery {
     }
 
     assess() {
-        if (this.matches)
+        if (this.matches())
             matchHandlers(this.handlers)
         else
             unmatchHandlers(this.handlers)
