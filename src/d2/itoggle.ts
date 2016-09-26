@@ -13,10 +13,6 @@ export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
         defp(el, 'itoggle', parseOpts(dir.arg.split(','), dir.value, vnode.context, el))
 }
 
-/*export function update(el: any, { value, oldValue }: VNodeDirective, vnode: VNodeWithData) {
-    
-}*/
-
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let opts: Opts = el.itoggle
     if (opts) {
