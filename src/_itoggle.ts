@@ -1,10 +1,15 @@
 import { resolveElement, removeClass, addClass } from './dom_util'
 
+export const enum Flags {
+    CHECK_INITIIAL = 16
+}
+
 export interface Opts {
-    type: string
-    check_initial?: boolean
     class_def: string
     class_alt: string
+    type: string
+    flags: number
+    check_initial: boolean
     
     array: any[]
     vm: any
@@ -19,15 +24,17 @@ export interface Opts {
 export function parseOpts(args: string[], array: any[], vm, el): Opts {
     let i = 0, 
         len = args.length,
-        type = args[i++],
-        check_initial = args[i++] === '1',
         class_def = args[i++],
-        class_alt = i !== len ? args[i++] : ''
+        class_alt = i === len ? '' : args[i++],
+        type = i === len ? 'click' : (args[i++] || 'click'),
+        flags = i === len ? Flags.CHECK_INITIIAL : parseInt(args[i++], 10),
+        check_initial = 0 !== (flags & Flags.CHECK_INITIIAL)
     
     let opts: Opts = {
-        type,
         class_def,
         class_alt,
+        type,
+        flags,
         check_initial,
 
         array,
@@ -49,9 +56,9 @@ export function cleanup(opts: Opts) {
     opts.el.removeEventListener(opts.type, opts.handler)
 }
 
-function resolveTarget(self: Opts, array_entry: any[], vm) {
-    var obj = array_entry[0]
-    return obj.nodeName ? obj : (array_entry[0] = resolveElement(self.el, obj, vm))
+function resolveTarget(self: Opts, array: any[], idx: number) {
+    let obj = array[idx]
+    return obj.tagName ? obj : (array[idx] = resolveElement(self.el, obj, self.vm))
 }
 
 function handler(e) {
@@ -59,13 +66,10 @@ function handler(e) {
 
     var self: Opts = this,
         array = self.array,
-        el,
-        vm,
-        array_entry
+        el
 
-    if (self.prevIndex != null) {
-        array_entry = array[self.prevIndex]
-        el = resolveTarget(self, array_entry, self.vm)
+    if (self.prevIndex !== null) {
+        el = resolveTarget(self, array, self.prevIndex)
         if (removeClass(el, 'active')) {
             removeClass(self.el_icon, self.class_def)
             if (self.class_alt)
@@ -87,10 +91,9 @@ function handler(e) {
         }
     }
 
-    array_entry = array[self.index]
-    el = resolveTarget(self, array_entry, self.vm)
+    el = resolveTarget(self, array, self.index)
 
-    if (self.check_initial && self.prevIndex == null && removeClass(el, 'active')) {
+    if (self.check_initial && self.prevIndex === null && removeClass(el, 'active')) {
         // was already visible and configure to hide on first toggle
         removeClass(self.el_icon, self.class_def)
         if (self.class_alt)
