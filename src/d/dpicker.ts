@@ -6,7 +6,7 @@ export function update(value: any, oldValue: any) {
     if (value && value.pojo && value.field)
         this.dpicker = parseOpts(this.arg && this.arg.split(','), value.pojo, value.field, this.el)
     else
-        console.warn('v-dpicker - Must provide value: { pojo: obj, field: string }')
+        console.warn('v-dpicker requires the value: { pojo: obj, field: string }')
 }
 
 export function unbind() {
