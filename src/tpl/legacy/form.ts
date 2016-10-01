@@ -57,7 +57,7 @@ function field_enum(it: Opts, fd: any, idx: number, pojo: string, ffid: any): st
     return `
 <div class="fluid picker">
   <select${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
-      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})">
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})">
     ${when(!it.update, option_empty)}${enum_options(fd)}
   </select>
 </div>`
@@ -76,7 +76,7 @@ function field_textarea(it: Opts, fd: any, idx: number, pojo: string, ffid: any)
     return `
 <div class="ui input">
   <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
-      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})"></textarea>
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})"></textarea>
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="${pojo}._['${fd._}']"></div>
 </div>`
@@ -90,7 +90,7 @@ function field_num(it: Opts, fd: any, idx: number, pojo: string, ffid: any): str
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(it, fd, pojo) || ''}
-      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
+      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="${pojo}._['${fd._}']"></div>
 </div>`
@@ -100,7 +100,7 @@ function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any):
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
-      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update})" />
+      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="${pojo}._['${fd._}']"></div>
 </div>`
