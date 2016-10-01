@@ -14,7 +14,7 @@
     "@types/hammerjs": "^2.0.32",
     "hammerjs": "^2.0.8",
     "vueds": "git+ssh://git@bitbucket.org/davidyu_ftw/vueds.git#master",
-    "vuets": "^0.9.0"
+    "vuets": "^0.9.1"
   },
   "devDependencies": {
     "@types/vue": "^1.0.29",
