@@ -1,8 +1,12 @@
+export declare const enum Flags {
+    CHECK_INITIIAL = 16,
+}
 export interface Opts {
-    type: string;
-    check_initial?: boolean;
     class_def: string;
     class_alt: string;
+    type: string;
+    flags: number;
+    check_initial: boolean;
     array: any[];
     vm: any;
     el: any;
