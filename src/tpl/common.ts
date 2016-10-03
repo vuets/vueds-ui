@@ -1,4 +1,4 @@
-export const anchor = '<content></content>'
+//export const anchor = '<content></content>'
 
 const yes_no = "'yes' : 'no'",
     no_yes = "'no' : 'yes'"

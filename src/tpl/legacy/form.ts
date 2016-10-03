@@ -1,4 +1,4 @@
-import { when, when_fn, attrs, exprs, or, append, prepend, include_if, anchor, quote } from '../common'
+import { when, when_fn, attrs, exprs, or, append, prepend, include_if, quote } from '../common'
 import { PojoState, FieldType } from 'vueds'
 import { PagerState } from 'vueds/lib/store'
 import * as $close from '../../_close'
@@ -34,7 +34,7 @@ export interface Opts {
     without_msg?: boolean
     without_vclass?: boolean
 
-    _content?: string
+    //_content?: string
     ffid?: string // first field id
 }
 
@@ -173,10 +173,9 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
     return out
 }
 
-export function fields(it: Opts, content?: string): string {
-    return `
-${typeof content === 'string' ? content : anchor}
-${body(it, it.$d, it.pojo, it)}`
+/** Alias to body. */
+export function fields(it: Opts): string {
+    return body(it, it.$d, it.pojo, it)
 }
 
 function msg_show_update(it: Opts): string {
@@ -220,10 +219,6 @@ export function disable_expr(it: Opts): string {
 
 // TODO v-xon="keyup{{? it.modal }}__{{pojo}}._.msg{{?}}:{{pojo}}._.msg = null | key esc"
 export function main(it: Opts, content?: string): string {
-    it._content = typeof content === 'string' ? content : anchor
-    if (!it.pojo)
-        it.pojo = 'pojo'
-
     let pojo = it.pojo,
         tag = it.tag || 'form',
         disable = it.pager || it.disable_expr,
@@ -238,9 +233,9 @@ ${
 <${tag} class="ui form"
     v-clear v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
   ${include_if(it.title, title, it)}
-  ${when(it.content_slot === ContentSlot.TOP, it._content)}
+  ${when(it.content_slot === ContentSlot.TOP, content)}
   ${!it.without_fields && body(it, it.$d, pojo, it) || ''}
-  ${when(it.content_slot === ContentSlot.BEFORE_BUTTON, it._content)}
+  ${when(it.content_slot === ContentSlot.BEFORE_BUTTON, content)}
   ${include_if(!it.without_msg, msg, it)}
   <button type="submit" class="ui fluid submit button${append(it.btn_class)}"
       ${disable && (it.pager && disable_pager(it) || it.disable_expr && disable_expr(it)) || ''}

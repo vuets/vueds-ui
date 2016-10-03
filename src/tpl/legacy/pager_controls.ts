@@ -1,6 +1,6 @@
 declare function require(path: string): any;
 
-import { include_if, when, anchor, tern_yes_no, attrs } from '../common'
+import { include_if, when, tern_yes_no, attrs } from '../common'
 
 import { PagerState } from 'vueds/lib/store'
 
@@ -172,7 +172,7 @@ function list_class(it: Opts): string {
 }
 
 export function main(it: Opts, content?: string): string {
-    it._content = typeof content === 'string' ? content : anchor
+    it._content = content
     return `
 ${include_if(!it.without_msg && it.top, msg_fragment, it)}
 <div class="ui skimped tiny horizontal list${include_if(it.list_class, list_class, it)}"${attrs(it.attrs)}>
