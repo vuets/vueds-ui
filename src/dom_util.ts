@@ -46,6 +46,12 @@ export function showPopup(popup, contentEl, positionEl) {
     style.visibility = 'visible'
 }
 
+export function focus(id: string) {
+    let el = document.getElementById(id)
+    if (el)
+        el.focus()
+}
+
 export function setClass(el, cls: string) {
     if (isIE9 && !/svg$/.test(el.namespaceURI)) {
         el.className = cls
