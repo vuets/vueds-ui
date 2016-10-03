@@ -23,10 +23,10 @@ export interface Opts {
     without_fields?: boolean;
     without_msg?: boolean;
     without_vclass?: boolean;
-    _content?: string;
     ffid?: string;
 }
-export declare function fields(it: Opts, content?: string): string;
+/** Alias to body. */
+export declare function fields(it: Opts): string;
 export declare function msg(it: Opts): string;
 export declare function toggle_el(it: Opts): string;
 export declare function title(it: Opts): string;
