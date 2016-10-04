@@ -1,6 +1,6 @@
 import { PojoState } from 'vueds'
 import { PojoListState, SelectionFlags } from 'vueds/lib/store/'
-import { when, attrs, exprs, or, append, include_if } from '../common'
+import { when, attrs, exprs, or, append, prepend, include_if } from '../common'
 
 export interface Opts {
     pager: string
@@ -20,7 +20,7 @@ export interface Opts {
 }
 
 function list_class(it: Opts): string {
-    return `${when(it.list_class)} small divided selection`
+    return `${prepend(it.list_class)}small divided selection`
 }
 
 function click_to_select(it: Opts): string {
