@@ -61,23 +61,22 @@ export interface PagerOpts extends CommonOpts {
     pager: string
     title: string
     search_fk: string
-    pager_disable?: string
+    dpager?: string // pager used for disable state
 }
 
 function disable(it: PagerOpts, dpager): string {
-    return ` v-disable="${dpager}.state & ${PagerState.LOADING} || (!{{dpager}}.size && !({{dpager}}.state & ${PagerState.LOCAL_SEARCH}))"`
+    return ` v-disable="(${dpager}.state & ${PagerState.LOADING}) || (!${dpager}.size && !(${dpager}.state & ${PagerState.LOCAL_SEARCH}))"`
 }
 
 export function pager(it: PagerOpts, content?: string): string {
-    let dpager = it.pager_disable || it.pager
+    let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
   <div class="item">
     <div class="ui small further left icon input">
-      <input type="text" placeholder="${it.title}"${disable(it, it.pager_disable || it.pager)}
-          v-listsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
+      <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
+          v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
       <i class="icon search"></i>
-      {{?}}
     </div>
   </div>
   ${right_menu(it, content)}
