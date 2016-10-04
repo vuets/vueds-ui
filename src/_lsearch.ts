@@ -42,7 +42,7 @@ export function parseOpts(args: string[]|any, pager: Pager, fields: string[], fn
         change: null
     }
 
-    el.addEventListener('change', opts.change = change.bind(this))
+    el.addEventListener('change', opts.change = change.bind(opts))
 
     return opts
 }
@@ -89,9 +89,9 @@ function change(this: Opts, e) {
 
     let target_array
     if (fn)
-        target_array = this.vm[fn](1) || pager.array
+        target_array = this.vm[fn](1) || store.array
     else
-        target_array = pager.array
+        target_array = store.array
     
     let result_array = search(value, this, target_array)
     this.array = result_array

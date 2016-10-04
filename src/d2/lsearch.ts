@@ -6,7 +6,7 @@ export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     let value = dir.value
 
     if (value && value.pager && value.fields) {
-        defp(el, 'lsearch_', parseOpts(this.arg && this.arg.split(','),
+        defp(el, 'lsearch_', parseOpts(dir.arg && dir.arg.split(','),
                 value.pager, value.fields, value.fn, vnode.context, el))
     } else {
         console.warn('v-lsearch requires the value: { pager: Pager, fields: string[], fn? }')
