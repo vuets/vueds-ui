@@ -89,9 +89,9 @@ function change(this: Opts, e) {
 
     let target_array
     if (fn)
-        target_array = this.vm[fn](1) || store.array
+        target_array = this.vm[fn](1) || store.mainArray
     else
-        target_array = store.array
+        target_array = store.mainArray
     
     let result_array = search(value, this, target_array)
     this.array = result_array
