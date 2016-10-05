@@ -1,5 +1,15 @@
-export interface ToggleOpts {
+export interface CommonOpts {
     pojo: string
+}
+
+export function timeago(it: CommonOpts): string {
+    let pojo = it.pojo
+    return `
+<i class="icon clock"></i>{{ ${pojo}.ts | prettydate }}
+<i class="icon pencil" v-show="${pojo}.rev" :title="${pojo}.rev"></i><span v-show="${pojo}.rev">{{ ${pojo}.updateTs | prettydate }}</span>`
+}
+
+export interface ToggleOpts extends CommonOpts {
     field: string
     fn: string
     bit?: number
