@@ -2,7 +2,7 @@ import * as Vue from 'vue'
 import { component } from 'vuets'
 import { defp, nullp, initObservable } from 'vueds'
 import { localToUtc } from 'vueds/lib/util'
-import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
+import { PojoStore, Pager, ItemSO, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as cal from '../calendar'
 
@@ -253,7 +253,7 @@ export class Calendar {
             keyProperty: 'id',
             $keyProperty: 'id',
             merge_fn: mergeFrom,
-            createObservable(so: StateObject, idx: number) {
+            createObservable(so: ItemSO, idx: number) {
                 return Item.$createObservable(String(idx))
             },
             onSelect(message: Item, flags: SelectionFlags): number {

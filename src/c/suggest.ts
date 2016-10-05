@@ -1,6 +1,6 @@
 import { component } from 'vuets'
 import { defp, nullp, initObservable } from 'vueds'
-import { PojoStore, Pager, StateObject, SelectionFlags, PojoListState } from 'vueds/lib/store/'
+import { PojoStore, Pager, ItemSO, SelectionFlags, PojoListState } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as pager_controls from '../tpl/legacy/pager_controls'
 import { Flags } from '../_pager'
@@ -51,7 +51,7 @@ export class Suggest {
             descriptor: ds.ACResult.$descriptor,
             keyProperty: '2',
             $keyProperty: 'value',
-            createObservable(so: StateObject, idx: number) {
+            createObservable(so: ItemSO, idx: number) {
                 return ds.ACResult.$createObservable()
             },
             onSelect(message: ds.ACResult, flags: SelectionFlags): number {
