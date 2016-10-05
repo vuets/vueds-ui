@@ -54,8 +54,8 @@ export class Suggest {
             createObservable(so: ItemSO, idx: number) {
                 return ds.ACResult.$createObservable()
             },
-            onSelect(message: ds.ACResult, flags: SelectionFlags): number {
-                self.opts.onSelect(message, flags)
+            onSelect(selected: ds.ACResult, flags: SelectionFlags): number {
+                self.opts.onSelect(selected, flags)
                 return 0
             },
             fetch(req: ds.ParamRangeKey, pager: Pager) {

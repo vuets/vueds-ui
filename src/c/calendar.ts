@@ -256,15 +256,15 @@ export class Calendar {
             createObservable(so: ItemSO, idx: number) {
                 return Item.$createObservable(String(idx))
             },
-            onSelect(message: Item, flags: SelectionFlags): number {
+            onSelect(selected: Item, flags: SelectionFlags): number {
                 let config = self.config,
                     opts = self.opts
                 
-                config.selected_item = message
+                config.selected_item = selected
                 config.selected_date = config.current
 
                 if (flags !== SelectionFlags.FORCE)
-                    opts.onSelect(message, flags)
+                    opts.onSelect(selected, flags)
                 
                 return 0
             },
