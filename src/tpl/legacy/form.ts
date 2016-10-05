@@ -1,4 +1,4 @@
-import { when, when_fn, attrs, exprs, or, append, prepend, include_if, quote } from '../common'
+import { when, when_fn, attrs, exprs, or, append, prepend, include_if, quote, attr } from '../common'
 import { PojoState, FieldType } from 'vueds'
 import { PagerState } from 'vueds/lib/store'
 import * as $close from '../../_close'
@@ -36,6 +36,7 @@ export interface Opts {
 
     //_content?: string
     ffid?: string // first field id
+    id?: string
 }
 
 const option_empty = '<option value=""></option>'
@@ -222,7 +223,7 @@ export function main(it: Opts, content?: string): string {
     let pojo = it.pojo,
         tag = it.tag || 'form',
         disable = it.pager || it.disable_expr,
-        btn_text = it.btn_text || 'Submit'
+        btn_text = it.btn_text || (it.update ? 'Update' : 'Submit')
     
     return `
 ${
@@ -230,7 +231,7 @@ ${
     it.hr_before && '<hr />' || 
     it.close_el && close_el(it) || ''
 }
-<${tag} class="ui form"
+<${tag} class="ui form"${attr(it, 'id')}
     v-clear v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
   ${include_if(it.title, title, it)}
   ${when(it.content_slot === ContentSlot.TOP, content)}
