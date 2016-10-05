@@ -1,5 +1,8 @@
-export interface ToggleOpts {
+export interface CommonOpts {
     pojo: string;
+}
+export declare function timeago(it: CommonOpts): string;
+export interface ToggleOpts extends CommonOpts {
     field: string;
     fn: string;
     bit?: number;
