@@ -24,6 +24,7 @@ export interface Opts {
     without_msg?: boolean;
     without_vclass?: boolean;
     ffid?: string;
+    id?: string;
 }
 /** Alias to body. */
 export declare function fields(it: Opts): string;
