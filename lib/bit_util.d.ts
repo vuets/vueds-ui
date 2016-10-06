@@ -4,6 +4,6 @@ export interface Entry {
     checked: boolean;
 }
 export interface Container {
-    [propName: string]: Entry | any;
+    [key: string]: Entry;
 }
 export declare function putCheckboxBitset(container1: Container, container2: Container, bitArray1: Entry[], bitArray2: Entry[], arrayValue: number[], arrayDisplay: string[]): void;
