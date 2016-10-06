@@ -79,7 +79,7 @@ function field_textarea(it: Opts, fd: any, idx: number, pojo: string, ffid: any)
   <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})"></textarea>
   ${include_if(fd.$h, help_text, fd)}
-  <div v-text="${pojo}._['${fd._}']"></div>
+  <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
 </div>`
 }
 
@@ -93,7 +93,7 @@ function field_num(it: Opts, fd: any, idx: number, pojo: string, ffid: any): str
   <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(it, fd, pojo) || ''}
       v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
   ${include_if(fd.$h, help_text, fd)}
-  <div v-text="${pojo}._['${fd._}']"></div>
+  <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
 </div>`
 }
 
@@ -103,7 +103,7 @@ function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any):
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
       v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
   ${include_if(fd.$h, help_text, fd)}
-  <div v-text="${pojo}._['${fd._}']"></div>
+  <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
 </div>`
 }
 
@@ -136,6 +136,14 @@ function show_field(it: Opts, expr: string): string {
     return ` v-show="${expr}"`
 }
 
+function error_class(it: Opts, fd: any, pojo: string): string {
+    return ` v-sclass:error="(${pojo}._.vfbs & ${1 << (fd._ - 1)}) && ${pojo}._['${fd._}']"`
+}
+
+function with_error(ft: number): boolean {
+    return ft !== FieldType.BOOL && ft !== FieldType.ENUM
+}
+
 function body(it: Opts, descriptor: any, pojo: string, root: any): string {
     var array = descriptor.$fdf, 
         mask = it.update ? 13 : 3, 
@@ -162,8 +170,7 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
         if (!fd.t || (fd.a & mask) || (exclude_fn && exclude_fn(f, descriptor))) continue
 
         out += `
-<div${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''} class="field${when(fd.m === 2, ' required')}"
-    v-sclass:error="${pojo}._['${fd._}']">
+<div class="field${when(fd.m === 2, ' required')}"${with_error(fd.t) && error_class(it, fd, pojo) || ''}${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''}>
   <label>${fd.$n}${when(fd.m === 2), ' *'}</label>
   ${field_switch(it, fd, i, pojo, ffid)}
 </div>
