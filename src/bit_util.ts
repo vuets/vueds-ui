@@ -6,7 +6,6 @@ export interface Entry {
 }
 
 export interface Container {
-    show: boolean
     [propName: string]: Entry|any
 }
 
@@ -17,8 +16,6 @@ export function putCheckboxBitset(container1: Container, container2: Container,
         value: number,
         strIdx: string,
         entry: Entry
-    
-    container2.show = false
     
     for (var i = 0, len = arrayValue.length; i < len; i++) {
         display = arrayDisplay[i]
