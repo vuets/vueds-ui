@@ -12,14 +12,14 @@ export function timeago(it: CommonOpts): string {
 export interface ToggleOpts extends CommonOpts {
     field: string
     fn: string
-    bit?: number
+    bit: number
     icon_class?: string
     title_expr?: string
 }
 
 export function toggle(it: ToggleOpts): string {
     let pojo = it.pojo,
-        bit = it.bit || 32,
+        bit = it.bit,
         title_expr = !it.title_expr ? '' : (` :title="${it.title_expr}"`)
     return `
 <i class="icon ${it.icon_class || 'circle'}" v-sclass:empty="!${pojo}.${it.field}" @click="${pojo}._.vstate |= ${bit}"${title_expr}></i>
