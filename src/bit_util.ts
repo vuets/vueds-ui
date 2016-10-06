@@ -6,7 +6,7 @@ export interface Entry {
 }
 
 export interface Container {
-    [propName: string]: Entry|any
+    [key: string]: Entry
 }
 
 export function putCheckboxBitset(container1: Container, container2: Container,
