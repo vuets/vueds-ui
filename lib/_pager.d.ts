@@ -1,6 +1,7 @@
 import { Pager } from 'vueds/lib/store/';
 export declare const enum Flags {
     SUGGEST = 16,
+    DTAP_ANY = 32,
 }
 export interface Opts {
     flags: number;
