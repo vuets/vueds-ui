@@ -26,3 +26,18 @@ export function toggle(it: ToggleOpts): string {
 <i class="icon ok-circled" v-show="(${pojo}._.vstate & ${bit})" @click="${it.fn}(${pojo}, ${pojo}._.vstate ^= ${bit})"></i>
 <i class="icon cancel-circled" v-show="(${pojo}._.vstate & ${bit})" @click="${pojo}._.vstate ^= ${bit}"></i>`
 }
+
+export interface DrawerOpts extends CommonOpts {
+    form: string
+    bit: number
+}
+
+export function drawer(it: DrawerOpts, content?: string): string {
+    let pojo = it.pojo,
+        bit = it.bit
+    return `
+<div class="content" @click="(${bit} === (${pojo}._.vstate ^= ${bit})) && ${it.form}$$A()">
+  <i class="icon" v-pclass:angle-="(${pojo}._.vstate & ${bit}) ? 'down' : 'right'"></i>${content || ''}
+</div>
+<dd v-show="(${pojo}._.vstate & ${bit})" v-append:${it.form}="(${pojo}._.vstate & ${bit})"></dd>`
+}
