@@ -26,7 +26,8 @@ import {
 } from 'vueds/lib/store/'
 
 export const enum Flags {
-    SUGGEST = 16
+    SUGGEST = 16,
+    DTAP_ANY = 32
 }
 
 export interface Opts {
@@ -82,13 +83,12 @@ export function attachOptsTo(el, args: string[]|any, pager: Pager, vm) {
 
 function configureHammer(hammer: any, opts: Opts) {
     hammer.get('swipe').set({ velocity: 0.1/*, distance: 1*/ })
-    hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
-    hammer.get('doubletap').recognizeWith('tap')
-
+    //hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
+    //hammer.get('doubletap').recognizeWith('tap')
+    hammer.on('doubletap', doubletap.bind(opts))
     hammer.on('swipe', swipe.bind(opts))
     hammer.on('press', press.bind(opts))
     hammer.on('tap', tap.bind(opts))
-    hammer.on('doubletap', doubletap.bind(opts))
 }
 
 /*function addCustomListenersTo(el, opts: Opts) {
@@ -254,27 +254,18 @@ function tap(e) {
         removeClass(opts.el.parentElement, 'active')
 }
 
-function doubletap(e) {
-    // TODO remove hack
-    if (e.target.hasOwnProperty('$l')) {
-        // a date input with a date picker
-        // workaround for mobile
-        fireEvent(e.target, 'dblclick')
-        e.preventDefault()
-        //e.stopPropagation()
-        return false
-    }
+function doubletap(this: Opts, e) {
+    if (this.flags & Flags.SUGGEST)
+        return
 
-    let opts: Opts = this
-    if (opts.flags & Flags.SUGGEST)
-        return false
-
-    current = opts
-    if (isInput(e.target)) return
-    // tap already handles this, which gets called before this function
-    // keymage.setScope('pager')
+    let flags = this.flags,
+        target = e.target
     
-    select(e, opts, true, opts.flags & screen.flags)
+    current = this
+
+    if (isInput(target) || (!(flags & Flags.DTAP_ANY) && target.tagName !== 'DD')) return
+    
+    select(e, this, true, flags & screen.flags)
 }
 
 // =====================================
