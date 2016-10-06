@@ -19,7 +19,7 @@ export interface ToggleOpts extends CommonOpts {
 
 export function toggle(it: ToggleOpts): string {
     let pojo = it.pojo,
-        bit = it.bit || 1,
+        bit = it.bit || 32,
         title_expr = !it.title_expr ? '' : (` :title="${it.title_expr}"`)
     return `
 <i class="icon ${it.icon_class || 'circle'}" v-sclass:empty="!${pojo}.${it.field}" @click="${pojo}._.vstate |= ${bit}"${title_expr}></i>
