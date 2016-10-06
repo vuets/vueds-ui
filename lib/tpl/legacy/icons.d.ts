@@ -5,7 +5,7 @@ export declare function timeago(it: CommonOpts): string;
 export interface ToggleOpts extends CommonOpts {
     field: string;
     fn: string;
-    bit?: number;
+    bit: number;
     icon_class?: string;
     title_expr?: string;
 }
