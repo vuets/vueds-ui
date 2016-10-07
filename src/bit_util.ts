@@ -1,43 +1,34 @@
 
-export interface Entry {
+export interface Checkbox {
     display: string
     value: number
     checked: boolean
 }
 
-export interface Container {
-    [key: string]: Entry
-}
-
-export function putCheckboxBitset(container1: Container, container2: Container,
-        bitArray1: Entry[], bitArray2: Entry[], 
-        arrayValue: number[], arrayDisplay: string[]) {
+export function fillWithCheckbox(arrayValue: number[], arrayDisplay: string[],
+        fill1: Checkbox[], fill2?: Checkbox[]) {
     var display: string,
         value: number,
-        strIdx: string,
-        entry: Entry
+        strIdx: string
     
     for (var i = 0, len = arrayValue.length; i < len; i++) {
         display = arrayDisplay[i]
         value = arrayValue[i]
-        strIdx = '$' + value
 
-        // 1
-        entry = {
+        fill1.push({
             display,
             value,
             checked: false
-        }
-        bitArray1.push(entry)
-        container1[strIdx] = entry
+        })
+
+        if (!fill2)
+            continue
 
         // 2
-        entry = {
+        fill2.push({
             display,
             value,
             checked: false
-        }
-        bitArray2.push(entry)
-        container2[strIdx] = entry
+        })
     }
 }
