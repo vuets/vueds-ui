@@ -89,14 +89,13 @@ function toUTC(config: Config): number {
 }
 
 function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
-    let self: Opts = this,
-        pending = flags === 0
+    let pending = flags === 0
     
-    self.pending = pending
+    this.pending = pending
     if (pending) return
     
-    self.pojo[self.field] = toUTC(getInstance().config)
-    Vue.nextTick(self.focusNT)
+    this.pojo[this.field] = toUTC(getInstance().config)
+    Vue.nextTick(this.focusNT)
 }
 
 function showCalendar(calendar: Calendar|any, self: Opts, popup?: any) {
@@ -130,19 +129,17 @@ function toggleCalendar(calendar, self: Opts, p?: any): boolean {
     return show
 }
 
-function focusout(e) {
-    let self: Opts = this
-
-    if (self.pending) {
-        self.pending = false
-        self.pojo[self.field] = toUTC(getInstance().config)
+function focusout(this: Opts, e) {
+    if (this.pending) {
+        this.pending = false
+        this.pojo[this.field] = toUTC(getInstance().config)
         hidePopup(getPopup())
     }
 }
 
-function click(e) {
+function click(this: Opts, e) {
     let calendar = getInstance(),
-        self: Opts = this,
+        self = this,
         popup = getPopup()
     
     e.preventDefault()
@@ -155,8 +152,8 @@ function click(e) {
     }
 }
 
-function keydown(e) {
-    let self: Opts = this,
+function keydown(this: Opts, e) {
+    let self = this,
         calendar: Calendar,
         pager: Pager
 

@@ -1,6 +1,6 @@
 import { Opts, parseOpts, cleanup } from '../_lsearch'
 
-export function update(value: any, oldValue: any) {
+export function update(this: any, value: any, oldValue: any) {
     if (oldValue) return
 
     if (value && value.pager && value.fields) {
@@ -11,7 +11,7 @@ export function update(value: any, oldValue: any) {
     }
 }
 
-export function unbind() {
+export function unbind(this: any) {
     let lsearch = this.lsearch
     if (lsearch)
         cleanup(lsearch)

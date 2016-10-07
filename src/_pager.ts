@@ -189,54 +189,52 @@ function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
 // =====================================
 // context listeners
 
-function focus(e) {
-    current = this as Opts
+function focus(this: Opts, e) {
+    current = this
     keymage.setScope('pager')
 }
 
-function swipe(e) {
-    let opts: Opts = this,
+function swipe(this: Opts, e) {
+    let self = this,
         target = e.target,
         pojo
     if (isInput(target)) return
-    current = opts
+    current = self
     keymage.setScope('pager')
     
-    if (!(pojo = itemLookup(target)) || pojo.$pager !== opts.pager) return
+    if (!(pojo = itemLookup(target)) || pojo.$pager !== self.pager) return
     
     switch(e.direction) {
         case 2: // right-to-left
-            pageNextOrLoad(e, opts.pager, opts)
+            pageNextOrLoad(e, self.pager, self)
             break
         case 4: // left-to-right
-            pagePrevOrLoad(e, opts.pager, opts)
+            pagePrevOrLoad(e, self.pager, self)
             break;
     }
 }
 
-function press(e) {
-    let opts: Opts = this
-    
+function press(this: Opts, e) {
     if (isInput(e.target)) return
     
-    current = opts
+    current = this
     keymage.setScope('pager')
     
-    select(e, opts, false, opts.flags & screen.flags)
+    select(e, this, false, this.flags & screen.flags)
 }
 
-function tap(e) {
-    let opts: Opts = this
-    current = opts
+function tap(this: Opts, e) {
+    let self = this
+    current = self
     if (isInput(e.target)) return
     keymage.setScope('pager')
     
-    if (opts.flags & screen.flags) {
-        select(e, opts, false, 1)
+    if (self.flags & screen.flags) {
+        select(e, self, false, 1)
         return
     }
 
-    var pager = opts.pager,
+    var pager = self.pager,
         pojo,
         store: PojoStore<any>,
         //key,
@@ -244,16 +242,16 @@ function tap(e) {
     
     if (!(pojo = itemLookup(e.target)) || pojo.$pager !== pager) return
     
-    store = opts.pager['store']
+    store = self.pager['store']
     //key = pojo[store.$k] || pojo[store.k]
-    suggest = !!(opts.flags & Flags.SUGGEST)
+    suggest = !!(self.flags & Flags.SUGGEST)
 
     if (!suggest && pager.array[pojo.$index] === pager.pojo/* && pager.prev_key === key*/) return
 
     store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
 
     if (suggest)
-        removeClass(opts.el.parentElement, 'active')
+        removeClass(self.el.parentElement, 'active')
 }
 
 function doubletap(this: Opts, e) {

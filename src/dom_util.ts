@@ -415,7 +415,7 @@ export function popTo(relativeTarget, popup) {
 }
 export function debounce(func, wait, immediate?): any {
     var timeout
-    return function(): any {
+    return function(this: any): any {
         var context = this, args = arguments
         var later = function() {
             timeout = null

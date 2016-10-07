@@ -43,8 +43,8 @@ export function cleanup(opts: Opts) {
     opts.el.removeEventListener(opts.type, opts.handler)
 }
 
-function handler(e) {
-    var self: Opts = this,
+function handler(this: Opts, e) {
+    let self = this,
         array = self.array,
         vm
 

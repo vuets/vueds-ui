@@ -1,12 +1,12 @@
 import { resolveElement } from '../dom_util'
 
-export function bind() {
+export function bind(this: any) {
     if (!this.arg) {
         console.warn('arg is required for v-append.')
     }
 }
 
-export function update(value: any, oldValue: any) {
+export function update(this: any, value: any, oldValue: any) {
     if (!this.arg || !value || value === oldValue) return
     
     var el = this.el,

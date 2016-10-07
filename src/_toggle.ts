@@ -43,10 +43,10 @@ export function cleanup(opts: Opts) {
     opts.el.removeEventListener(opts.type, opts.handler)
 }
 
-function handler(e) {
+function handler(this: Opts, e) {
     e.preventDefault()
 
-    var self: Opts = this,
+    let self = this,
         array = self.array,
         vm = self.vm,
         el

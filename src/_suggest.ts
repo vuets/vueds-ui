@@ -97,8 +97,8 @@ function focusNT(this: Opts) {
     this.el.focus()
 }
 
-function onSelect(message: ds.ACResult, flags: SelectionFlags) {
-    let self: Opts = this,
+function onSelect(this: Opts, message: ds.ACResult, flags: SelectionFlags) {
+    let self = this,
         name = message.name,
         value = message.id || message.value
     if (!flags) {
@@ -118,11 +118,11 @@ function onSelect(message: ds.ACResult, flags: SelectionFlags) {
     }
 }
 
-function postPS(req: ds.PS) {
+function postPS(this: string, req: ds.PS) {
     return rpc.post(this, ds.PS.$stringify(req))
 }
 
-export function parseOpts(args: string[]|any, pojo, field, fetch, vm, el): Opts {
+export function parseOpts(args: string[]|any, pojo, field: string, fetch: string, vm, el): Opts {
     let i = 0,
         len = !args ? 0 : args.length,
         flags = i === len ? 0 : parseInt(args[i++], 10),
@@ -214,8 +214,8 @@ export function cleanup(opts: Opts) {
     }
 }*/
 
-function focusout(e) {
-    let self: Opts = this,
+function focusout(this: Opts, e) {
+    let self = this,
         name = self.pending_name,
         text = self.el.value,
         suggest = getInstance()
@@ -248,9 +248,9 @@ function focusout(e) {
     //    window.setTimeout(self.hideSuggestNT, 100)
 }
 
-function click(e) {
-    let suggest = getInstance(),
-        self: Opts = this,
+function click(this: Opts, e) {
+    let self = this,
+        suggest = getInstance(),
         text: string,
         popup
 
@@ -267,8 +267,8 @@ function click(e) {
     }
 }
 
-function cbFetchSuccess(data) {
-    let self: Opts = this,
+function cbFetchSuccess(this: Opts, data) {
+    let self = this,
         value = self.str_fetch
     
     self.disabled = false
@@ -295,17 +295,15 @@ function cbFetchSuccess(data) {
     return true
 }
 
-function cbFetchFailed(err) {
-    let self: Opts = this
-
-    self.disabled = false
+function cbFetchFailed(this: Opts, err) {
+    this.disabled = false
     
-    if (self.str_fetch !== self.el.value)
-        Vue.nextTick(self.input)
+    if (this.str_fetch !== this.el.value)
+        Vue.nextTick(this.input)
 }
 
-function input(e) {
-    let self: Opts = this,
+function input(this: Opts, e) {
+    let self = this,
         el = self.el,
         value: string = el.value.trim()
     
@@ -328,8 +326,8 @@ function input(e) {
     }
 }
 
-function keydown(e) {
-    let self: Opts = this,
+function keydown(this: Opts, e) {
+    let self = this,
         suggest,
         pager
     switch (e.which) {

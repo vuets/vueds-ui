@@ -1,6 +1,6 @@
 import { resolveElement } from '../dom_util'
 
-export function update(value, oldValue) {
+export function update(this: any, value, oldValue) {
     // expects a static value, should only be called once.
     if (oldValue) return
 

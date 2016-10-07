@@ -422,7 +422,7 @@ export class Trie {
      * @type  {void}
      */
     fromJSON(json) {
-        Trie.STATIC_PROPS.forEach(function(prop) {
+        Trie.STATIC_PROPS.forEach(function(this: any, prop) {
             this[prop] = json[prop];
         }.bind(this));
         this.children = json.children.map(function(data) {
@@ -444,7 +444,7 @@ export class Trie {
                 return child.toJSON();
             })
         };
-        Trie.STATIC_PROPS.forEach(function(prop) {
+        Trie.STATIC_PROPS.forEach(function(this: any, prop) {
             json[prop] = this[prop];
         }.bind(this));
         return json;

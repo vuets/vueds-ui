@@ -1,4 +1,7 @@
-import * as Vue from 'vue'
+// dummy (for the mean time)
+export default {}
+
+/*import * as Vue from 'vue'
 
 var FragmentFactory = Vue['FragmentFactory']
 var before = Vue.util.before
@@ -72,4 +75,4 @@ Vue.directive('xp', {
             this.el_frag.before(anchor)
         }
     }
-})
+})*/

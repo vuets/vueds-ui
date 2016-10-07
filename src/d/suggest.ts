@@ -1,6 +1,6 @@
 import { Opts, parseOpts, cleanup } from '../_suggest'
 
-export function update(value: any, oldValue: any) {
+export function update(this: any, value: any, oldValue: any) {
     if (oldValue) return
 
     if (value && value.pojo && value.field && value.fetch)
@@ -9,7 +9,7 @@ export function update(value: any, oldValue: any) {
         console.warn('Must provide value: { pojo: obj, field: string, fetch: function }')
 }
 
-export function unbind() {
+export function unbind(this: any) {
     let suggest = this.suggest
     if (suggest)
         cleanup(suggest)

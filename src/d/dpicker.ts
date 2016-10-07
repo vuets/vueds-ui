@@ -1,6 +1,6 @@
 import { Opts, parseOpts, cleanup } from '../_dpicker'
 
-export function update(value: any, oldValue: any) {
+export function update(this: any, value: any, oldValue: any) {
     if (oldValue) return
 
     if (value && value.pojo && value.field)
@@ -9,7 +9,7 @@ export function update(value: any, oldValue: any) {
         console.warn('v-dpicker requires the value: { pojo: obj, field: string }')
 }
 
-export function unbind() {
+export function unbind(this: any) {
     let dpicker = this.dpicker
     if (dpicker)
         cleanup(dpicker)

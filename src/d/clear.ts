@@ -6,10 +6,10 @@ function handle(e) {
     hidePopup(getPopup())
 }
 
-export function bind() {
+export function bind(this: any) {
     this.el.addEventListener(this.arg || 'focusin', handle, true)
 }
 
-export function unbind() {
+export function unbind(this: any) {
     this.el.removeEventListener(this.arg || 'focusin', handle)
 }

@@ -1,6 +1,6 @@
 import { Opts, parseOpts } from '../_sval'
 
-export function bind() {
+export function bind(this: any) {
     if (!this.arg) {
         console.warn('arg is required for v-sval.')
         return
@@ -9,7 +9,7 @@ export function bind() {
     this.opts = parseOpts(this.arg.split(','), this.el)
 }
 
-export function update(value: any, oldValue: any) {
+export function update(this: any, value: any, oldValue: any) {
     if (value === undefined)
         return
     
@@ -17,5 +17,3 @@ export function update(value: any, oldValue: any) {
     if (opts)
         opts.fn(this.el, value)
 }
-
-//export function unbind() {}

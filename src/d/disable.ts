@@ -1,11 +1,11 @@
 import { addClass, removeClass, resolveElement } from '../dom_util'
 
-export function bind() {
+export function bind(this: any) {
     if (!this.arg)
         this.target = this.el
 }
 
-export function update(value: any, oldValue: any) {
+export function update(this: any, value: any, oldValue: any) {
     let disabled = !!value,
         el = this.target
     
@@ -20,5 +20,3 @@ export function update(value: any, oldValue: any) {
     if (disabled) addClass(el, 'disabled')
     else removeClass(el, 'disabled')
 }
-
-//export function unbind() {}

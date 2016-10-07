@@ -61,10 +61,10 @@ function resolveTarget(self: Opts, array: any[], idx: number) {
     return obj.tagName ? obj : (array[idx] = resolveElement(self.el, obj, self.vm))
 }
 
-function handler(e) {
+function handler(this: Opts, e) {
     e.preventDefault()
-
-    var self: Opts = this,
+    
+    let self = this,
         array = self.array,
         el
 
