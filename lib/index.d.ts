@@ -1,1 +1,2 @@
-export declare var templates: {};
+declare var _default: {};
+export default _default;

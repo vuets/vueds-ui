@@ -1,2 +1,2 @@
-export declare function update(value: any, oldValue: any): void;
-export declare function unbind(): void;
+export declare function update(this: any, value: any, oldValue: any): void;
+export declare function unbind(this: any): void;
