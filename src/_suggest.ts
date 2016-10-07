@@ -371,7 +371,7 @@ function keydown(this: Opts, e) {
             suggest = getInstance()
             pager = suggest.pager
             if (e.ctrlKey) moveTopOrUp(e, pager, self)
-            else listUp(pager, pager.index_selected, e, false)
+            else listUp(pager, pager.index_selected, e, self.flags) // TODO pass flags?
             break
         case Keys.RIGHT:
             if (!visiblePopup(getPopup())) return true
@@ -387,7 +387,7 @@ function keydown(this: Opts, e) {
             suggest = getInstance()
             pager = suggest.pager
             if (e.ctrlKey) moveBottomOrDown(e, pager, self)
-            else listDown(pager, pager.index_selected, e, false)
+            else listDown(pager, pager.index_selected, e, self.flags) // TODO pass flags?
             break
         default:
             //if (e.which >= 65 && e.which <= 90)

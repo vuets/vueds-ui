@@ -19,15 +19,19 @@ import {
     pageNextOrLoad, pagePrevOrLoad
 } from './pager_util'
 
-import { PojoState, defp } from 'vueds'
+import { defp } from 'vueds'
 
 import {
     Pager, PagerState, PojoStore, SelectionFlags, SelectionType, resolveNextPageIndex 
 } from 'vueds/lib/store/'
 
 export const enum Flags {
-    SUGGEST = 16,
-    DTAP_ANY = 32
+    UPDATE = 16,
+    PAGE_AND_SELECT = 32,
+    NO_RELOAD = 64,
+    NO_RPC = 128,
+    DTAP_ANY = 256,
+    SUGGEST = 512
 }
 
 export interface Opts {
@@ -125,8 +129,7 @@ var current: Opts
 function moveUp(e) {
     var target = e.target,
         attr = target.getAttribute('c-list'),
-        pager,
-        clickUpdate: boolean
+        pager
     
     if (attr && !(current = target.pager_opts)) {
         target.pager_opts = current = resolveElement(target, attr).pager_opts
@@ -134,18 +137,16 @@ function moveUp(e) {
     
     if (!current || !(pager = current.pager).index_hidden) return
     
-    clickUpdate = !!(current.flags & screen.flags)
     if (current.col_size)
-        tableUp(pager, current.col_size, current.table_flags, pager.index_selected, e, clickUpdate)
+        tableUp(pager, current.col_size, current.table_flags, pager.index_selected, e, current.flags)
     else
-        listUp(pager, pager.index_selected, e, clickUpdate)
+        listUp(pager, pager.index_selected, e, current.flags)
 }
 
 function moveDown(e) {
     var target = e.target,
         attr = target.getAttribute('c-list'),
-        pager: Pager,
-        clickUpdate: boolean
+        pager: Pager
     
     if (attr && !(current = target.pager_opts)) {
         target.pager_opts = current = resolveElement(target, attr).pager_opts
@@ -153,14 +154,13 @@ function moveDown(e) {
     
     if (!current || !(pager = current.pager).index_hidden) return
     
-    clickUpdate = !!(current.flags & screen.flags)
     if (current.col_size)
-        tableDown(pager, current.col_size, current.table_flags, pager.index_selected, e, clickUpdate)
+        tableDown(pager, current.col_size, current.table_flags, pager.index_selected, e, current.flags)
     else
-        listDown(pager, pager.index_selected, e, clickUpdate)
+        listDown(pager, pager.index_selected, e, current.flags)
 }
 
-function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
+function select(e, opts: Opts, dbltap: boolean, clickedUpdate: boolean) {
     var target = e.target, 
         parent = target.parentElement, 
         pojo,
@@ -173,17 +173,7 @@ function select(e, opts: Opts, dbltap: boolean, flagsIntersect: number) {
     
     store = opts.pager['store']
 
-    if (flagsIntersect) {
-        if (!(pojo.vstate & PojoState.UPDATE)) {
-            pojo.vstate |= PojoState.UPDATE
-            store.select(pojo, SelectionFlags.CLICKED_UPDATE, pojo.$index)
-        }
-    } else if (dbltap && trigger) {
-        store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
-    } else {
-        pojo.vstate ^= PojoState.UPDATE
-        store.select(pojo, SelectionFlags.CLICKED_UPDATE, pojo.$index)
-    }
+    store.select(pojo, clickedUpdate ? SelectionFlags.CLICKED_UPDATE : SelectionFlags.CLICKED, pojo.$index)
 }
 
 // =====================================
@@ -220,7 +210,7 @@ function press(this: Opts, e) {
     current = this
     keymage.setScope('pager')
     
-    select(e, this, false, this.flags & screen.flags)
+    select(e, this, false, true)
 }
 
 function tap(this: Opts, e) {
@@ -229,11 +219,6 @@ function tap(this: Opts, e) {
     if (isInput(e.target)) return
     keymage.setScope('pager')
     
-    if (self.flags & screen.flags) {
-        select(e, self, false, 1)
-        return
-    }
-
     var pager = self.pager,
         pojo,
         store: PojoStore<any>,
@@ -248,7 +233,7 @@ function tap(this: Opts, e) {
 
     if (!suggest && pager.array[pojo.$index] === pager.pojo/* && pager.prev_key === key*/) return
 
-    store.select(pojo, SelectionFlags.CLICKED, pojo.$index)
+    store.select(pojo, (self.flags & screen.flags) ? SelectionFlags.CLICKED_UPDATE : SelectionFlags.CLICKED, pojo.$index)
 
     if (suggest)
         removeClass(self.el.parentElement, 'active')
@@ -262,7 +247,7 @@ function doubletap(this: Opts, e) {
 
     if (isInput(target) || (!(flags & Flags.DTAP_ANY) && target.tagName !== 'DD')) return
     
-    select(e, this, true, flags & screen.flags)
+    select(e, this, true, true)
 }
 
 // =====================================

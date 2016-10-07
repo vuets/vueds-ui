@@ -187,7 +187,7 @@ function keydown(this: Opts, e) {
             calendar = getInstance()
             pager = calendar.pager
             if (e.ctrlKey) moveTopOrUp(e, pager, self)
-            else tableUp(pager, self.col_size, 0, pager.index_selected, e, false)            
+            else tableUp(pager, self.col_size, 0, pager.index_selected, e, self.flags) // TODO pass flags?
             break
         case Keys.RIGHT:
             calendar = getInstance()
@@ -203,7 +203,7 @@ function keydown(this: Opts, e) {
             calendar = getInstance()
             pager = calendar.pager
             if (e.ctrlKey) moveBottomOrDown(e, pager, self)
-            else tableDown(pager, self.col_size, 0, pager.index_selected, e, false) 
+            else tableDown(pager, self.col_size, 0, pager.index_selected, e, self.flags) // TODO pass flags?
             break
         default:
             return true
