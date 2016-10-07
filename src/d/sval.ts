@@ -15,4 +15,4 @@ export function update(value: any, oldValue: any) {
         opts.fn(this.el, value)
 }
 
-export function unbind() {}
+//export function unbind() {}
