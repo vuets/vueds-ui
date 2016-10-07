@@ -1,5 +1,5 @@
 import enquire from './enquire'
-import { addClass, removeClass, resolveElement } from './dom_util'
+import { resolveElement } from './dom_util'
 import { screen } from './screen_util'
 
 export interface Opts {
