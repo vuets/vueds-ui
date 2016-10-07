@@ -12,19 +12,18 @@ export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     if (!dir.arg) return
 
     let opts: Opts = parseOpts(dir.arg.split(','), el)
-    defp(el, 'sval_opts', opts)
+    defp(el, 'sval_', opts)
     opts.fn(el, dir.value)
 }
 
 export function update(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    if (dir.value === dir.oldValue) {
-        //console.warn('sval: vue2 update propagation bug')
+    let value = dir.value
+    if (value === undefined || value === dir.oldValue)
         return
-    }
-
-    let opts: Opts = el['sval_opts']
+    
+    let opts: Opts = el.sval_
     if (opts)
-        opts.fn(el, dir.value)
+        opts.fn(el, value)
 }
 
 //export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {}

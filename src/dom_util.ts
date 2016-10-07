@@ -531,29 +531,24 @@ export function updateBoolSelect(el, value) {
 }
 
 export function updateTime(el, value) {
-    if (value !== undefined)
-        el.value = !value ? '' : formatTime(value)
+    el.value = !value ? '' : formatTime(value)
 }
 
 export function updateDate(el, value) {
-    if (value !== undefined)
-        el.value = !value ? '' : formatDate(value)
+    el.value = !value ? '' : formatDate(value)
 }
 
 export function updateDateTime(el, value) {
-    if (value !== undefined)
-        el.value = !value ? '' : formatDateTime(value)
+    el.value = !value ? '' : formatDateTime(value)
 }
 
 export function updateString(el, value) {
     // TODO escape value
-    if (value !== undefined)
-        el.value = value
+    el.value = value
 }
 
 export function updateNumber(el, value) {
-    if (value !== undefined)
-        el.value = value || value === 0 ? value.toString() : ''
+    el.value = value || value === 0 ? value.toString() : ''
     // only write '0' if the input field was not empty (not initial state)
     //if (value || el.value)
     //    el.value = value

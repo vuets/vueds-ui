@@ -10,6 +10,9 @@ export function bind() {
 }
 
 export function update(value: any, oldValue: any) {
+    if (value === undefined)
+        return
+    
     let opts: Opts = this.opts
     if (opts)
         opts.fn(this.el, value)
