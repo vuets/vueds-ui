@@ -83,11 +83,13 @@ export function attachOptsTo(el, args: string[]|any, pager: Pager, vm) {
 
 function configureHammer(hammer: any, opts: Opts) {
     hammer.get('swipe').set({ velocity: 0.1/*, distance: 1*/ })
-    //hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
-    //hammer.get('doubletap').recognizeWith('tap')
-    hammer.on('doubletap', doubletap.bind(opts))
+    if (!(opts.flags & Flags.SUGGEST)) {
+        //hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
+        //hammer.get('doubletap').recognizeWith('tap')
+        hammer.on('doubletap', doubletap.bind(opts))
+        hammer.on('press', press.bind(opts))
+    }
     hammer.on('swipe', swipe.bind(opts))
-    hammer.on('press', press.bind(opts))
     hammer.on('tap', tap.bind(opts))
 }
 
@@ -215,7 +217,7 @@ function swipe(e) {
 function press(e) {
     let opts: Opts = this
     
-    if (isInput(e.target) || (opts.flags & Flags.SUGGEST)) return
+    if (isInput(e.target)) return
     
     current = opts
     keymage.setScope('pager')
@@ -255,9 +257,6 @@ function tap(e) {
 }
 
 function doubletap(this: Opts, e) {
-    if (this.flags & Flags.SUGGEST)
-        return
-
     let flags = this.flags,
         target = e.target
     
