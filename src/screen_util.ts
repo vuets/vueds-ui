@@ -1,5 +1,10 @@
 import enquire from './enquire'
 
+export const enum ScreenFlags {
+    LAP = 2,
+    DESK = 4
+}
+
 export const screen = {
     lap: 'screen and (min-width:48em)',
     desk: 'screen and (min-width:62em)',
@@ -28,19 +33,19 @@ export function table_compact_columns(): number {
 
 export const desk_entry = {
     match() {
-        screen.flags |= 4
+        screen.flags |= ScreenFlags.DESK
     },
     unmatch() {
-        screen.flags ^= 4
+        screen.flags ^= ScreenFlags.DESK
     }
 }
 
 export const lap_entry = {
     match() {
-        screen.flags |= 2
+        screen.flags |= ScreenFlags.LAP
     },
     unmatch() {
-        screen.flags ^= 2
+        screen.flags ^= ScreenFlags.LAP
     }
 }
 
