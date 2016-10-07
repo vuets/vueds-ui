@@ -1,9 +1,6 @@
-export interface Entry {
+export interface Checkbox {
     display: string;
     value: number;
     checked: boolean;
 }
-export interface Container {
-    [key: string]: Entry;
-}
-export declare function putCheckboxBitset(container1: Container, container2: Container, bitArray1: Entry[], bitArray2: Entry[], arrayValue: number[], arrayDisplay: string[]): void;
+export declare function fillWithCheckbox(arrayValue: number[], arrayDisplay: string[], fill1: Checkbox[], fill2?: Checkbox[]): void;
