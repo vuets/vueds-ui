@@ -29,6 +29,7 @@ export interface Opts {
     hr_after?: boolean
     btn_class?: string
     disable_expr?: string
+    show_expr?: string
 
     without_fields?: boolean
     without_msg?: boolean
@@ -238,7 +239,7 @@ ${
     it.hr_before && '<hr />' || 
     it.close_el && close_el(it) || ''
 }
-<${tag} class="ui form"${attr(it, 'id')}
+<${tag} class="ui form"${attr(it, 'id')}${attr(it, 'show_expr', 'v-show')}
     v-clear v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
   ${include_if(it.title, title, it)}
   ${when(it.content_slot === ContentSlot.TOP, content)}

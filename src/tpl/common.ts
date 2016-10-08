@@ -30,11 +30,11 @@ export function tern_yes_no(cond: any): string {
     return cond ? yes_no : no_yes
 }
 
-export function attr(obj: any, k: string): string {
+export function attr(obj: any, k: string, kattr?: string): string {
     let v = obj[k],
         buf = ''
     if (v)
-        buf += ' ' + k + '="' + v + '"'
+        buf += ' ' + (kattr || k) + '="' + v + '"'
     
     return buf
 }
