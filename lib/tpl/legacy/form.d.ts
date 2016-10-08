@@ -20,6 +20,7 @@ export interface Opts {
     hr_after?: boolean;
     btn_class?: string;
     disable_expr?: string;
+    show_expr?: string;
     without_fields?: boolean;
     without_msg?: boolean;
     without_vclass?: boolean;
