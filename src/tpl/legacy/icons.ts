@@ -28,16 +28,28 @@ export function toggle(it: ToggleOpts): string {
 }
 
 export interface DrawerOpts extends CommonOpts {
-    form: string
     bit: number
+    form?: string
+    fn?: string
+    tabindex?: number
 }
 
 export function drawer(it: DrawerOpts, content?: string): string {
     let pojo = it.pojo,
-        bit = it.bit
+        bit = it.bit,
+        and_call = '',
+        tabindex = it.tabindex === undefined ? '' : ' tabindex="0"',
+        append = !it.form ? '' : ` v-append:${it.form}="(${pojo}._.state & ${bit})"`
+    
+    if (it.fn) {
+        and_call = ` && ${it.fn}()`
+    } else if (it.form) {
+        and_call = ` && ${it.form}$$A()`
+    }
+
     return `
-<div class="content" @click="(${bit} === (${pojo}._.state ^= ${bit})) && ${it.form}$$A()">
-  <i class="icon" v-pclass:angle-="(${pojo}._.state & ${bit}) ? 'down' : 'right'"></i>${content || ''}
+<div class="content" @click="(${bit} === (${pojo}._.state ^= ${bit}))${and_call}">
+  <i ${tabindex}class="icon" v-pclass:angle-="(${pojo}._.state & ${bit}) ? 'down' : 'right'"></i>${content || ''}
 </div>
-<dd v-show="(${pojo}._.state & ${bit})" v-append:${it.form}="(${pojo}._.state & ${bit})"></dd>`
+<dd v-show="(${pojo}._.state & ${bit})"${append}></dd>`
 }
