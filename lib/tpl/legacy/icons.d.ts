@@ -11,7 +11,9 @@ export interface ToggleOpts extends CommonOpts {
 }
 export declare function toggle(it: ToggleOpts): string;
 export interface DrawerOpts extends CommonOpts {
-    form: string;
     bit: number;
+    form?: string;
+    fn?: string;
+    tabindex?: number;
 }
 export declare function drawer(it: DrawerOpts, content?: string): string;
