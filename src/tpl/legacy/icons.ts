@@ -22,9 +22,9 @@ export function toggle(it: ToggleOpts): string {
         bit = it.bit,
         title_expr = !it.title_expr ? '' : (` :title="${it.title_expr}"`)
     return `
-<i class="icon ${it.icon_class || 'circle'}" v-sclass:empty="!${pojo}.${it.field}" @click="(${pojo}._.vstate |= ${bit})"${title_expr}></i>
-<i class="icon ok-circled" v-show="(${pojo}._.vstate & ${bit})" @click="${it.fn}(${pojo}, ${pojo}._.vstate ^= ${bit})"></i>
-<i class="icon cancel-circled" v-show="(${pojo}._.vstate & ${bit})" @click="(${pojo}._.vstate ^= ${bit})"></i>`
+<i class="icon ${it.icon_class || 'circle'}" v-sclass:empty="!${pojo}.${it.field}" @click="(${pojo}._.state |= ${bit})"${title_expr}></i>
+<i class="icon ok-circled" v-show="(${pojo}._.state & ${bit})" @click="${it.fn}(${pojo}, ${pojo}._.state ^= ${bit})"></i>
+<i class="icon cancel-circled" v-show="(${pojo}._.state & ${bit})" @click="(${pojo}._.state ^= ${bit})"></i>`
 }
 
 export interface DrawerOpts extends CommonOpts {
@@ -36,8 +36,8 @@ export function drawer(it: DrawerOpts, content?: string): string {
     let pojo = it.pojo,
         bit = it.bit
     return `
-<div class="content" @click="(${bit} === (${pojo}._.vstate ^= ${bit})) && ${it.form}$$A()">
-  <i class="icon" v-pclass:angle-="(${pojo}._.vstate & ${bit}) ? 'down' : 'right'"></i>${content || ''}
+<div class="content" @click="(${bit} === (${pojo}._.state ^= ${bit})) && ${it.form}$$A()">
+  <i class="icon" v-pclass:angle-="(${pojo}._.state & ${bit}) ? 'down' : 'right'"></i>${content || ''}
 </div>
-<dd v-show="(${pojo}._.vstate & ${bit})" v-append:${it.form}="(${pojo}._.vstate & ${bit})"></dd>`
+<dd v-show="(${pojo}._.state & ${bit})" v-append:${it.form}="(${pojo}._.state & ${bit})"></dd>`
 }

@@ -49,7 +49,7 @@ export function main(it: Opts, content: string): string {
       v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
       ${it.item_class_exprs && item_class_exprs(it) || item_class_expr(it)}>
     ${content}
-    <div v-show="${pojo}._.msg && !(${pager}.pojo._.vstate & ${PojoState.UPDATE})">
+    <div v-show="${pojo}._.msg">
       <div class="ui message" v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
         <i class="close icon" @click.prevent="${pojo}._.msg = null"></i>
         <span v-text="${pojo}._.msg"></span>
