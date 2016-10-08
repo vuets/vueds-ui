@@ -37,18 +37,20 @@ export interface DrawerOpts extends CommonOpts {
 export function drawer(it: DrawerOpts, content?: string): string {
     let pojo = it.pojo,
         bit = it.bit,
-        and_call = '',
         tabindex = it.tabindex === undefined ? '' : ' tabindex="0"',
-        append = !it.form ? '' : ` v-append:${it.form}="(${pojo}._.state & ${bit})"`
+        append = !it.form ? '' : ` v-append:${it.form}="(${pojo}._.state & ${bit})"`,
+        call_expr
     
     if (it.fn) {
-        and_call = ` && ${it.fn}()`
+        call_expr = `${it.fn}((${pojo}._.state ^= ${bit}))`
     } else if (it.form) {
-        and_call = ` && ${it.form}$$A()`
+        call_expr = `${it.form}$$A((${pojo}._.state ^= ${bit}))`
+    } else {
+        call_expr = `(${pojo}._.state ^= ${bit})`
     }
 
     return `
-<div class="content" @click="(${bit} === (${pojo}._.state ^= ${bit}))${and_call}">
+<div class="content" @click="${call_expr}">
   <i ${tabindex}class="icon" v-pclass:angle-="(${pojo}._.state & ${bit}) ? 'down' : 'right'"></i>${content || ''}
 </div>
 <dd v-show="(${pojo}._.state & ${bit})"${append}></dd>`
