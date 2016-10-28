@@ -1,6 +1,6 @@
 export declare function prettydate(value: any): string;
-export declare function num(value: any, format?: string): number | string;
-export declare function r2(value: any, format?: string): number | string;
+export declare function num(value: any, format?: string): string | number;
+export declare function r2(value: any, format?: string): string | number;
 export declare function s2h(value: any): string;
 export declare function s2m(value: any): string;
 export declare function hms(value: any): string;
