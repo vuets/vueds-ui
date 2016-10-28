@@ -13,7 +13,7 @@ const ls = window.localStorage || stub
 
 export function get(key) {
     let val = ls.getItem(key)
-    return !val ? null : JSON.parse(val)
+    return val == null ? null : JSON.parse(val)
 }
 
 export function set(key, value) {
