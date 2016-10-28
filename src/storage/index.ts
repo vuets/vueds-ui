@@ -12,7 +12,8 @@ const ls = window.localStorage || stub
 }*/
 
 export function get(key) {
-    return JSON.parse(ls.getItem(key))
+    let val = ls.getItem(key)
+    return !val ? null : JSON.parse(val)
 }
 
 export function set(key, value) {
