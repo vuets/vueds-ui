@@ -42,14 +42,12 @@ export interface Opts {
 
 const option_empty = '<option value=""></option>'
 
-function enum_options(fd: any): string {
+export function enum_options(arrayValue: any[], arrayDisplay: any[]): string {
     let out = '',
-        arrayValue = fd.v_fn(),
-        arrayDisplay = fd.$v_fn(),
         len = arrayValue.length,
         i = 0
     
-    for (i = 0; i < len; i++)
+    for (; i < len; i++)
         out += `<option value="${arrayValue[i]}">${arrayDisplay[i]}</option>`
     
     return out
@@ -60,7 +58,7 @@ function field_enum(it: Opts, fd: any, idx: number, pojo: string, ffid: any): st
 <div class="fluid picker">
   <select${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})">
-    ${when(!it.update, option_empty)}${enum_options(fd)}
+    ${when(!it.update, option_empty)}${enum_options(fd.v_fn(), fd.$v_fn())}
   </select>
 </div>`
 }
