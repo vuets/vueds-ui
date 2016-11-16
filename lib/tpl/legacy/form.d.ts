@@ -27,6 +27,7 @@ export interface Opts {
     ffid?: string;
     id?: string;
 }
+export declare const option_empty: string;
 export declare function enum_options(arrayValue: any[], arrayDisplay: any[]): string;
 /** Alias to body. */
 export declare function fields(it: Opts): string;
