@@ -40,7 +40,7 @@ export interface Opts {
     id?: string
 }
 
-const option_empty = '<option value=""></option>'
+export const option_empty = '<option value=""></option>'
 
 export function enum_options(arrayValue: any[], arrayDisplay: any[]): string {
     let out = '',
