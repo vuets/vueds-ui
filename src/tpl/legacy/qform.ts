@@ -80,9 +80,9 @@ export function filter_fields(it: Opts, jso: any, fields: number[], pojo: string
         fd = descriptor[fk]
         disable = pojo + '.disable_'
         if (jso['r' + fk])
-            display = fd.$n
-        else
             display = fd.$n + ' *'
+        else
+            display = fd.$n
         
         suggestKind = jso['s' + fk]
         if (suggestKind) {
