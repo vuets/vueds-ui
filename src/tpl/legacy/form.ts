@@ -53,7 +53,7 @@ export function enum_options(arrayValue: any[], arrayDisplay: any[]): string {
     return out
 }
 
-function field_enum(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+function field_enum(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="fluid picker">
   <select${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
@@ -64,7 +64,7 @@ function field_enum(it: Opts, fd: any, idx: number, pojo: string, ffid: any): st
 }
 
 // TODO call the change function?
-function field_bool(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+function field_bool(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui checkbox">
   <input${include_if(ffid, ffid_attr, ffid)} type="checkbox"
@@ -72,7 +72,7 @@ function field_bool(it: Opts, fd: any, idx: number, pojo: string, ffid: any): st
 </div>`
 }
 
-function field_textarea(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+function field_textarea(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
   <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
@@ -86,7 +86,7 @@ function dpicker(it: Opts, fd: any, pojo: string): string {
     return ` v-dpicker:${it.update ? $dpicker.Flags.UPDATE : 0}="{ pojo: ${pojo}, field: '${fd.$ || fd._}' }"`
 }
 
-function field_num(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+function field_num(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(it, fd, pojo) || ''}
@@ -96,7 +96,7 @@ function field_num(it: Opts, fd: any, idx: number, pojo: string, ffid: any): str
 </div>`
 }
 
-function field_default(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
+function field_default(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
@@ -117,18 +117,18 @@ function ffid_attr(ffid): string {
 function field_switch(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
     let t = fd.t
     if (t === FieldType.BOOL)
-        return field_bool(it, fd, idx, pojo, ffid)
+        return field_bool(it, fd, pojo, ffid)
     
     if (t === FieldType.ENUM)
-        return field_enum(it, fd, idx, pojo, ffid)
+        return field_enum(it, fd, pojo, ffid)
     
     if (t !== FieldType.STRING)
-        return field_num(it, fd, idx, pojo, ffid)
+        return field_num(it, fd, pojo, ffid)
 
     if (fd.ta)
-        return field_textarea(it, fd, idx, pojo, ffid)
+        return field_textarea(it, fd, pojo, ffid)
     
-    return field_default(it, fd, idx, pojo, ffid)
+    return field_default(it, fd, pojo, ffid)
 }
 
 function show_field(it: Opts, expr: string): string {
