@@ -556,7 +556,7 @@ export function updateNumber(el, value) {
 
 export function getFnUpdate(el, type: FieldType, flags: number): FnUpdate {
     if (type === FieldType.BOOL)
-        return el.tagName === 'select' ? updateBoolSelect : updateBoolCheckbox
+        return el.nodeName === 'SELECT' ? updateBoolSelect : updateBoolCheckbox
     
     if (type === FieldType.ENUM)
         return updateSelect
