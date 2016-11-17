@@ -29,6 +29,7 @@ export interface Opts {
 }
 export declare const option_empty: string;
 export declare function enum_options(arrayValue: any[], arrayDisplay: any[]): string;
+export declare function dpicker(update: boolean, fd: any, pojo: string): string;
 /** Alias to body. */
 export declare function fields(it: Opts): string;
 export declare function msg(it: Opts): string;

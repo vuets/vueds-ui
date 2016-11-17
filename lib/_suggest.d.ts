@@ -29,5 +29,5 @@ export interface Opts {
     input: any;
     keydown: any;
 }
-export declare function parseOpts(args: string[] | any, pojo: any, field: string, fetch: string, vm: any, el: any): Opts;
+export declare function parseOpts(args: string[] | any, pojo: any, field: string, fetch: any, vm: any, el: any): Opts;
 export declare function cleanup(opts: Opts): void;
