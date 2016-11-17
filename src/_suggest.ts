@@ -122,7 +122,7 @@ function postPS(this: string, req: ds.PS) {
     return rpc.post(this, ds.PS.$stringify(req))
 }
 
-export function parseOpts(args: string[]|any, pojo, field: string, fetch: string, vm, el): Opts {
+export function parseOpts(args: string[]|any, pojo, field: string, fetch: any, vm, el): Opts {
     let i = 0,
         len = !args ? 0 : args.length,
         flags = i === len ? 0 : parseInt(args[i++], 10),
