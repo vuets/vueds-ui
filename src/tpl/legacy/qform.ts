@@ -51,6 +51,23 @@ export function field_num(it: Opts, fd: any, pojo: string, display: string): str
 </div>`
 }
 
+export function field_num_range(it: Opts, fd: any, pojo: string, display: string): string {
+    let sval = `${fd.t}${append(fd.o, ',')}`
+    return `
+<div class="ui input">
+  <input type="text"${fd.o === 2 && dpicker(false, fd, pojo) || ''}
+      placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
+      v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}.${fd.$}"
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$)" />
+</div>
+<div class="ui input">
+  <input type="text"${fd.o === 2 && dpicker(false, fd, pojo + '$') || ''}
+      placeholder="End ${display}" v-sclass:disabled="${pojo}.disable_"
+      v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}$.${fd.$}"
+      @change="qform.$d.$change($event, ${pojo}$, ${fd._}, false, ${pojo}$, ${pojo}$$)" />
+</div>`
+}
+
 export function field_default(it: Opts, fd: any, pojo: string, display: string, changeSuffix: string): string {
     return `
 <div class="ui input">
@@ -92,11 +109,8 @@ export function filter_fields(it: Opts, jso: any, fields: number[], pojo: string
         } else if (fd.t === FieldType.ENUM) {
             buf += field_enum(it, fd, pojo, display)
         } else if (fd.t !== FieldType.STRING) {
-            buf += field_num(it, fd, pojo, display)
-            // TODO range
-            if (jso['e' + fk]) {
-                
-            }
+            // check range
+            buf += (jso['e' + fk] ? field_num_range(it, fd, pojo, display) : field_num(it, fd, pojo, display))
         } else if (jso['p' + fk]) {
             buf += field_default(it, fd, pojo, display, ', true')
         } else {
@@ -121,7 +135,7 @@ export function items(it: Opts, values: any[]): string {
     
     for (let i = 0, len = key_array.length; i < len; i++) {
         jso = qd[key_array[i]]
-        if (!jso.fields)
+        if (!jso || !jso.fields)
             continue
         buf += filter_fields(it, jso, jso.fields, `qform.${jso.$}`, String(values[i]))
     }
