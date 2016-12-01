@@ -58,13 +58,13 @@ export function field_num_range(it: Opts, fd: any, pojo: string, display: string
   <input type="text"${fd.o === 2 && dpicker(false, fd, pojo) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$)" />
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$, true)" />
 </div>
 <div class="ui input">
   <input type="text"${fd.o === 2 && dpicker(false, fd, pojo + '$') || ''}
       placeholder="End ${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}$.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}$, ${fd._}, false, ${pojo}$, ${pojo}$$)" />
+      @change="qform.$d.$change($event, ${pojo}$, ${fd._}, false, ${pojo}$, ${pojo}$$, true)" />
 </div>`
 }
 
