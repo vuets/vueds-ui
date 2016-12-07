@@ -83,7 +83,7 @@ export function pager(it: PagerOpts, content?: string): string {
 </div>`
 }
 
-export interface LazyPagerOpts extends PagerOpts {
+export interface PagerLazyOpts extends PagerOpts {
     /** defaults to lazy_init() */
     lazy_fn?: string
     /** defaults to lazy_count */
@@ -92,7 +92,7 @@ export interface LazyPagerOpts extends PagerOpts {
     init_var?: string
 }
 
-export function lazy_pager(it: LazyPagerOpts, content?: string): string {
+export function pager_lazy(it: PagerLazyOpts, content?: string): string {
     let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
