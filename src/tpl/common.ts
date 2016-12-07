@@ -53,6 +53,10 @@ export function append(val: any, prefix?: string): string {
     return !val ? '' : (prefix || ' ') + val
 }
 
+export function append_kv(k: string, v?: string, prefix?: string): string {
+    return !v ? '' : (prefix || ' ') + k + '="' + v + '"'
+}
+
 export function prepend(val: any, suffix?: string): string {
     return !val ? '' : val + (suffix || ' ')
 }

@@ -1,5 +1,5 @@
 import { PagerState } from 'vueds/lib/store/'
-import { when, attr } from '../common'
+import { when, attr, append_kv } from '../common'
 
 export const enum ContentLoc {
     RIGHT_MENU = 1
@@ -20,9 +20,9 @@ function itoggle_id(it: CommonOpts): string {
 </div>`
 }
 
-function dropdown(it: CommonOpts, content: string): string {
+function dropdown(it: CommonOpts, content: string, show_expr?: string): string {
     return `
-<div class="item">
+<div class="item"${append_kv('v-show', show_expr)}>
   <div class="dropdown"${attr(it, "id")}>
     <div v-toggle="'1'"><i class="icon down-dir"></i></div>
     <ul class="dropdown-menu" v-close="'1'">
@@ -80,5 +80,36 @@ export function pager(it: PagerOpts, content?: string): string {
     </div>
   </div>
   ${right_menu(it, content)}
+</div>`
+}
+
+export interface LazyPagerOpts extends PagerOpts {
+    /** defaults to lazy_init() */
+    lazy_fn?: string
+    /** defaults to lazy_count */
+    lazy_count?: string
+    /** defaults to initialized */
+    init_var?: string
+}
+
+export function lazy_pager(it: LazyPagerOpts, content?: string): string {
+    let dpager = it.dpager || it.pager
+    return `
+<div class="ui attached large secondary pointing menu">
+  <div class="item">
+    <div class="ui small further left icon input">
+      <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
+          v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
+      <i class="icon search"></i>
+    </div>
+  </div>
+  <div class="right menu">
+    <div class="item">
+      <a @click="${it.lazy_fn || 'lazy_init()'}">
+        <i class="icon" v-pclass:resize-="0 === ${it.lazy_count || 'lazy_count'} % 2 ? 'full' : 'small'"></i>
+      </a>
+    </div>
+    ${content && dropdown(it, content, it.init_var || 'initialized') || ''}
+  </div>
 </div>`
 }
