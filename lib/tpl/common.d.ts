@@ -7,6 +7,7 @@ export declare function tern_yes_no(cond: any): string;
 export declare function attr(obj: any, k: string, kattr?: string): string;
 export declare function attrs(obj: any): string;
 export declare function append(val: any, prefix?: string): string;
+export declare function append_kv(k: string, v?: string, prefix?: string): string;
 export declare function prepend(val: any, suffix?: string): string;
 export declare function exprs(obj: any): string;
 /**

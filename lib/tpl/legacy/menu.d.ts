@@ -18,3 +18,12 @@ export interface PagerOpts extends CommonOpts {
     dpager?: string;
 }
 export declare function pager(it: PagerOpts, content?: string): string;
+export interface LazyPagerOpts extends PagerOpts {
+    /** defaults to lazy_init() */
+    lazy_fn?: string;
+    /** defaults to lazy_count */
+    lazy_count?: string;
+    /** defaults to initialized */
+    init_var?: string;
+}
+export declare function lazy_pager(it: LazyPagerOpts, content?: string): string;
