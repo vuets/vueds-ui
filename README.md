@@ -1,12 +1,12 @@
 Vue UI using terminal directives that call the compiled templates.
 
 ```sh
-# install
-npm i
+# install deps
+yarn install
 
 # compile the templates
-npm run dot
+yarn run dot
 
 # build
-npm run build
+yarn run build
 ```
