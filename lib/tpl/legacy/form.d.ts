@@ -27,7 +27,7 @@ export interface Opts {
     ffid?: string;
     id?: string;
 }
-export declare const option_empty: string;
+export declare const option_empty = "<option value=\"\"></option>";
 export declare function enum_options(arrayValue: any[], arrayDisplay: any[]): string;
 export declare function dpicker(update: boolean, fd: any, pojo: string): string;
 /** Alias to body. */

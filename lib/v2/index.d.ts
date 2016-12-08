@@ -1,4 +1,3 @@
-/// <reference types="vue" />
 export declare function locateNode(vnode: any): VNodeWithData;
 export interface PropOptions {
     type: Function | Array<Function> | null;
