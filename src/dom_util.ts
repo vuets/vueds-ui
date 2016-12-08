@@ -88,7 +88,7 @@ export function isInput(el: Element): boolean {
     var tag = el.tagName
     return tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA'
 }
-export function findupClass(el: Element, cls: string, limit: number): Element|null {
+export function findupClass(el: any, cls: string, limit: number): Element|null {
     if (hasClassList) {
         do {
             if (el.classList.contains(cls)) return el
@@ -233,7 +233,7 @@ export function resolveElement(el: Element, value: any, vm?: any): any {
     else
         return document.getElementById(value)
 }
-export function resolveElementArray(el: Element, value, selectFromParent: boolean, vm?: any): any {
+export function resolveElementArray(el: any, value, selectFromParent: boolean, vm?: any): any {
     if (Array.isArray(value)) {
         return !value[0] ?
                 [chainResolveRelativeElement(el, value, 1)] :
