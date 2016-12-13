@@ -23,7 +23,7 @@ export function toggle(it: ToggleOpts): string {
         title_expr = !it.title_expr ? '' : (` :title="${it.title_expr}"`)
     return `
 <i class="icon ${it.icon_class || 'circle'}" v-sclass:empty="!${pojo}.${it.field}" @click="(${pojo}._.state |= ${bit})"${title_expr}></i>
-<i class="icon ok-circled" v-show="(${pojo}._.state & ${bit})" @click="${it.fn}(${pojo}, ${pojo}._.state ^= ${bit})"></i>
+<i class="icon ok-circled" v-show="(${pojo}._.state & ${bit})" @click="${it.fn}(${pojo}, '${it.field}', ${pojo}._.state ^= ${bit})"></i>
 <i class="icon cancel-circled" v-show="(${pojo}._.state & ${bit})" @click="(${pojo}._.state ^= ${bit})"></i>`
 }
 
