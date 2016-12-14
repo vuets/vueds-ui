@@ -2,14 +2,15 @@ import * as Vue from 'vue'
 import { Calendar, Config, Item, getInstance, update, goto } from './c/calendar'
 import { localToUtc } from 'vueds/lib/util'
 import { Pager, SelectionFlags } from 'vueds/lib/store/'
-import { Keys, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
+import { Keys, getPopup, hidePopup, showPopup, visiblePopup, fireEvent } from './dom_util'
 import {
     pageFirst, pageLast, moveLeft, moveRight,
     tableDown, tableUp, moveTopOrUp, moveBottomOrDown
 } from './pager_util'
 
 export const enum Flags {
-    UPDATE = 16
+    UPDATE = 16,
+    TRIGGER_CHANGE_ON_SELECT = 32
 }
 
 export interface Opts {
@@ -78,6 +79,8 @@ export function cleanup(opts: Opts) {
 
 function focusNT(this: Opts) {
     this.el.focus()
+    if ((this.flags & Flags.TRIGGER_CHANGE_ON_SELECT))
+        fireEvent(this.el, 'change')
 }
 
 function toUTC(config: Config): number {

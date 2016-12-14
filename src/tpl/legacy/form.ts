@@ -83,7 +83,7 @@ function field_textarea(it: Opts, fd: any, pojo: string, ffid: any): string {
 }
 
 export function dpicker(update: boolean, fd: any, pojo: string): string {
-    return ` v-dpicker:${update ? $dpicker.Flags.UPDATE : 0}="{ pojo: ${pojo}, field: '${fd.$ || fd._}' }"`
+    return ` v-dpicker:${$dpicker.Flags.TRIGGER_CHANGE_ON_SELECT | (update ? $dpicker.Flags.UPDATE : 0)}="{ pojo: ${pojo}, field: '${fd.$ || fd._}' }"`
 }
 
 function field_num(it: Opts, fd: any, pojo: string, ffid: any): string {
