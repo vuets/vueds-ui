@@ -27,6 +27,7 @@ export interface Opts {
     pending: boolean
 
     focusNT: any
+    changeNT: any
     onSelect: any
 
     focusout: any
@@ -53,6 +54,7 @@ export function parseOpts(args: string[]|any, pojo, field, el): Opts {
         pending: false,
 
         focusNT: null,
+        changeNT: null,
         onSelect: null,
 
         focusout: null,
@@ -65,6 +67,9 @@ export function parseOpts(args: string[]|any, pojo, field, el): Opts {
     el.addEventListener('focusout', opts.focusout = focusout.bind(opts))
     el.addEventListener('click', opts.click = click.bind(opts))
     el.addEventListener('keydown', opts.keydown = keydown.bind(opts))
+
+    if ((flags & Flags.TRIGGER_CHANGE_ON_SELECT))
+        opts.changeNT = changeNT.bind(opts)
 
     return opts
 }
@@ -79,8 +84,12 @@ export function cleanup(opts: Opts) {
 
 function focusNT(this: Opts) {
     this.el.focus()
-    if ((this.flags & Flags.TRIGGER_CHANGE_ON_SELECT))
+    if (this.changeNT)
         fireEvent(this.el, 'change')
+}
+
+function changeNT(this: Opts) {
+    fireEvent(this.el, 'change')
 }
 
 function toUTC(config: Config): number {
@@ -137,6 +146,9 @@ function focusout(this: Opts, e) {
         this.pending = false
         this.pojo[this.field] = toUTC(getInstance().config)
         hidePopup(getPopup())
+
+        if (this.changeNT)
+            Vue.nextTick(this.changeNT)
     }
 }
 
@@ -165,13 +177,18 @@ function keydown(this: Opts, e) {
             calendar = getInstance()
             if (toggleCalendar(calendar, self)) {
                 // shown
-            } else if (self.pending) {
+                break
+            }
+            
+            if (self.pending) {
                 self.pending = false
                 self.pojo[self.field] = toUTC(calendar.config)
             } else if (!self.update && !self.pojo[self.field]) {
                 // assign today's value
                 self.pojo[self.field] = calendar.config.todayUTC
             }
+            if (self.changeNT)
+                Vue.nextTick(self.changeNT)
             break
         case Keys.ESCAPE:
             hidePopup(getPopup())
