@@ -186,7 +186,10 @@ function keydown(this: Opts, e) {
             } else if (!self.update && !self.pojo[self.field]) {
                 // assign today's value
                 self.pojo[self.field] = calendar.config.todayUTC
+            } else {
+                break
             }
+            
             if (self.changeNT)
                 Vue.nextTick(self.changeNT)
             break
