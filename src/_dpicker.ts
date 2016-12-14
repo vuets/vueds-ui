@@ -84,8 +84,6 @@ export function cleanup(opts: Opts) {
 
 function focusNT(this: Opts) {
     this.el.focus()
-    if (this.changeNT)
-        fireEvent(this.el, 'change')
 }
 
 function changeNT(this: Opts) {
@@ -106,7 +104,15 @@ function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
     this.pending = pending
     if (pending) return
     
-    this.pojo[this.field] = toUTC(getInstance().config)
+    let val = toUTC(getInstance().config)
+    if (val === this.pojo[this.field]) {
+        Vue.nextTick(this.focusNT)
+        return
+    }
+    
+    this.pojo[this.field] = val
+    if (this.changeNT)
+        fireEvent(this.el, 'change')
     Vue.nextTick(this.focusNT)
 }
 
@@ -142,14 +148,21 @@ function toggleCalendar(calendar, self: Opts, p?: any): boolean {
 }
 
 function focusout(this: Opts, e) {
-    if (this.pending) {
-        this.pending = false
-        this.pojo[this.field] = toUTC(getInstance().config)
-        hidePopup(getPopup())
+    if (!this.pending)
+        return
+    
+    this.pending = false
+    
+    let val = toUTC(getInstance().config)
 
-        if (this.changeNT)
-            Vue.nextTick(this.changeNT)
-    }
+    hidePopup(getPopup())
+
+    if (val === this.pojo[this.field])
+        return
+    
+    this.pojo[this.field] = val
+    if (this.changeNT)
+        Vue.nextTick(this.changeNT)
 }
 
 function click(this: Opts, e) {
@@ -170,7 +183,8 @@ function click(this: Opts, e) {
 function keydown(this: Opts, e) {
     let self = this,
         calendar: Calendar,
-        pager: Pager
+        pager: Pager,
+        val
 
     switch (e.which) {
         case Keys.ENTER:
@@ -182,14 +196,16 @@ function keydown(this: Opts, e) {
             
             if (self.pending) {
                 self.pending = false
-                self.pojo[self.field] = toUTC(calendar.config)
+                if ((val = toUTC(calendar.config)) === self.pojo[self.field])
+                    break
+                self.pojo[self.field] = val
             } else if (!self.update && !self.pojo[self.field]) {
                 // assign today's value
                 self.pojo[self.field] = calendar.config.todayUTC
             } else {
                 break
             }
-            
+
             if (self.changeNT)
                 Vue.nextTick(self.changeNT)
             break
