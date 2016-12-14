@@ -1,5 +1,6 @@
 export declare const enum Flags {
     UPDATE = 16,
+    TRIGGER_CHANGE_ON_SELECT = 32,
 }
 export interface Opts {
     flags: number;
