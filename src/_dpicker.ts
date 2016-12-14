@@ -104,13 +104,16 @@ function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
     this.pending = pending
     if (pending) return
     
-    let val = toUTC(getInstance().config)
+    let val = toUTC(getInstance().config),
+        old = this.pojo[this.field]
 
     Vue.nextTick(this.focusNT)
-    
-    if (val === this.pojo[this.field])
+
+    if (val === old)
         return
     
+    if (this.changeNT && this.update)
+        this.pojo['_'][this.field] = old || null
     this.pojo[this.field] = val
     if (this.changeNT)
         Vue.nextTick(this.changeNT)
@@ -153,13 +156,16 @@ function focusout(this: Opts, e) {
     
     this.pending = false
     
-    let val = toUTC(getInstance().config)
+    let val = toUTC(getInstance().config),
+        old = this.pojo[this.field]
 
     hidePopup(getPopup())
 
-    if (val === this.pojo[this.field])
+    if (val === old)
         return
     
+    if (this.changeNT && this.update)
+        this.pojo['_'][this.field] = old || null
     this.pojo[this.field] = val
     if (this.changeNT)
         Vue.nextTick(this.changeNT)
@@ -184,7 +190,7 @@ function keydown(this: Opts, e) {
     let self = this,
         calendar: Calendar,
         pager: Pager,
-        val
+        val, old
 
     switch (e.which) {
         case Keys.ENTER:
@@ -196,8 +202,12 @@ function keydown(this: Opts, e) {
             
             if (self.pending) {
                 self.pending = false
-                if ((val = toUTC(calendar.config)) === self.pojo[self.field])
+                val = toUTC(calendar.config)
+                old = self.pojo[self.field]
+                if (val === old)
                     break
+                if (self.changeNT && self.update)
+                    self.pojo['_'][self.field] = old || null
                 self.pojo[self.field] = val
             } else if (!self.update && !self.pojo[self.field]) {
                 // assign today's value
