@@ -247,7 +247,7 @@ export function resolveElementArray(el: any, value, selectFromParent: boolean, v
 
 export function fireEvent(el, type: string) {
     if (createEvent) {
-        var ev = createEvent("HTMLEvents");
+        var ev = document.createEvent("HTMLEvents");
         ev.initEvent(type, true, true); // type,bubbling,cancelable
         el.dispatchEvent(ev);
         return
@@ -255,7 +255,7 @@ export function fireEvent(el, type: string) {
     
     if (createEventObject) {
         // IE
-        el.fireEvent('on' + type, createEventObject())
+        el.fireEvent('on' + type, document['createEventObject']())
         return
     }
     
