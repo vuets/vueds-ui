@@ -105,15 +105,15 @@ function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
     if (pending) return
     
     let val = toUTC(getInstance().config)
-    if (val === this.pojo[this.field]) {
-        Vue.nextTick(this.focusNT)
+
+    Vue.nextTick(this.focusNT)
+    
+    if (val === this.pojo[this.field])
         return
-    }
     
     this.pojo[this.field] = val
     if (this.changeNT)
-        fireEvent(this.el, 'change')
-    Vue.nextTick(this.focusNT)
+        Vue.nextTick(this.changeNT)
 }
 
 function showCalendar(calendar: Calendar|any, self: Opts, popup?: any) {
