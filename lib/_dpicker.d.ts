@@ -12,6 +12,7 @@ export interface Opts {
     table_flags: number;
     pending: boolean;
     focusNT: any;
+    changeNT: any;
     onSelect: any;
     focusout: any;
     click: any;
