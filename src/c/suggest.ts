@@ -60,17 +60,17 @@ export class Suggest {
             },
             fetch(req: ds.ParamRangeKey, pager: Pager) {
                 let opts = self.opts,
+                    val = opts.str.toLowerCase(),
                     store: PojoStore<ds.ACResult> = pager['store'],
-                    startObj: ds.ACResult,
+                    startObj,
                     pgstart
 
-                if (req.startKey) {
-                    startObj = store.startObj
-                    pgstart = startObj['name'] || startObj['1']
+                if (req.startKey && (startObj = store.startObj)) {
+                    pgstart = startObj.$d ? startObj.name : startObj['1']
                     pgstart = pgstart.toLowerCase()
                 }
                 
-                opts.fetch(ds.PS.$create(opts.str, req, undefined, pgstart))
+                opts.fetch(ds.PS.$create(val, req, undefined, pgstart))
                     .then(self.cbFetchSuccess).then(undefined, self.cbFetchFailed)
             }
         })).pager
