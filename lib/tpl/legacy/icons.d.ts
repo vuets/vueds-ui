@@ -1,7 +1,10 @@
 export interface CommonOpts {
     pojo: string;
 }
-export declare function timeago(it: CommonOpts): string;
+export interface TimeagoOpts extends CommonOpts {
+    icon_class?: string;
+}
+export declare function timeago(it: TimeagoOpts): string;
 export interface ToggleOpts extends CommonOpts {
     field: string;
     fn: string;
