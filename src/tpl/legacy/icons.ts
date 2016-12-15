@@ -1,11 +1,17 @@
+import { append } from '../common'
+
 export interface CommonOpts {
     pojo: string
 }
 
-export function timeago(it: CommonOpts): string {
+export interface TimeagoOpts extends CommonOpts {
+    icon_class?: string
+}
+
+export function timeago(it: TimeagoOpts): string {
     let pojo = it.pojo
     return `
-<i class="icon clock"></i>{{ ${pojo}.ts | prettydate }}
+<i class="icon clock${append(it.icon_class)}"></i>{{ ${pojo}.ts | prettydate }}
 <i class="icon pencil" v-show="${pojo}.rev" :title="${pojo}.rev"></i><span v-show="${pojo}.rev">{{ ${pojo}.updateTs | prettydate }}</span>`
 }
 
