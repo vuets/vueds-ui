@@ -82,14 +82,14 @@ function field_textarea(it: Opts, fd: any, pojo: string, ffid: any): string {
 </div>`
 }
 
-export function dpicker(update: boolean, fd: any, pojo: string): string {
-    return ` v-dpicker:${$dpicker.Flags.TRIGGER_CHANGE_ON_SELECT | (update ? $dpicker.Flags.UPDATE : 0)}="{ pojo: ${pojo}, field: '${fd.$ || fd._}' }"`
+export function dpicker(update: boolean, pojo: string, field: string): string {
+    return ` v-dpicker:${$dpicker.Flags.TRIGGER_CHANGE_ON_SELECT | (update ? $dpicker.Flags.UPDATE : 0)}="{ pojo: ${pojo}, field: '${field}' }"`
 }
 
 function field_num(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
-  <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(!!it.update, fd, pojo) || ''}
+  <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(!!it.update, pojo, fd.$ || fd._) || ''}
       v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>

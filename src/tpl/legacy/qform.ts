@@ -44,7 +44,7 @@ export function field_suggest(it: Opts, fd: any, pojo: string, display: string):
 export function field_num(it: Opts, fd: any, pojo: string, display: string): string {
     return `
 <div class="ui input">
-  <input type="text"${fd.o === 2 && dpicker(false, fd, pojo) || ''}
+  <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
       @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$)" />
@@ -55,13 +55,13 @@ export function field_num_range(it: Opts, fd: any, pojo: string, display: string
     let sval = `${fd.t}${append(fd.o, ',')}`
     return `
 <div class="ui input">
-  <input type="text"${fd.o === 2 && dpicker(false, fd, pojo) || ''}
+  <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}.${fd.$}"
       @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$, true)" />
 </div>
 <div class="ui input">
-  <input type="text"${fd.o === 2 && dpicker(false, fd, pojo + '$') || ''}
+  <input type="text"${fd.o === 2 && dpicker(false, pojo + '$', fd.$ || fd._) || ''}
       placeholder="End ${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}$.${fd.$}"
       @change="qform.$d.$change($event, ${pojo}$, ${fd._}, false, ${pojo}$, ${pojo}$$, true)" />
