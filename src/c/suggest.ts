@@ -67,6 +67,7 @@ export class Suggest {
                 if (req.startKey) {
                     startObj = store.startObj
                     pgstart = startObj['name'] || startObj['1']
+                    pgstart = pgstart.toLowerCase()
                 }
                 
                 opts.fetch(ds.PS.$create(opts.str, req, undefined, pgstart))
