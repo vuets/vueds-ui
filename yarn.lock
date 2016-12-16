@@ -222,10 +222,6 @@ vuets@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/vuets/-/vuets-0.9.2.tgz#de95bf781868e717ed0674483797a18ff570ec33"
 
-whatwg-fetch@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.1.1.tgz#ac3c9d39f320c6dce5339969d054ef43dd333319"
-
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
