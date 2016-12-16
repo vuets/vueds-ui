@@ -144,12 +144,8 @@ function with_error(ft: number): boolean {
 }
 
 function body(it: Opts, descriptor: any, pojo: string, root: any): string {
-    var array = descriptor.$fdf, 
-        mask = it.update ? 13 : 3, 
-        out = '',
-        exclude_fn = it.exclude_fn,
-        show_fn = it.show_fn,
-        ffid
+    let out = '',
+        array = descriptor.$fdf
     
     if (descriptor.$fmf) {
         for (let fk of descriptor.$fmf) {
@@ -157,8 +153,15 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
             out += body(it, fd.d_fn(), pojo+'.'+fd.$, root)
         }
     }
+    
+    if (!array)
+        return out
 
-    ffid = root.ffid
+    let mask = it.update ? 13 : 3, 
+        exclude_fn = it.exclude_fn,
+        show_fn = it.show_fn,
+        ffid = root.ffid
+    
     if (ffid && array.length)
         root.ffid = null
 
