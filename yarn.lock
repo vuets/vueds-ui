@@ -211,9 +211,9 @@ vue@^1.0.28:
   dependencies:
     envify "^3.4.0"
 
-"vueds@git+ssh://git@bitbucket.org/davidyu_ftw/vueds.git#master":
+"vueds@git+ssh://git@gitlab.com/dyu/vueds.git#master":
   version "0.1.0"
-  resolved "git+ssh://git@bitbucket.org/davidyu_ftw/vueds.git#620ee6bdb70a58d3e5be56e9b62ef88ecf7d2bfe"
+  resolved "git+ssh://git@gitlab.com/dyu/vueds.git#d4dab22e8238eefc8830528c70b67a3c76dbb94a"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.3"
@@ -221,6 +221,10 @@ vue@^1.0.28:
 vuets@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/vuets/-/vuets-0.9.2.tgz#de95bf781868e717ed0674483797a18ff570ec33"
+
+whatwg-fetch@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.1.1.tgz#ac3c9d39f320c6dce5339969d054ef43dd333319"
 
 wrappy@1:
   version "1.0.2"
