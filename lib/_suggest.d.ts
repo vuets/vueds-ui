@@ -6,6 +6,7 @@ export interface Opts {
     pojo: any;
     field: string;
     fetch: any;
+    cbfn: any;
     fk: string;
     vm: any;
     el: any;
@@ -29,5 +30,5 @@ export interface Opts {
     input: any;
     keydown: any;
 }
-export declare function parseOpts(args: string[] | any, pojo: any, field: string, fetch: any, vm: any, el: any): Opts;
+export declare function parseOpts(args: string[] | any, pojo: any, field: string, fetch: any, cbfn: any, vm: any, el: any): Opts;
 export declare function cleanup(opts: Opts): void;
