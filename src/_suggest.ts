@@ -41,6 +41,7 @@ export interface Opts {
     pojo: any
     field: string
     fetch: any
+    cbfn: any
     fk: string
     vm: any
     el: any
@@ -110,10 +111,13 @@ function onSelect(this: Opts, message: ds.ACResult, flags: SelectionFlags) {
         self.el.value = name // redudant
         addClass(this.el.parentElement, 'suggested')
         Vue.nextTick(self.focusNT)
-    } else {
+    } else if (!this.cbfn || this.cbfn(name, value)) {
         self.pending_name = null
         self.pojo_[self.fk] = name
         self.pojo[self.field] = value
+        Vue.nextTick(self.focusNT)
+    } else {
+        self.pending_name = null
         Vue.nextTick(self.focusNT)
     }
 }
@@ -122,7 +126,7 @@ function postPS(this: string, req: ds.PS) {
     return rpc.post(this, ds.PS.$stringify(req))
 }
 
-export function parseOpts(args: string[]|any, pojo, field: string, fetch: any, vm, el): Opts {
+export function parseOpts(args: string[]|any, pojo, field: string, fetch: any, cbfn, vm, el): Opts {
     let i = 0,
         len = !args ? 0 : args.length,
         flags = i === len ? 0 : parseInt(args[i++], 10),
@@ -136,6 +140,7 @@ export function parseOpts(args: string[]|any, pojo, field: string, fetch: any, v
         pojo,
         field,
         fetch: typeof fetch === 'string' ? postPS.bind(fetch) : fetch,
+        cbfn,
         fk,
         vm,
         el,
@@ -226,7 +231,7 @@ function focusout(this: Opts, e) {
         } else if (name === self.pojo_[self.fk]) {
             self.el.value = name // redundant on non update
             addClass(self.el.parentElement, 'suggested')
-        } else {
+        } else if (!self.cbfn || self.cbfn(name, self.pending_value)) {
             self.pojo_[self.fk] = name
             self.pojo[self.field] = self.pending_value
         }
@@ -339,11 +344,16 @@ function keydown(this: Opts, e) {
             if (self !== suggest.opts && self.cache.length) {
                 // show your results.
                 showSuggest(suggest, self)
-            } else if (!toggleSuggest(suggest, self) && self.el.value === self.pending_name) {
+            } else if (toggleSuggest(suggest, self) || self.el.value !== self.pending_name) {
+                // noop
+            } else if (!self.cbfn || self.cbfn(self.pending_name, self.pending_value)) {
                 self.pojo_[self.fk] = self.pending_name
                 self.pojo[self.field] = self.pending_value
                 self.pending_name = null
+            } else {
+                self.pending_name = null
             }
+            
             /*if (self.el.value) {
                 togglePopup(getInstance(), self)
             } else if (!self.update && self.pojo[self.field]) {
