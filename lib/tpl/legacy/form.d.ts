@@ -32,7 +32,7 @@ export declare function enum_options(arrayValue: any[], arrayDisplay: any[]): st
 export declare function dpicker(update: boolean, pojo: string, field: string): string;
 /** Alias to body. */
 export declare function fields(it: Opts): string;
-export declare function msg(it: Opts): string;
+export declare function msg(pojo: string, update?: boolean): string;
 export declare function toggle_el(it: Opts): string;
 export declare function title(it: Opts): string;
 export declare function disable_pager(it: Opts): string;
