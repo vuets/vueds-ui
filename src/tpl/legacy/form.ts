@@ -173,7 +173,7 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
 
         out += `
 <div class="field${when(fd.m === 2, ' required')}"${with_error(fd.t) && error_class(it, fd, pojo) || ''}${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''}>
-  <label>${fd.$n}${when(fd.m === 2), ' *'}</label>
+  <label>${fd.$n}${when(fd.m === 2, ' *')}</label>
   ${field_switch(it, fd, i, pojo, ffid)}
 </div>
         `
