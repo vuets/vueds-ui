@@ -1,5 +1,5 @@
 import { when, append } from '../common'
-import { FieldType } from 'vueds'
+import { FieldType, ChangeFlags } from 'vueds'
 import { PagerState } from 'vueds/lib/store/'
 import { enum_options, option_empty, dpicker } from './form'
 
@@ -112,7 +112,7 @@ export function filter_fields(it: Opts, jso: any, fields: number[], pojo: string
             // check range
             buf += (jso['e' + fk] ? field_num_range(it, fd, pojo, display) : field_num(it, fd, pojo, display))
         } else if (jso['p' + fk]) {
-            buf += field_default(it, fd, pojo, display, ', true')
+            buf += field_default(it, fd, pojo, display, `, ${ChangeFlags.SKIP_VALIDATE}`)
         } else {
             buf += field_default(it, fd, pojo, display, '')
             // TODO range for string?
