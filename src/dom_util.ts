@@ -46,10 +46,25 @@ export function showPopup(popup, contentEl, positionEl) {
     style.visibility = 'visible'
 }
 
+export interface LazyEl {
+    id: string
+    el: any
+}
+
 export function focus(id: string) {
     let el = document.getElementById(id)
     if (el)
         el.focus()
+}
+
+function bFocus(this: LazyEl) {
+    let el = this.el !== undefined ? this.el : (this.el = document.getElementById(this.id))
+    if (el)
+        el.focus()
+}
+
+export function bindFocus(id: string): any {
+    return bFocus.bind({ id, el: undefined })
 }
 
 export function setClass(el, cls: string) {
