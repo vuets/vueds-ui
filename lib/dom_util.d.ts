@@ -15,7 +15,12 @@ export declare function getPopup(): any;
 export declare function visiblePopup(popup: any): boolean;
 export declare function hidePopup(popup: any): boolean;
 export declare function showPopup(popup: any, contentEl: any, positionEl: any): void;
+export interface LazyEl {
+    id: string;
+    el: any;
+}
 export declare function focus(id: string): void;
+export declare function bindFocus(id: string): any;
 export declare function setClass(el: any, cls: string): void;
 export declare function addClass(el: any, cls: string): void;
 export declare function isInput(el: Element): boolean;
