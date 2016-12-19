@@ -12,7 +12,7 @@ export function field_enum(it: Opts, fd: any, pojo: string, display: string): st
     return `
 <div class="fluid picker">
   <select v-disable="${pojo}.disable_" v-sval:${fd.t}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$)">
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)">
     <option value="">${display}</option>${enum_options(fd.v_fn(), fd.$v_fn())}
   </select>
 </div>`
@@ -23,7 +23,7 @@ export function field_bool(it: Opts, fd: any, pojo: string, display: string): st
 <div class="fluid picker">
 <select class="icons" :class="{ active: ${pojo}.${fd.$}, disabled: ${pojo}.disable_ }"
     v-disable="${pojo}.disable_" v-sval:${fd.t}="${pojo}.${fd.$}"
-    @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$)">
+    @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)">
   <option value="">${display}:</option>
   <option value="1">${fd.$n} &#xe9fc;</option>
   <option value="0">${fd.$n} &#xea00;</option>
@@ -47,7 +47,7 @@ export function field_num(it: Opts, fd: any, pojo: string, display: string): str
   <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$)" />
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)" />
 </div>`
 }
 
@@ -58,7 +58,7 @@ export function field_num_range(it: Opts, fd: any, pojo: string, display: string
   <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$, true)" />
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$, true)" />
 </div>
 <div class="ui input">
   <input type="text"${fd.o === 2 && dpicker(false, pojo + '$', fd.$ || fd._) || ''}
@@ -74,7 +74,7 @@ export function field_default(it: Opts, fd: any, pojo: string, display: string, 
   <input type="text"
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, ${pojo}, ${pojo}$$${changeSuffix})" />
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$${changeSuffix})" />
 </div>`
 }
 
