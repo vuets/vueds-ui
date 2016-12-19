@@ -57,18 +57,18 @@ function field_enum(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="fluid picker">
   <select${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
-      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})">
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})">
     ${when(!it.update, option_empty)}${enum_options(fd.v_fn(), fd.$v_fn())}
   </select>
 </div>`
 }
 
-// TODO call the change function?
 function field_bool(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui checkbox">
   <input${include_if(ffid, ffid_attr, ffid)} type="checkbox"
-      v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.${fd.$} = $event.target.checked" />
+      v-sval:${fd.t}="${pojo}.${fd.$}"
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
 </div>`
 }
 
@@ -76,7 +76,7 @@ function field_textarea(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
   <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
-      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})"></textarea>
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})"></textarea>
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
 </div>`
@@ -90,7 +90,7 @@ function field_num(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(!!it.update, pojo, fd.$ || fd._) || ''}
-      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
+      v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
 </div>`
@@ -100,7 +100,7 @@ function field_default(it: Opts, fd: any, pojo: string, ffid: any): string {
     return `
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
-      v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}, ${it.pojo})" />
+      v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
 </div>`
