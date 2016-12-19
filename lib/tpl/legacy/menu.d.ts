@@ -26,4 +26,4 @@ export interface PagerLazyOpts extends PagerOpts {
     /** defaults to initialized */
     init_var?: string;
 }
-export declare function pager_lazy(it: PagerLazyOpts, content?: string): string;
+export declare function pager_lazy(it: PagerLazyOpts, content?: string, items?: string): string;
