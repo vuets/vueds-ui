@@ -92,7 +92,7 @@ export interface PagerLazyOpts extends PagerOpts {
     init_var?: string
 }
 
-export function pager_lazy(it: PagerLazyOpts, content?: string): string {
+export function pager_lazy(it: PagerLazyOpts, content?: string, items?: string): string {
     let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
@@ -104,6 +104,7 @@ export function pager_lazy(it: PagerLazyOpts, content?: string): string {
     </div>
   </div>
   <div class="right menu">
+    ${items || ''}
     <div class="item">
       <a @click="${it.lazy_fn || 'lazy_init()'}">
         <i class="icon" v-pclass:resize-="0 === ${it.lazy_count || 'lazy_count'} % 2 ? 'full' : 'small'"></i>
