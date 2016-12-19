@@ -188,17 +188,15 @@ export function fields(it: Opts): string {
     return body(it, it.$d, it.pojo, it)
 }
 
-function msg_show_update(it: Opts): string {
-    return ` && (${it.pojo}._.state & ${PojoState.MASK_STATUS})`
+function msg_show_update(pojo: string): string {
+    return ` && (${pojo}._.state & ${PojoState.MASK_STATUS})`
 }
 
 // TODO v-show="${pojo}._.msg{{? it.update}} && (${pojo}._.state & {{c.MASK_STATUS}}){{?}}"
-export function msg(it: Opts): string {
-    let pojo = it.pojo
-
+export function msg(pojo: string, update?: boolean): string {
     return `
 <div class="ui message"
-    v-show="${pojo}._.msg${include_if(it.update, msg_show_update, it)}"
+    v-show="${pojo}._.msg${include_if(update, msg_show_update, pojo)}"
     v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
   <i class="icon close" @click.prevent="${pojo}._.msg = null"></i>
   <span v-text="${pojo}._.msg"></span>
@@ -246,7 +244,7 @@ ${
   ${when(it.content_slot === ContentSlot.TOP, content)}
   ${!it.without_fields && body(it, it.$d, pojo, it) || ''}
   ${when(it.content_slot === ContentSlot.BEFORE_BUTTON, content)}
-  ${include_if(!it.without_msg, msg, it)}
+  ${!it.without_msg && msg(it.pojo, it.update) || ''}
   <button type="submit" class="ui fluid submit button${append(it.btn_class)}"
       ${disable && (it.pager && disable_pager(it) || it.disable_expr && disable_expr(it)) || ''}
       @click.prevent="${it.on_submit}">
