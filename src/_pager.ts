@@ -31,7 +31,8 @@ export const enum Flags {
     NO_RELOAD = 64,
     NO_RPC = 128,
     DTAP_ANY = 256,
-    SUGGEST = 512
+    SUGGEST = 512,
+    NO_SWIPE = 1024
 }
 
 export interface Opts {
@@ -85,15 +86,36 @@ export function attachOptsTo(el, args: string[]|any, pager: Pager, vm) {
     defp(el, 'pager_opts', opts)
 }
 
+const SWIPE_VELOCITY = 0.1,
+    PRESS_DELAY = 250,
+    OPT_DISABLE = { enable: false }
+
 function configureHammer(hammer: any, opts: Opts) {
-    hammer.get('swipe').set({ velocity: 0.1/*, distance: 1*/ })
-    if (!(opts.flags & Flags.SUGGEST)) {
-        //hammer.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) )
-        //hammer.get('doubletap').recognizeWith('tap')
-        hammer.on('doubletap', doubletap.bind(opts))
+    if ((opts.flags & Flags.SUGGEST)) {
+        // disable
+        hammer.get('press').set(OPT_DISABLE)
+        hammer.get('doubletap').set(OPT_DISABLE)
+
+        hammer.get('swipe').set({ velocity: SWIPE_VELOCITY/*, distance: 1*/ })
+        hammer.on('swipe', swipe.bind(opts))
+    } else {
+        if (!(opts.flags & Flags.DTAP_ANY)) {
+            hammer.get('doubletap').set(OPT_DISABLE)
+        } else {
+            hammer.on('doubletap', doubletap.bind(opts))
+        }
+
+        if ((opts.flags & Flags.NO_SWIPE)) {
+            hammer.get('swipe').set(OPT_DISABLE)
+        } else {
+            hammer.get('swipe').set({ velocity: SWIPE_VELOCITY/*, distance: 1*/ })
+            hammer.on('swipe', swipe.bind(opts))
+        }
+
+        hammer.get('press').set({ time: PRESS_DELAY })
         hammer.on('press', press.bind(opts))
     }
-    hammer.on('swipe', swipe.bind(opts))
+    
     hammer.on('tap', tap.bind(opts))
 }
 
@@ -245,7 +267,10 @@ function doubletap(this: Opts, e) {
     
     current = this
 
-    if (isInput(target) || (!(flags & Flags.DTAP_ANY) && target.tagName !== 'DD')) return
+    if (isInput(target)) return
+    keymage.setScope('pager')
+    
+    if (target.tagName === 'I') return
     
     select(e, this, true, true)
 }
