@@ -309,20 +309,20 @@ export function pageReload(e, pager, opts: Opts) {
     pager.store.reload()
 }
 
-export function pagePrevOrLoad(e, pager, opts: Opts) {
+export function pagePrevOrLoad(e, pager, flags: number) {
     if (pager.page) {
         // goto previous
         e.preventDefault()
         let page = --pager.page
-        if (opts.flags & Flags.PAGE_AND_SELECT) {
-            pageAndSelectIdx(page, pager.index_selected, pager.array, pager.store, opts.flags) // TODO pass flag?
+        if (flags & Flags.PAGE_AND_SELECT) {
+            pageAndSelectIdx(page, pager.index_selected, pager.array, pager.store, flags)
         } else {
             pager.store.repaint()
         }
         return
     }
     // page unshift
-    if ((opts.flags & Flags.NO_RPC) || (pager.state & PagerState.MASK_RPC_DISABLE)) return
+    if ((flags & Flags.NO_RPC) || (pager.state & PagerState.MASK_RPC_DISABLE)) return
     
     if (pager.state & PagerState.DESC) {
         e.preventDefault()
@@ -334,16 +334,16 @@ export function pagePrevOrLoad(e, pager, opts: Opts) {
     }
 }
 
-export function pageNextOrLoad(e, pager: Pager, opts: Opts) {
+export function pageNextOrLoad(e, pager: Pager, flags: number) {
     let store = pager['store'] as PojoStore<any>,
         page = pager.page
     if (page < pager.page_count) {
         // goto next
         e.preventDefault()
         page = ++pager.page
-        if (opts.flags & Flags.PAGE_AND_SELECT) {
+        if (flags & Flags.PAGE_AND_SELECT) {
             pageAndSelectIdx(page, resolveNextPageIndex(page, pager.index_selected, pager), 
-                pager.array, store, opts.flags) // TODO pass flag?
+                pager.array, store, flags)
         } else {
             store.repaint()
         }
@@ -352,7 +352,7 @@ export function pageNextOrLoad(e, pager: Pager, opts: Opts) {
 
     let state = pager.state
     // page push
-    if ((opts.flags & Flags.NO_RPC) || (state & PagerState.MASK_RPC_DISABLE) || !pager.index_hidden) return
+    if ((flags & Flags.NO_RPC) || (state & PagerState.MASK_RPC_DISABLE) || !pager.index_hidden) return
     
     e.preventDefault()
 
@@ -364,7 +364,7 @@ export function pageNextOrLoad(e, pager: Pager, opts: Opts) {
 
 export function moveLeft(e, pager: Pager, opts: Opts) {
     if (!opts.col_size) {
-        pagePrevOrLoad(e, pager, opts)
+        pagePrevOrLoad(e, pager, opts.flags)
     } else if (pager.index_hidden) {
         tableLeft(pager, opts.col_size, opts.table_flags, pager.index_selected, e, opts.flags)
     }
@@ -372,7 +372,7 @@ export function moveLeft(e, pager: Pager, opts: Opts) {
 
 export function moveRight(e, pager: Pager, opts: Opts) {
     if (!opts.col_size) {
-        pageNextOrLoad(e, pager, opts)
+        pageNextOrLoad(e, pager, opts.flags)
     } else if (pager.index_hidden) {
         tableRight(pager, opts.col_size, opts.table_flags, pager.index_selected, e, opts.flags)
     }

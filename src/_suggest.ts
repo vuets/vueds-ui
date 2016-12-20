@@ -373,7 +373,7 @@ function keydown(this: Opts, e) {
             suggest = getInstance()
             pager = suggest.pager
             if (e.ctrlKey) pageFirst(e, pager, self)
-            else pagePrevOrLoad(e, pager, self)
+            else pagePrevOrLoad(e, pager, self.flags)
             break
         case Keys.UP:
             if (!visiblePopup(getPopup())) break
@@ -389,7 +389,7 @@ function keydown(this: Opts, e) {
             suggest = getInstance()
             pager = suggest.pager
             if (e.ctrlKey) pageLast(e, pager, self)
-            else pageNextOrLoad(e, pager, self)
+            else pageNextOrLoad(e, pager, self.flags)
             break
         case Keys.DOWN: // down
             if (!visiblePopup(getPopup())) break

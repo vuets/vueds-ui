@@ -84,6 +84,8 @@ export function attachOptsTo(el, args: string[]|any, pager: Pager, vm) {
     el.addEventListener('focusin', opts.focus = focus.bind(opts), true)
 
     defp(el, 'pager_opts', opts)
+    
+    pager['m']['d'] = opts
 }
 
 const SWIPE_VELOCITY = 0.1,
@@ -182,18 +184,22 @@ function moveDown(e) {
         listDown(pager, pager.index_selected, e, current.flags)
 }
 
-function select(e, opts: Opts, dbltap: boolean, clickedUpdate: boolean) {
+function select(self: Opts, e, dbltap: boolean, clickedUpdate: boolean) {
     var target = e.target, 
         parent = target.parentElement, 
         pojo,
-        store: PojoStore<any>,
+        pager: Pager,
+        store: PojoStore<any>/*,
         trigger = target.getAttribute('dtap') || (target=parent).getAttribute('dtap')
     
-    if (trigger) fireEvent(target, 'dtap')
+    if (trigger) fireEvent(target, 'dtap')*/
     
-    if (!(pojo = itemLookup(target)) || pojo.$pager !== opts.pager) return
+    if (!(pojo = itemLookup(target))) return
+
+    if (pojo.$pager !== (pager = self.pager))
+        pager = pojo.$pager
     
-    store = opts.pager['store']
+    store = pager['store']
 
     store.select(pojo, clickedUpdate ? SelectionFlags.CLICKED_UPDATE : SelectionFlags.CLICKED, pojo.$index)
 }
@@ -209,19 +215,29 @@ function focus(this: Opts, e) {
 function swipe(this: Opts, e) {
     let self = this,
         target = e.target,
-        pojo
+        pojo,
+        pager: Pager,
+        flags: number
     if (isInput(target)) return
     current = self
     keymage.setScope('pager')
     
-    if (!(pojo = itemLookup(target)) || pojo.$pager !== self.pager) return
+    if (!(pojo = itemLookup(target))) return
+
+    if (pojo.$pager !== (pager = self.pager)) {
+        pager = pojo.$pager
+        self = pager['m']['d']
+        flags = self && self.flags || 0
+    } else {
+        flags = self.flags
+    }
     
     switch(e.direction) {
         case 2: // right-to-left
-            pageNextOrLoad(e, self.pager, self)
+            pageNextOrLoad(e, pager, flags)
             break
         case 4: // left-to-right
-            pagePrevOrLoad(e, self.pager, self)
+            pagePrevOrLoad(e, pager, flags)
             break;
     }
 }
@@ -232,7 +248,7 @@ function press(this: Opts, e) {
     current = this
     keymage.setScope('pager')
     
-    select(e, this, false, true)
+    select(this, e, false, true)
 }
 
 function tap(this: Opts, e) {
@@ -241,22 +257,33 @@ function tap(this: Opts, e) {
     if (isInput(e.target)) return
     keymage.setScope('pager')
     
-    var pager = self.pager,
-        pojo,
+    var pojo,
+        pager: Pager,
         store: PojoStore<any>,
         //key,
-        suggest
+        suggest: boolean,
+        flags: number
     
-    if (!(pojo = itemLookup(e.target)) || pojo.$pager !== pager) return
+    if (!(pojo = itemLookup(e.target))) return
+
+    if (pojo.$pager !== (pager = self.pager)) {
+        pager = pojo.$pager
+        self = pager['m']['d']
+        flags = self && self.flags || 0
+        suggest = false
+    } else {
+        flags = self.flags
+        suggest = !!(flags & Flags.SUGGEST)
+    }
     
     store = pager['store']
     //key = pojo[store.$k] || pojo[store.k]
-    suggest = !!(self.flags & Flags.SUGGEST)
 
     if (!suggest && pager.array[pojo.$index] === pager.pojo/* && pager.prev_key === key*/) return
 
-    store.select(pojo, (self.flags & screen.flags) ? SelectionFlags.CLICKED_UPDATE : SelectionFlags.CLICKED, pojo.$index)
+    store.select(pojo, (flags & screen.flags) ? SelectionFlags.CLICKED_UPDATE : SelectionFlags.CLICKED, pojo.$index)
 
+    // self could be null at this point but then again, suggest is false when it is null
     if (suggest)
         removeClass(self.el.parentElement, 'active')
 }
@@ -272,7 +299,7 @@ function doubletap(this: Opts, e) {
     
     if (target.tagName === 'I') return
     
-    select(e, this, true, true)
+    select(this, e, true, true)
 }
 
 // =====================================
