@@ -249,7 +249,7 @@ function tap(this: Opts, e) {
     
     if (!(pojo = itemLookup(e.target)) || pojo.$pager !== pager) return
     
-    store = self.pager['store']
+    store = pager['store']
     //key = pojo[store.$k] || pojo[store.k]
     suggest = !!(self.flags & Flags.SUGGEST)
 
