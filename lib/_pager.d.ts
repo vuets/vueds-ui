@@ -6,6 +6,7 @@ export declare const enum Flags {
     NO_RPC = 128,
     DTAP_ANY = 256,
     SUGGEST = 512,
+    NO_SWIPE = 1024,
 }
 export interface Opts {
     flags: number;
