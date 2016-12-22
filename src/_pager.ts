@@ -277,9 +277,8 @@ function tap(this: Opts, e) {
     }
     
     store = pager['store']
-    //key = pojo[store.$k] || pojo[store.k]
-
-    if (!suggest && pager.array[pojo.$index] === pager.pojo/* && pager.prev_key === key*/) return
+    
+    if (!suggest && pojo === pager.pojo && pager.prev_key === pojo[store.$k]) return
 
     store.select(pojo, (flags & screen.flags) ? SelectionFlags.CLICKED_UPDATE : SelectionFlags.CLICKED, pojo.$index)
 
