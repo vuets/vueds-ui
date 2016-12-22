@@ -19,7 +19,7 @@ export interface ListOpts {
 }
 
 export interface Opts extends ItemOpts, ListOpts {
-    
+    raw?: boolean
 }
 
 const DEFAULT_LIST_CLASS = 'small divided selection'
@@ -66,16 +66,22 @@ export function new_pi(it: ItemOpts) {
     }
 }
 
-export function pi(it: ListOpts, content: string) {
+export function pi(it: ListOpts, content: string, pojo?: string) {
+    if (!pojo)
+        pojo = 'pojo'
+    
     return `
 <ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
-  <pi v-for="pojo in ${it.pager}.array" :pojo="pojo">
+  <pi v-for="${pojo} in ${it.pager}.array" :${pojo}="${pojo}">
     ${content}
   </pi>
 </ul>`
 }
 
 export function main(it: Opts, content: string): string {
+    if (!it.raw)
+        return pi(it, content, it.pojo)
+    
     if (!it.pojo)
         it.pojo = 'pojo'
     
