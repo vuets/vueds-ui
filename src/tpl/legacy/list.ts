@@ -35,26 +35,56 @@ function item_class_expr(it: Opts): string {
     return `v-sclass:active="(${it.pojo}._.lstate & ${PojoListState.SELECTED})"`
 }
 
+export function item(it: Opts, content: string, initialAttrs?: string) {
+    let pojo = it.pojo
+    if (initialAttrs === undefined) {
+        initialAttrs = `v-for="${pojo} in ${it.pager}.array"`
+    }
+    return `
+<li${append(initialAttrs)} v-defp:pager_item="${pojo}" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
+    ${include_if(it.click_to_select, click_to_select, it)}
+    v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
+    ${it.item_class_exprs && item_class_exprs(it) || item_class_expr(it)}>
+  ${content}
+  <div v-show="${pojo}._.msg">
+    <div class="ui message" v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
+      <i class="close icon" @click.prevent="${pojo}._.msg = null"></i>
+      <span v-text="${pojo}._.msg"></span>
+    </div>
+  </div>
+</li>
+`
+}
+
+export function new_pi(it: Opts) {
+    if (!it.pojo)
+        it.pojo = 'pojo'
+    
+    return {
+        name: 'pi',
+        props: {
+            pojo: { type: Object, required: true }
+        },
+        template: item(it, '<slot></slot>', '')
+    }
+}
+
+export function pi(pager: string, content: string, custom_list_class?: string, ul_attrs?: any) {
+    let cls = custom_list_class || 'small divided selection'
+    return `
+<ul class="ui ${cls} list"${attrs(ul_attrs)}>
+  <pi v-for="pojo in ${pager}.array" :pojo="pojo">
+    ${content}
+  </pi>
+</ul>`
+}
+
 export function main(it: Opts, content: string): string {
     if (!it.pojo)
         it.pojo = 'pojo'
     
-    let pager = it.pager,
-        pojo = it.pojo
-    
     return `
 <ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
-  <li v-for="${pojo} in ${pager}.array" v-defp:pager_item="${it.pojo}" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
-      ${include_if(it.click_to_select, click_to_select, it)}
-      v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
-      ${it.item_class_exprs && item_class_exprs(it) || item_class_expr(it)}>
-    ${content}
-    <div v-show="${pojo}._.msg">
-      <div class="ui message" v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
-        <i class="close icon" @click.prevent="${pojo}._.msg = null"></i>
-        <span v-text="${pojo}._.msg"></span>
-      </div>
-    </div>
-  </li>
+  ${item(it, content)}
 </ul>`
 }
