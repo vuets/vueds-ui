@@ -3,12 +3,6 @@ import { PojoListState, SelectionFlags } from 'vueds/lib/store/'
 import { when, attrs, exprs, or, append, prepend, include_if } from '../common'
 
 export interface ItemOpts {
-    custom_list_class?: string
-    list_class?: string
-    attrs?: any
-
-    click_to_select?: boolean
-
     item_class?: string
     item_attrs?: any
     item_show_expr?: string
@@ -17,13 +11,20 @@ export interface ItemOpts {
     pojo?: string
 }
 
-export interface Opts extends ItemOpts {
+export interface ListOpts {
     pager: string
+    attrs?: any
+    custom_list_class?: string
+    list_class?: string
+}
+
+export interface Opts extends ItemOpts, ListOpts {
+    
 }
 
 const DEFAULT_LIST_CLASS = 'small divided selection'
 
-function list_class(it: ItemOpts): string {
+function list_class(it: ListOpts): string {
     return `${prepend(it.list_class)}${DEFAULT_LIST_CLASS}`
 }
 
@@ -65,10 +66,10 @@ export function new_pi(it: ItemOpts) {
     }
 }
 
-export function pi(pager: string, content: string, custom_list_class?: string, list_attrs?: any) {
+export function pi(it: ListOpts, content: string) {
     return `
-<ul class="ui ${custom_list_class || DEFAULT_LIST_CLASS} list"${attrs(list_attrs)}>
-  <pi v-for="pojo in ${pager}.array" :pojo="pojo">
+<ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
+  <pi v-for="pojo in ${it.pager}.array" :pojo="pojo">
     ${content}
   </pi>
 </ul>`
