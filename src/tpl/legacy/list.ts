@@ -2,9 +2,7 @@ import { PojoState } from 'vueds'
 import { PojoListState, SelectionFlags } from 'vueds/lib/store/'
 import { when, attrs, exprs, or, append, prepend, include_if } from '../common'
 
-export interface Opts {
-    pager: string
-
+export interface ItemOpts {
     custom_list_class?: string
     list_class?: string
     attrs?: any
@@ -19,30 +17,28 @@ export interface Opts {
     pojo?: string
 }
 
-function list_class(it: Opts): string {
-    return `${prepend(it.list_class)}small divided selection`
+export interface Opts extends ItemOpts {
+    pager: string
 }
 
-function click_to_select(it: Opts): string {
-    return `@click="${it.pager}.store.select(${it.pojo}, ${SelectionFlags.CLICKED}, ${it.pojo}.$index)"`
+const DEFAULT_LIST_CLASS = 'small divided selection'
+
+function list_class(it: ItemOpts): string {
+    return `${prepend(it.list_class)}${DEFAULT_LIST_CLASS}`
 }
 
-function item_class_exprs(it: Opts): string {
+function item_class_exprs(it: ItemOpts): string {
     return `:class="{ active: (${it.pojo}._.lstate & ${PojoListState.SELECTED})${exprs(it.item_class_exprs)} }"`
 }
 
-function item_class_expr(it: Opts): string {
+function item_class_expr(it: ItemOpts): string {
     return `v-sclass:active="(${it.pojo}._.lstate & ${PojoListState.SELECTED})"`
 }
 
-export function item(it: Opts, content: string, initialAttrs?: string) {
+export function item(it: ItemOpts, content: string, initialAttrs?: string) {
     let pojo = it.pojo
-    if (initialAttrs === undefined) {
-        initialAttrs = `v-for="${pojo} in ${it.pager}.array"`
-    }
     return `
 <li${append(initialAttrs)} v-defp:pager_item="${pojo}" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
-    ${include_if(it.click_to_select, click_to_select, it)}
     v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
     ${it.item_class_exprs && item_class_exprs(it) || item_class_expr(it)}>
   ${content}
@@ -56,7 +52,7 @@ export function item(it: Opts, content: string, initialAttrs?: string) {
 `
 }
 
-export function new_pi(it: Opts) {
+export function new_pi(it: ItemOpts) {
     if (!it.pojo)
         it.pojo = 'pojo'
     
@@ -65,14 +61,13 @@ export function new_pi(it: Opts) {
         props: {
             pojo: { type: Object, required: true }
         },
-        template: item(it, '<slot></slot>', '')
+        template: item(it, '<slot></slot>')
     }
 }
 
-export function pi(pager: string, content: string, custom_list_class?: string, ul_attrs?: any) {
-    let cls = custom_list_class || 'small divided selection'
+export function pi(pager: string, content: string, custom_list_class?: string, list_attrs?: any) {
     return `
-<ul class="ui ${cls} list"${attrs(ul_attrs)}>
+<ul class="ui ${custom_list_class || DEFAULT_LIST_CLASS} list"${attrs(list_attrs)}>
   <pi v-for="pojo in ${pager}.array" :pojo="pojo">
     ${content}
   </pi>
@@ -85,6 +80,6 @@ export function main(it: Opts, content: string): string {
     
     return `
 <ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
-  ${item(it, content)}
+  ${item(it, content, `v-for="${it.pojo} in ${it.pager}.array"`)}
 </ul>`
 }
