@@ -1,5 +1,4 @@
-export interface Opts {
-    pager: string;
+export interface ItemOpts {
     custom_list_class?: string;
     list_class?: string;
     attrs?: any;
@@ -10,8 +9,11 @@ export interface Opts {
     item_class_exprs?: any;
     pojo?: string;
 }
-export declare function item(it: Opts, content: string, initialAttrs?: string): string;
-export declare function new_pi(it: Opts): {
+export interface Opts extends ItemOpts {
+    pager: string;
+}
+export declare function item(it: ItemOpts, content: string, initialAttrs?: string): string;
+export declare function new_pi(it: ItemOpts): {
     name: string;
     props: {
         pojo: {
@@ -21,5 +23,5 @@ export declare function new_pi(it: Opts): {
     };
     template: string;
 };
-export declare function pi(pager: string, content: string, custom_list_class?: string, ul_attrs?: any): string;
+export declare function pi(pager: string, content: string, custom_list_class?: string, list_attrs?: any): string;
 export declare function main(it: Opts, content: string): string;
