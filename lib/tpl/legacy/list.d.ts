@@ -12,6 +12,7 @@ export interface ListOpts {
     list_class?: string;
 }
 export interface Opts extends ItemOpts, ListOpts {
+    raw?: boolean;
 }
 export declare function item(it: ItemOpts, content: string, initialAttrs?: string): string;
 export declare function new_pi(it: ItemOpts): {
@@ -24,5 +25,5 @@ export declare function new_pi(it: ItemOpts): {
     };
     template: string;
 };
-export declare function pi(it: ListOpts, content: string): string;
+export declare function pi(it: ListOpts, content: string, pojo?: string): string;
 export declare function main(it: Opts, content: string): string;
