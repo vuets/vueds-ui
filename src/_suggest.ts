@@ -238,7 +238,8 @@ function focusout(this: Opts, e) {
         self.pending_name = null
         hidePopup(getPopup())
     } else if (text === (name = self.pojo_[self.fk])) {
-        addClass(self.el.parentElement, 'suggested') // redundant
+        if (text)
+            addClass(self.el.parentElement, 'suggested') // redundant
     } else if (self.update) {
         self.el.value = name
         addClass(self.el.parentElement, 'suggested')
