@@ -49,7 +49,7 @@ export function simple(it: SimpleOpts, content?: string): string {
     return `
 <div class="ui attached large secondary pointing menu">
   <div class="item">
-    <div class="ui small further left icon input">
+    <div class="ui small left icon input">
       <input type="text" placeholder="${it.title}" disabled />
     </div>
   </div>
@@ -74,7 +74,7 @@ export function pager(it: PagerOpts, content?: string): string {
     return `
 <div class="ui attached large secondary pointing menu">
   <div class="item${append(it.item_class)}">
-    <div class="ui small further left icon input">
+    <div class="ui small left icon input">
       <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
           v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
       <i class="icon search"></i>
@@ -98,7 +98,7 @@ export function pager_lazy(it: PagerLazyOpts, content?: string, items?: string):
     return `
 <div class="ui attached large secondary pointing menu">
   <div class="item${append(it.item_class)}">
-    <div class="ui small further left icon input">
+    <div class="ui small left icon input">
       <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
           v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
       <i class="icon search"></i>
