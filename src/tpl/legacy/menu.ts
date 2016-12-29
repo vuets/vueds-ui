@@ -1,5 +1,5 @@
 import { PagerState } from 'vueds/lib/store/'
-import { when, attr, append_kv } from '../common'
+import { when, attr, append_kv, append } from '../common'
 
 export const enum ContentLoc {
     RIGHT_MENU = 1
@@ -62,6 +62,7 @@ export interface PagerOpts extends CommonOpts {
     title: string
     search_fk: string
     dpager?: string // pager used for disable state
+    item_class?: string
 }
 
 function disable(it: PagerOpts, dpager): string {
@@ -72,7 +73,7 @@ export function pager(it: PagerOpts, content?: string): string {
     let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
-  <div class="item">
+  <div class="item${append(it.item_class)}">
     <div class="ui small further left icon input">
       <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
           v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
@@ -96,7 +97,7 @@ export function pager_lazy(it: PagerLazyOpts, content?: string, items?: string):
     let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
-  <div class="item">
+  <div class="item${append(it.item_class)}">
     <div class="ui small further left icon input">
       <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
           v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
