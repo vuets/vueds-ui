@@ -1,6 +1,7 @@
 import * as Vue from 'vue'
 import { Calendar, Config, Item, getInstance, update, goto } from './c/calendar'
 import { localToUtc } from 'vueds/lib/util'
+import { formatDate } from 'vueds/lib/datetime_util'
 import { Pager, SelectionFlags } from 'vueds/lib/store/'
 import { Keys, getPopup, hidePopup, showPopup, visiblePopup, fireEvent } from './dom_util'
 import {
@@ -186,16 +187,46 @@ function click(this: Opts, e) {
     }
 }
 
+function applyPending(self: Opts, calendar: Calendar, hideIfApplied?: boolean): boolean {
+    let val = toUTC(calendar.config),
+        old = self.pojo[self.field]
+    
+    self.pending = false
+
+    if (val === old)
+        return false
+    
+    if (self.changeNT && self.update)
+        self.pojo['_'][self.field] = old || null
+    
+    self.pojo[self.field] = val
+
+    if (hideIfApplied)
+        hidePopup(getPopup())
+    
+    return true
+}
+
 function keydown(this: Opts, e) {
     let self = this,
         calendar: Calendar,
         pager: Pager,
-        val, old
+        val
 
     switch (e.which) {
         case Keys.ENTER:
-            if ((val = self.el.value) && val.length === 10)
-                return true
+            if ((val = self.el.value) && val.length === 10) {
+                if (self.pending) {
+                    if (applyPending(self, getInstance(), true) && self.changeNT)
+                        Vue.nextTick(self.changeNT)
+                    break
+                }
+                
+                // check if the user changed the date manually
+                if (val !== formatDate(self.pojo[self.field]))
+                    return true
+            }
+            
             calendar = getInstance()
             if (toggleCalendar(calendar, self)) {
                 // shown
@@ -203,14 +234,8 @@ function keydown(this: Opts, e) {
             }
             
             if (self.pending) {
-                self.pending = false
-                val = toUTC(calendar.config)
-                old = self.pojo[self.field]
-                if (val === old)
+                if (!applyPending(self, calendar))
                     break
-                if (self.changeNT && self.update)
-                    self.pojo['_'][self.field] = old || null
-                self.pojo[self.field] = val
             } else if (!self.update && !self.pojo[self.field]) {
                 // assign today's value
                 self.pojo[self.field] = calendar.config.todayUTC
