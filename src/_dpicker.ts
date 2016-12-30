@@ -204,6 +204,7 @@ function applyPending(self: Opts, calendar: Calendar, hideIfApplied?: boolean): 
     if (hideIfApplied)
         hidePopup(getPopup())
     
+    window.setTimeout(self.focusNT, 100)
     return true
 }
 
