@@ -194,6 +194,8 @@ function keydown(this: Opts, e) {
 
     switch (e.which) {
         case Keys.ENTER:
+            if ((val = self.el.value) && val.length === 10)
+                return true
             calendar = getInstance()
             if (toggleCalendar(calendar, self)) {
                 // shown
