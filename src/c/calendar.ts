@@ -4,6 +4,7 @@ import { defp, nullp, initObservable } from 'vueds'
 import { localToUtc } from 'vueds/lib/util'
 import { PojoStore, Pager, ItemSO, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
+import { hidePopup, getPopup } from '../dom_util'
 import * as cal from '../calendar'
 
 /**
@@ -287,6 +288,10 @@ export class Calendar {
     page(next: boolean) {
         repaint(this, next)
     }
+    
+    hide() {
+        hidePopup(getPopup())
+    }
 }
 const item_tpl = `
 <li v-defp:pager_item="pojo" class="day"
@@ -308,6 +313,9 @@ export default component({
     },
     template: `
 <ul class="ui calendar" v-pager:0,0,7="pager">
+  <div class="top">
+    <i class="icon close" @click="hide"></i>
+  </div>
   <li class="header">
     <i class="l icon left-circled" @click.prevent="page(false)"></i>
     <span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></span>
