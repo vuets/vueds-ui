@@ -75,7 +75,7 @@ export declare class Calendar {
     constructor();
     static created(self: Calendar): void;
     static mounted(self: Calendar): void;
-    page(next: boolean): void;
+    page(next: boolean, year?: boolean): void;
     hide(): void;
 }
 declare var _default: any;
