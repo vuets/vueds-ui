@@ -288,10 +288,24 @@ export class Calendar {
         repaint(this, next)
     }
 }
+const item_tpl = `
+<li v-defp:pager_item="pojo" class="day"
+    v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
+    v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
+`
 export default component({
     created(this: Calendar) { Calendar.created(this) },
     mounted(this: Calendar) { Calendar.mounted(this) }, // vue 2.0
     ready(this: Calendar) { Calendar.mounted(this) }, // vue 1.0
+    components: {
+        ci: {
+            name: 'ci',
+            props: {
+                pojo: { type: Object, required: true }
+            },
+            template: item_tpl
+        }
+    },
     template: `
 <ul class="ui calendar" v-pager:0,0,7="pager">
   <li class="header">
@@ -306,9 +320,7 @@ export default component({
   <li class="weekday">Thu</li>
   <li class="weekday">Fri</li>
   <li class="weekday">Sat</li>
-  <li v-for="pojo in pager.array" v-defp:pager_item="pojo" class="day"
-      v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
-      v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
+  <ci v-for="pojo in pager.array" :pojo="pojo"></ci>
   <div class="footer"></div>
 </ul>`
 }, Calendar)
