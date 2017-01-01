@@ -319,15 +319,14 @@ export default component({
     },
     template: `
 <ul class="ui calendar" v-pager:0,0,7="pager">
-  <div class="top">
-    <i class="icon close" @click="hide"></i>
-  </div>
   <li class="header">
     <span class="l">
       <i class="icon angle-double-left link" @click.prevent="page(false, true)"></i>
       <i class="icon angle-left link" @click.prevent="page(false)"></i>
     </span>
-    <span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></span>
+    <div @click.prevent="hide">
+      <span class="month" v-text="month" @click="hide"></span>&nbsp;&nbsp;<span class="year" v-text="year"></span>
+    </div>
     <span class="r">
       <i class="icon angle-right link" @click.prevent="page(true)"></i>
       <i class="icon angle-double-right link" @click.prevent="page(true, true)"></i>
