@@ -8,7 +8,7 @@ export interface Opts {
     pager?: string
 }
 
-export function field_enum(it: Opts, fd: any, pojo: string, display: string): string {
+export function field_enum(fd: any, pojo: string, display: string): string {
     return `
 <div class="fluid picker">
   <select v-disable="${pojo}.disable_" v-sval:${fd.t}="${pojo}.${fd.$}"
@@ -18,7 +18,7 @@ export function field_enum(it: Opts, fd: any, pojo: string, display: string): st
 </div>`
 }
 
-export function field_bool(it: Opts, fd: any, pojo: string, display: string): string {
+export function field_bool(fd: any, pojo: string, display: string): string {
     return `
 <div class="fluid picker">
 <select class="icons" :class="{ active: ${pojo}.${fd.$}, disabled: ${pojo}.disable_ }"
@@ -31,7 +31,7 @@ export function field_bool(it: Opts, fd: any, pojo: string, display: string): st
 </div>`
 }
 
-export function field_suggest(it: Opts, fd: any, pojo: string, display: string): string {
+export function field_suggest(fd: any, pojo: string, display: string): string {
     return `
 <div class="ui input">
   <input type="text"
@@ -41,7 +41,7 @@ export function field_suggest(it: Opts, fd: any, pojo: string, display: string):
 </div>`
 }
 
-export function field_num(it: Opts, fd: any, pojo: string, display: string): string {
+export function field_num(fd: any, pojo: string, display: string): string {
     return `
 <div class="ui input">
   <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
@@ -51,7 +51,7 @@ export function field_num(it: Opts, fd: any, pojo: string, display: string): str
 </div>`
 }
 
-export function field_num_range(it: Opts, fd: any, pojo: string, display: string): string {
+export function field_num_range(fd: any, pojo: string, display: string): string {
     let sval = `${fd.t}${append(fd.o, ',')}`
     return `
 <div class="ui input">
@@ -68,7 +68,7 @@ export function field_num_range(it: Opts, fd: any, pojo: string, display: string
 </div>`
 }
 
-export function field_default(it: Opts, fd: any, pojo: string, display: string, changeSuffix: string): string {
+export function field_default(fd: any, pojo: string, display: string, changeSuffix: string): string {
     return `
 <div class="ui input">
   <input type="text"
@@ -103,18 +103,18 @@ export function filter_fields(it: Opts, jso: any, fields: number[], pojo: string
         
         suggestKind = jso['s' + fk]
         if (suggestKind) {
-            buf += field_suggest(it, fd, pojo, display)
+            buf += field_suggest(fd, pojo, display)
         } else if (fd.t === FieldType.BOOL) {
-            buf += field_bool(it, fd, pojo, display)
+            buf += field_bool(fd, pojo, display)
         } else if (fd.t === FieldType.ENUM) {
-            buf += field_enum(it, fd, pojo, display)
+            buf += field_enum(fd, pojo, display)
         } else if (fd.t !== FieldType.STRING) {
             // check range
-            buf += (jso['e' + fk] ? field_num_range(it, fd, pojo, display) : field_num(it, fd, pojo, display))
+            buf += (jso['e' + fk] ? field_num_range(fd, pojo, display) : field_num(fd, pojo, display))
         } else if (jso['p' + fk]) {
-            buf += field_default(it, fd, pojo, display, `, ${ChangeFlags.SKIP_VALIDATE}`)
+            buf += field_default(fd, pojo, display, `, ${ChangeFlags.SKIP_VALIDATE}`)
         } else {
-            buf += field_default(it, fd, pojo, display, '')
+            buf += field_default(fd, pojo, display, '')
             // TODO range for string?
             if (jso['e' + fk]) {
 
