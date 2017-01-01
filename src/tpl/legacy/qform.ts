@@ -8,17 +8,19 @@ export interface Opts {
     pager?: string
 }
 
-export function field_enum(fd: any, pojo: string, display: string, custom_class?: string): string {
+export function field_enum(fd: any, pojo: string, display: string, 
+        custom_class?: string, content?: string): string {
     return `
 <div class="${custom_class || 'fluid picker'}">
   <select v-disable="${pojo}.disable_" v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)">
     <option value="">${display}</option>${enum_options(fd.v_fn(), fd.$v_fn())}
-  </select>
+  </select>${content || ''}
 </div>`
 }
 
-export function field_bool(fd: any, pojo: string, display: string, custom_class?: string): string {
+export function field_bool(fd: any, pojo: string, display: string, 
+        custom_class?: string, content?: string): string {
     return `
 <div class="${custom_class || 'fluid picker'}">
 <select class="icons" :class="{ active: ${pojo}.${fd.$}, disabled: ${pojo}.disable_ }"
@@ -27,41 +29,45 @@ export function field_bool(fd: any, pojo: string, display: string, custom_class?
   <option value="">${display}:</option>
   <option value="1">${fd.$n} &#xe9fc;</option>
   <option value="0">${fd.$n} &#xea00;</option>
-</select>
+</select>${content || ''}
 </div>`
 }
 
-export function field_suggest(fd: any, pojo: string, display: string, custom_class?: string): string {
+export function field_suggest(fd: any, pojo: string, display: string, 
+        custom_class?: string, content?: string): string {
     return `
 <div class="${custom_class || 'ui input'}">
   <input type="text"
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_"
-      v-suggest="{ pojo: ${pojo}, field: '${fd.$}', fetch: qform.${fd.$}$$AC }" />
+      v-suggest="{ pojo: ${pojo}, field: '${fd.$}', fetch: qform.${fd.$}$$AC }" />${content || ''}
 </div>`
 }
 
-export function field_num(fd: any, pojo: string, display: string, custom_class?: string): string {
+export function field_num(fd: any, pojo: string, display: string, 
+        custom_class?: string, content?: string): string {
     return `
 <div class="${custom_class || 'ui input'}">
   <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)" />
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)" />${content || ''}
 </div>`
 }
 
-export function field_num_end(fd: any, pojo: string, display: string, custom_class?: string): string {
+export function field_num_end(fd: any, pojo: string, display: string, 
+        custom_class?: string, content?: string): string {
     return `
 <div class="${custom_class || 'ui input'}">
   <input type="text"${fd.o === 2 && dpicker(false, pojo + '$', fd.$ || fd._) || ''}
       placeholder="End ${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}$.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}$, ${fd._}, false, null, ${pojo}$$, true)" />
+      @change="qform.$d.$change($event, ${pojo}$, ${fd._}, false, null, ${pojo}$$, true)" />${content || ''}
 </div>`
 }
 
-export function field_num_range(fd: any, pojo: string, display: string, custom_class?: string): string {
+export function field_num_range(fd: any, pojo: string, display: string, 
+        custom_class?: string): string {
     let sval = `${fd.t}${append(fd.o, ',')}`,
         clazz = custom_class || 'ui input'
     return `
@@ -79,13 +85,14 @@ export function field_num_range(fd: any, pojo: string, display: string, custom_c
 </div>`
 }
 
-export function field_default(fd: any, pojo: string, display: string, changeSuffix: string, custom_class?: string): string {
+export function field_default(fd: any, pojo: string, display: string, changeSuffix: string, 
+        custom_class?: string, content?: string): string {
     return `
 <div class="${custom_class || 'ui input'}">
   <input type="text"
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
-      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$${changeSuffix})" />
+      @change="qform.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$${changeSuffix})" />${content || ''}
 </div>`
 }
 
