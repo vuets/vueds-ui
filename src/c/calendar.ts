@@ -81,6 +81,11 @@ function mergeFrom(src: cal.Item, descriptor: any, target: Item|any): Item {
         month = src.month,
         day = src.day
     
+    if (day === 0) {
+        target.day = null
+        return target
+    }
+
     if (src.selected)
         flags |= 1
     if (src.siblingMonth)
@@ -105,10 +110,20 @@ export interface Entry {
     firstDayIdx: number
 }
 
+const empty_item: cal.Item = {
+    day: 0,
+    month: 0,
+    selected: false,
+    siblingMonth: false,
+    weekDay: 0,
+    weekNumber: 0,
+    year: 0
+}
+
 function getEntry(year: number, month: number, opts: cal.Opts, startDate: cal.YMD, cache: any): Entry {
     let key = year + '/' + month,
         entry: Entry = cache[key],
-        array
+        array: cal.Item[]
     
     if (!entry) {
         array = []
@@ -118,6 +133,8 @@ function getEntry(year: number, month: number, opts: cal.Opts, startDate: cal.YM
             array,
             firstDayIdx: cal.addItemsTo(array, year, month, opts, startDate)
         }
+        for (var i = 42 - array.length; i-- > 0;)
+            array.push(empty_item)
     }
     
     return entry
@@ -249,7 +266,7 @@ export class Calendar {
 
         self.pager = defp(self, 'pstore', new PojoStore(current_entry.array, {
             desc: true,
-            pageSize: 35,
+            pageSize: 42,
             descriptor: Item.$descriptor,
             keyProperty: 'id',
             $keyProperty: 'id',
