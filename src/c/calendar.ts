@@ -285,8 +285,14 @@ export class Calendar {
         self.pstore.repaint()
     }
 
-    page(next: boolean) {
-        repaint(this, next)
+    page(next: boolean, year?: boolean) {
+        if (!year) {
+            repaint(this, next)
+            return
+        }
+        let current = this.config.current,
+            diff = next ? 1 : -1
+        goto(this, current.year + diff, current.month, -1)
     }
     
     hide() {
@@ -317,9 +323,15 @@ export default component({
     <i class="icon close" @click="hide"></i>
   </div>
   <li class="header">
-    <i class="l icon left-circled" @click.prevent="page(false)"></i>
+    <span class="l">
+      <i class="icon angle-double-left link" @click.prevent="page(false, true)"></i>
+      <i class="icon angle-left link" @click.prevent="page(false)"></i>
+    </span>
     <span class="month" v-text="month"></span>&nbsp;&nbsp;<span class="year" v-text="year"></span>
-    <i class="r icon right-circled" @click.prevent="page(true)"></i>
+    <span class="r">
+      <i class="icon angle-right link" @click.prevent="page(true)"></i>
+      <i class="icon angle-double-right link" @click.prevent="page(true, true)"></i>
+    </span>
   </li>
   <li class="weekday">Sun</li>
   <li class="weekday">Mon</li>
