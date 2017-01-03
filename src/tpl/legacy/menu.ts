@@ -63,6 +63,7 @@ export interface PagerOpts extends CommonOpts {
     search_fk: string
     dpager?: string // pager used for disable state
     item_class?: string
+    item_raw_attrs?: string
 }
 
 function disable(it: PagerOpts, dpager): string {
@@ -73,7 +74,7 @@ export function pager(it: PagerOpts, content?: string): string {
     let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
-  <div class="item${append(it.item_class)}">
+  <div class="item${append(it.item_class)}"${append(it.item_raw_attrs)}>
     <div class="ui small left icon input">
       <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
           v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
@@ -97,7 +98,7 @@ export function pager_lazy(it: PagerLazyOpts, content?: string, items?: string):
     let dpager = it.dpager || it.pager
     return `
 <div class="ui attached large secondary pointing menu">
-  <div class="item${append(it.item_class)}">
+  <div class="item${append(it.item_class)}"${append(it.item_raw_attrs)}>
     <div class="ui small left icon input">
       <input type="text" placeholder="${it.title}"${disable(it, it.dpager || it.pager)}
           v-lsearch="{ pager: ${it.pager}, fields: ['${it.search_fk}'] }" />
