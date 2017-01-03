@@ -17,6 +17,7 @@ export interface PagerOpts extends CommonOpts {
     search_fk: string;
     dpager?: string;
     item_class?: string;
+    item_raw_attrs?: string;
 }
 export declare function pager(it: PagerOpts, content?: string): string;
 export interface PagerLazyOpts extends PagerOpts {
