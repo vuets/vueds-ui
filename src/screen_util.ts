@@ -1,4 +1,5 @@
 import enquire from './enquire'
+import { bit_unset } from 'vueds/lib/util'
 
 export const enum ScreenFlags {
     PL = 1,
@@ -38,7 +39,7 @@ export const desk_entry = {
         screen.flags |= ScreenFlags.DESK
     },
     unmatch() {
-        screen.flags ^= ScreenFlags.DESK
+        screen.flags = bit_unset(screen.flags, ScreenFlags.DESK)
     }
 }
 
@@ -47,7 +48,7 @@ export const lap_entry = {
         screen.flags |= ScreenFlags.LAP
     },
     unmatch() {
-        screen.flags ^= ScreenFlags.LAP
+        screen.flags = bit_unset(screen.flags, ScreenFlags.LAP)
     }
 }
 
@@ -56,7 +57,7 @@ export const pl_entry = {
         screen.flags |= ScreenFlags.PL
     },
     unmatch() {
-        screen.flags ^= ScreenFlags.PL
+        screen.flags = bit_unset(screen.flags, ScreenFlags.PL)
     }
 }
 
