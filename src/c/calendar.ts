@@ -275,6 +275,9 @@ export class Calendar {
                 return Item.$createObservable(String(idx))
             },
             onSelect(selected: Item, flags: SelectionFlags): number {
+                if (!selected.day)
+                    return 0
+                
                 let config = self.config,
                     opts = self.opts
                 
@@ -318,6 +321,7 @@ export class Calendar {
 }
 const item_tpl = `
 <li v-defp:pager_item="pojo" class="day"
+    v-show="pojo.day"
     v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
     v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
 `
