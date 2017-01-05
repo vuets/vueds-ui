@@ -1,11 +1,13 @@
 import enquire from './enquire'
 
 export const enum ScreenFlags {
+    PL = 1,
     LAP = 2,
     DESK = 4
 }
 
 export const screen = {
+    pl: 'screen and (min-width:33.75em)',
     lap: 'screen and (min-width:48em)',
     desk: 'screen and (min-width:62em)',
     wall: 'screen and (min-width:75em)',
@@ -49,7 +51,17 @@ export const lap_entry = {
     }
 }
 
+export const pl_entry = {
+    match() {
+        screen.flags |= ScreenFlags.PL
+    },
+    unmatch() {
+        screen.flags ^= ScreenFlags.PL
+    }
+}
+
 export function registerDefaults() {
     enquire.register(screen.desk, desk_entry)
     enquire.register(screen.lap, lap_entry)
+    enquire.register(screen.pl, pl_entry)
 }
