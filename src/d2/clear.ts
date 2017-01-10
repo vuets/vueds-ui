@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
+import { VNodeDirective, VNodeWithData } from '../v2/'
 import * as keymage from '../keymage'
 import { getPopup, hidePopup } from '../dom_util'
 

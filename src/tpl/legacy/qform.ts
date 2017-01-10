@@ -1,4 +1,4 @@
-import { when, append } from '../common'
+import { append } from '../common'
 import { FieldType, ChangeFlags } from 'vueds'
 import { PagerState } from 'vueds/lib/store/'
 import { enum_options, option_empty, dpicker } from './form'
@@ -103,7 +103,6 @@ export function filter_fields(it: Opts, jso: any, fields: number[], pojo: string
         fk,
         disable,
         display,
-        item,
         suggestKind
     
     buf += `<div class="field" v-show="${pojo}.show__ && ${pojo}.show_">`
@@ -148,7 +147,6 @@ export function items(it: Opts, values: any[]): string {
     let buf = '',
         qd = it.qd,
         key_array = qd.key_array,
-        descriptor = qd.$d,
         jso
     
     for (let i = 0, len = key_array.length; i < len; i++) {

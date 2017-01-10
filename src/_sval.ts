@@ -1,4 +1,3 @@
-import { FieldType } from 'vueds'
 import { FnUpdate, getFnUpdate } from './dom_util'
 
 export interface Opts {

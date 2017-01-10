@@ -222,8 +222,7 @@ export function cleanup(opts: Opts) {
 function focusout(this: Opts, e) {
     let self = this,
         name = self.pending_name,
-        text = self.el.value,
-        suggest = getInstance()
+        text = self.el.value
     
     if (name) {
         if (!self.update && text !== name) {

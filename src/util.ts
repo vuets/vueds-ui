@@ -1,6 +1,5 @@
 declare function require(path: string) : any;
 
-import * as Vue from 'vue'
 import { EventFlags } from 'vueds'
 import { Trie } from './trie'
 

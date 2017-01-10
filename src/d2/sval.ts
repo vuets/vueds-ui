@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
+import { VNodeDirective, VNodeWithData } from '../v2/'
 import { Opts, parseOpts } from '../_sval'
 import { defp } from 'vueds'
 

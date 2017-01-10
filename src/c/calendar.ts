@@ -1,6 +1,6 @@
 import * as Vue from 'vue'
 import { component } from 'vuets'
-import { defp, nullp, initObservable } from 'vueds'
+import { defp, nullp } from 'vueds'
 import { localToUtc } from 'vueds/lib/util'
 import { PojoStore, Pager, ItemSO, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
@@ -148,7 +148,6 @@ function selectItemNT(this: Calendar) {
 
 function selectDayNT(this: Calendar) {
     let config = this.config,
-        current = config.current,
         current_entry = config.current_entry,
         //selected_item = config.selected_item,
         // selected_day is 1-based
@@ -249,7 +248,7 @@ export class Calendar {
             cache = {},
             current_entry = getEntry(year, month, opts, startDate, cache)
         
-        let config: Config = defp(self, 'config', {
+        defp(self, 'config', {
             today,
             todayUTC,
             startDate,
@@ -262,7 +261,7 @@ export class Calendar {
             selectDayNT: selectDayNT.bind(self),
             opts,
             cache
-        })
+        } as Config)
 
         self.pager = defp(self, 'pstore', new PojoStore(current_entry.array, {
             desc: true,

@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
+import { VNodeDirective, VNodeWithData } from '../v2/'
 import { addClass, removeClass } from '../dom_util'
 
 export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {

@@ -2,7 +2,7 @@ import { FieldType } from 'vueds'
 import { formatDate, formatTime, formatDateTime } from 'vueds/lib/datetime_util'
 
 const UA = window.navigator.userAgent.toLowerCase(), // browser sniffing from vuejs
-    isIE = UA && UA.indexOf('trident') > 0,
+    //isIE = UA && UA.indexOf('trident') > 0,
     isIE9 = UA && UA.indexOf('msie 9.0') > 0,
     createEvent = document['createEvent'],
     createEventObject = document['createEventObject'],

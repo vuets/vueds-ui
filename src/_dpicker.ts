@@ -139,8 +139,7 @@ function showCalendar(calendar: Calendar|any, self: Opts, popup?: any) {
 }
 function toggleCalendar(calendar, self: Opts, p?: any): boolean {
     let popup = p || getPopup(),
-        show = true,
-        array
+        show = true
     
     if (hidePopup(popup)) {
         show = false

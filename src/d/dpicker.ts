@@ -10,7 +10,7 @@ export function update(this: any, value: any, oldValue: any) {
 }
 
 export function unbind(this: any) {
-    let dpicker = this.dpicker
+    let dpicker: Opts = this.dpicker
     if (dpicker)
         cleanup(dpicker)
 }

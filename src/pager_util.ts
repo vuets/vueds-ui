@@ -1,4 +1,3 @@
-import { PojoState } from 'vueds'
 import {
     PojoStore, Pager, PagerState, SelectionFlags, SelectionType, resolveNextPageIndex
 } from 'vueds/lib/store/'
@@ -24,9 +23,9 @@ export function pageAndSelectIdx(page: number, idx: number, array: any[], store:
 export function listUp(pager: Pager, index_selected: number, e: Event, flags: number) {
     e.preventDefault()
 
-    let array = pager.array
+    let array = pager.array,
+        index_hidden: number
     
-    var index_hidden: number, pojo
     if (index_selected === -1) {
         index_hidden = pager.index_hidden
         // select the visible item at the bottom (last)
@@ -227,9 +226,9 @@ export function moveBottomOrDown(e, pager: Pager, opts: Opts) {
         return
     }
     
-    var index_selected = pager.index_selected,
-        index_hidden = pager.index_hidden,
-        clickUpdate = !!(opts.flags & screen.flags)
+    let index_selected = pager.index_selected,
+        index_hidden = pager.index_hidden
+    
     if (index_selected === index_hidden - 1)
         listDown(pager, index_selected, e, opts.flags)
     else

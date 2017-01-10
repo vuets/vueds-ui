@@ -122,7 +122,7 @@ function tokenize(query: string, diacritics?: boolean): Token[] {
         return tokens
     
     let words = query.split(regexSpace),
-        i, n, regex, dregex, letter
+        i, n, regex, letter
     
     for (i = 0, n = words.length; i < n; i++) {
         regex = escape_regex(words[i])

@@ -61,7 +61,7 @@ const operator_map = {
     '>=': true
 }
 
-const regexBacktick = /`/g
+//const regexBacktick = /`/g
 
 /*export function replaceBacktick(str: string) {
     return str.indexOf('`') === -1 ? str : str.replace(regexBacktick, "'")

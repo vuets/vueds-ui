@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
+import { VNodeDirective, VNodeWithData } from '../v2/'
 import { addClass, removeClass } from '../dom_util'
 
 function doUpdate(el, value) {

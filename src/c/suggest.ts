@@ -1,5 +1,5 @@
 import { component } from 'vuets'
-import { defp, nullp, initObservable } from 'vueds'
+import { defp, nullp } from 'vueds'
 import { PojoStore, Pager, ItemSO, SelectionFlags, PojoListState } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as pager_controls from '../tpl/legacy/pager_controls'

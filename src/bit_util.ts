@@ -8,8 +8,7 @@ export interface Checkbox {
 export function fillWithCheckbox(arrayValue: number[], arrayDisplay: string[],
         fill1: Checkbox[], fill2?: Checkbox[]) {
     var display: string,
-        value: number,
-        strIdx: string
+        value: number
     
     for (var i = 0, len = arrayValue.length; i < len; i++) {
         display = arrayDisplay[i]

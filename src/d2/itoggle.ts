@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
+import { VNodeDirective, VNodeWithData } from '../v2/'
 import { defp } from 'vueds'
 import { Opts, parseOpts, cleanup } from '../_itoggle'
 

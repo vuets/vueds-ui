@@ -1,4 +1,4 @@
-import { VNode, VNodeDirective, VNodeWithData } from '../v2/'
+import { VNodeDirective, VNodeWithData } from '../v2/'
 import { Opts, attachOptsTo, cleanup } from '../_pager'
 
 export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
@@ -6,7 +6,7 @@ export function inserted(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
 }
 
 export function unbind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
-    let opts = el.pager_opts
+    let opts: Opts = el.pager_opts
     if (opts) {
         cleanup(opts)
         el.pager_opts = null

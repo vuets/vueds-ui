@@ -7,7 +7,7 @@ export function update(this: any, value: any, oldValue: any) {
 }
 
 export function unbind(this: any) {
-    let opts = this.el.pager_opts
+    let opts: Opts = this.el.pager_opts
     if (opts) {
         cleanup(opts)
         this.el.pager_opts = null

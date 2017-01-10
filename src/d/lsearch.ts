@@ -12,7 +12,7 @@ export function update(this: any, value: any, oldValue: any) {
 }
 
 export function unbind(this: any) {
-    let lsearch = this.lsearch
+    let lsearch: Opts = this.lsearch
     if (lsearch)
         cleanup(lsearch)
 }

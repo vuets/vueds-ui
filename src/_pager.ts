@@ -8,12 +8,11 @@ import {
     screen, table_compact_columns, 
 } from './screen_util'
 
-import { isInput, resolveElement, fireEvent, removeClass } from './dom_util'
+import { isInput, resolveElement, removeClass } from './dom_util'
 
 import {
-    selectIdx, pageAndSelectIdx, 
-    listUp, listDown, 
-    tableUp, tableDown, tableLeft, tableRight, tableJumpUp, tableJumpDown, tableJumpLeft, tableJumpRight,
+    listUp, listDown,
+    tableUp, tableDown,
     moveTopOrUp, moveBottomOrDown, moveLeft, moveRight,
     pageFirst, pageLast, pageSort, pageReload,
     pageNextOrLoad, pagePrevOrLoad
@@ -22,7 +21,7 @@ import {
 import { defp } from 'vueds'
 
 import {
-    Pager, PagerState, PojoStore, SelectionFlags, SelectionType, resolveNextPageIndex 
+    Pager, PojoStore, SelectionFlags
 } from 'vueds/lib/store/'
 
 export const enum Flags {
@@ -186,7 +185,6 @@ function moveDown(e) {
 
 function select(self: Opts, e, dbltap: boolean, clickedUpdate: boolean) {
     var target = e.target, 
-        parent = target.parentElement, 
         pojo,
         pager: Pager,
         store: PojoStore<any>/*,
@@ -288,8 +286,7 @@ function tap(this: Opts, e) {
 }
 
 function doubletap(this: Opts, e) {
-    let flags = this.flags,
-        target = e.target
+    let target = e.target
     
     current = this
 

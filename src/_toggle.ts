@@ -1,4 +1,4 @@
-import { resolveElement, removeClass, addClass, resolveElementArray } from './dom_util'
+import { removeClass, addClass, resolveElementArray } from './dom_util'
 
 export interface Opts {
     type: string

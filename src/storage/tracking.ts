@@ -1,6 +1,5 @@
 let listeners = {},
-    listening = false,
-    listenFn: Function
+    listening = false
 
 function listen() {
     if (window.addEventListener) {
