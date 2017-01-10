@@ -1,8 +1,8 @@
-import * as Vue from 'vue'
+import { nextTick } from 'vueds'
 import { SelectionType, SelectionFlags } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
 import * as rpc from 'vueds/lib/rpc/'
-import * as keymage from './keymage'
+//import * as keymage from './keymage'
 import { getInstance } from './c/suggest'
 import { Keys, removeClass, addClass, debounce, getPopup, hidePopup, showPopup, visiblePopup } from './dom_util'
 import {
@@ -110,15 +110,15 @@ function onSelect(this: Opts, message: ds.ACResult, flags: SelectionFlags) {
         self.pending_name = null
         self.el.value = name // redudant
         addClass(this.el.parentElement, 'suggested')
-        Vue.nextTick(self.focusNT)
+        nextTick(self.focusNT)
     } else if (!this.cbfn || this.cbfn(name, value)) {
         self.pending_name = null
         self.pojo_[self.fk] = name
         self.pojo[self.field] = value
-        Vue.nextTick(self.focusNT)
+        nextTick(self.focusNT)
     } else {
         self.pending_name = null
-        Vue.nextTick(self.focusNT)
+        nextTick(self.focusNT)
     }
 }
 
@@ -279,7 +279,7 @@ function cbFetchSuccess(this: Opts, data) {
     self.disabled = false
     
     if (value !== self.el.value) {
-        Vue.nextTick(self.input)
+        nextTick(self.input)
         return true
     }
 
@@ -294,7 +294,7 @@ function cbFetchSuccess(this: Opts, data) {
     } else {
         self.cache = array.reverse()
         showSuggest(suggest, self)
-        Vue.nextTick(self.focusNT)
+        nextTick(self.focusNT)
     }
 
     return true
@@ -304,7 +304,7 @@ function cbFetchFailed(this: Opts, err) {
     this.disabled = false
     
     if (this.str_fetch !== this.el.value)
-        Vue.nextTick(this.input)
+        nextTick(this.input)
 }
 
 function input(this: Opts, e) {

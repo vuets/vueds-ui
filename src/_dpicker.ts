@@ -1,4 +1,4 @@
-import * as Vue from 'vue'
+import { nextTick } from 'vueds'
 import { Calendar, Config, Item, getInstance, update, goto } from './c/calendar'
 import { localToUtc } from 'vueds/lib/util'
 import { formatDate } from 'vueds/lib/datetime_util'
@@ -108,7 +108,7 @@ function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
     let val = toUTC(getInstance().config),
         old = this.pojo[this.field]
 
-    Vue.nextTick(this.focusNT)
+    nextTick(this.focusNT)
 
     if (val === old)
         return
@@ -117,7 +117,7 @@ function onSelect(this: Opts, message: Item, flags: SelectionFlags) {
         this.pojo['_'][this.field] = old || null
     this.pojo[this.field] = val
     if (this.changeNT)
-        Vue.nextTick(this.changeNT)
+        nextTick(this.changeNT)
 }
 
 function showCalendar(calendar: Calendar|any, self: Opts, popup?: any) {
@@ -168,7 +168,7 @@ function focusout(this: Opts, e) {
         this.pojo['_'][this.field] = old || null
     this.pojo[this.field] = val
     if (this.changeNT)
-        Vue.nextTick(this.changeNT)
+        nextTick(this.changeNT)
 }
 
 function click(this: Opts, e) {
@@ -218,7 +218,7 @@ function keydown(this: Opts, e) {
             if ((val = self.el.value) && val.length === 10) {
                 if (self.pending) {
                     if (applyPending(self, getInstance(), true) && self.changeNT)
-                        Vue.nextTick(self.changeNT)
+                        nextTick(self.changeNT)
                     break
                 }
                 
@@ -244,7 +244,7 @@ function keydown(this: Opts, e) {
             }
 
             if (self.changeNT)
-                Vue.nextTick(self.changeNT)
+                nextTick(self.changeNT)
             break
         case Keys.ESCAPE:
             hidePopup(getPopup())

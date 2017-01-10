@@ -1,6 +1,5 @@
-import * as Vue from 'vue'
 import { component } from 'vuets'
-import { defp, nullp } from 'vueds'
+import { defp, nullp, nextTick } from 'vueds'
 import { localToUtc } from 'vueds/lib/util'
 import { PojoStore, Pager, ItemSO, SelectionFlags, PojoListState, SelectionType } from 'vueds/lib/store/'
 import { ds } from 'vueds/lib/ds/'
@@ -174,9 +173,9 @@ export function goto(self: Calendar, year: number, month: number, day: number) {
 
     if (day !== -1) {
         config.selected_day = day
-        Vue.nextTick(config.selectDayNT)
+        nextTick(config.selectDayNT)
     } else if (selected_date && ymd.year === selected_date.year && ymd.month === selected_date.month) {
-        Vue.nextTick(config.selectItemNT)
+        nextTick(config.selectItemNT)
     }
 }
 
