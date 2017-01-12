@@ -58,8 +58,8 @@ export function focus(id: string) {
 }
 
 function bFocus(this: LazyEl) {
-    let el = this.el !== undefined ? this.el : (this.el = document.getElementById(this.id))
-    if (el)
+    let el = this.el
+    if (el || (el === undefined && (this.el = el = document.getElementById(this.id))))
         el.focus()
 }
 
