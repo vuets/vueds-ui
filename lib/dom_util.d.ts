@@ -39,4 +39,4 @@ export declare function getAbsoluteLeft(el: any): number;
 export declare function getAbsoluteTop(el: any): number;
 export declare function positionTo(relativeTarget: any, popup: any): void;
 export declare function popTo(relativeTarget: any, popup: any): void;
-export declare function debounce(func: any, wait: any, immediate?: any): any;
+export declare function debounce(func: any, wait: number, immediate?: boolean): any;

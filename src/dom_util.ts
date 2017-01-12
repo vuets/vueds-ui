@@ -425,7 +425,7 @@ export function popTo(relativeTarget, popup) {
     
     popup.style.visibility = 'visible'
 }
-export function debounce(func, wait, immediate?): any {
+export function debounce(func, wait: number, immediate?: boolean): any {
     var timeout
     return function(this: any): any {
         var context = this, args = arguments
