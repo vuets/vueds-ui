@@ -1,4 +1,4 @@
-import { FnUpdate } from './dom_util';
+import { FnUpdate } from './field_util';
 export interface Opts {
     type: number;
     flags: number;
