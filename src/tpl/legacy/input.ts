@@ -1,6 +1,5 @@
 import { attr } from '../common'
-import { FieldType, PojoState } from 'vueds/lib/types'
-import { ChangeFlags } from 'vueds'
+import { FieldType, PojoState, ChangeFlags } from 'vueds/lib/types'
 
 export interface BaseOpts {
     pojo: string

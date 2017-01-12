@@ -212,8 +212,8 @@ vue@^1.0.28:
     envify "^3.4.0"
 
 "vueds@git+ssh://git@gitlab.com/dyu/vueds.git#master":
-  version "0.2.0"
-  resolved "git+ssh://git@gitlab.com/dyu/vueds.git#4ab006838e8f4d28f27b252aa32f3d0f20d5371c"
+  version "0.3.0"
+  resolved "git+ssh://git@gitlab.com/dyu/vueds.git#f3c2fd08f99de224117fe77056262152d261edce"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.3"
