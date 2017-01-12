@@ -2,7 +2,7 @@ declare function require(path: string): any;
 
 import { include_if, when, tern_yes_no, attrs } from '../common'
 
-import { PagerState } from 'vueds/lib/store'
+import { PagerState } from 'vueds/lib/types'
 
 export const enum ContentSlot {
     FIRST = 0,

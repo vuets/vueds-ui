@@ -1,4 +1,4 @@
-import { FieldType } from 'vueds'
+import { FieldType } from 'vueds/lib/types'
 import { formatDate, formatTime, formatDateTime } from 'vueds/lib/datetime_util'
 
 const UA = window.navigator.userAgent.toLowerCase(), // browser sniffing from vuejs

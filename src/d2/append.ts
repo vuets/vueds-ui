@@ -1,5 +1,5 @@
 import { VNodeDirective, VNodeWithData } from '../v2/'
-import { defp } from 'vueds'
+import { defp } from 'vueds/lib/util'
 import { resolveElement } from '../dom_util'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {

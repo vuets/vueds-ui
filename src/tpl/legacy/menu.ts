@@ -1,4 +1,4 @@
-import { PagerState } from 'vueds/lib/store/'
+import { PagerState } from 'vueds/lib/types'
 import { attr, append_kv, append } from '../common'
 
 export const enum ContentLoc {

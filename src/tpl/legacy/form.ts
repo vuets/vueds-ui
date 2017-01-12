@@ -1,6 +1,5 @@
 import { when, when_fn, append, prepend, include_if, quote, attr } from '../common'
-import { PojoState, FieldType } from 'vueds'
-import { PagerState } from 'vueds/lib/store'
+import { PojoState, FieldType, PagerState } from 'vueds/lib/types'
 import * as $close from '../../_close'
 import * as $dpicker from '../../_dpicker'
 

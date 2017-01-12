@@ -1,5 +1,5 @@
 import { VNodeDirective, VNodeWithData } from '../v2/'
-import { defp } from 'vueds'
+import { defp } from 'vueds/lib/util'
 import { Opts, parseOpts, cleanup } from '../_rappendto'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {

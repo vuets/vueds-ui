@@ -2,7 +2,7 @@ import { nextTick } from 'vueds'
 import { Calendar, Config, Item, getInstance, update, goto } from './c/calendar'
 import { localToUtc } from 'vueds/lib/util'
 import { formatDate } from 'vueds/lib/datetime_util'
-import { Pager, SelectionFlags } from 'vueds/lib/store/'
+import { Pager, SelectionFlags } from 'vueds/lib/types'
 import { Keys, getPopup, hidePopup, showPopup, visiblePopup, fireEvent } from './dom_util'
 import {
     pageFirst, pageLast, moveLeft, moveRight,

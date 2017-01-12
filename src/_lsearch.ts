@@ -1,4 +1,5 @@
-import { PojoStore, Pager, PagerState, SelectionType } from 'vueds/lib/store/'
+import { Pager, PagerState, SelectionType } from 'vueds/lib/types'
+import { PojoStore } from 'vueds/lib/store/'
 import search from './sifter'
 
 export const enum Flags {

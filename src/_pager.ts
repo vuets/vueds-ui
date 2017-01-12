@@ -18,11 +18,9 @@ import {
     pageNextOrLoad, pagePrevOrLoad
 } from './pager_util'
 
-import { defp } from 'vueds'
-
-import {
-    Pager, PojoStore, SelectionFlags
-} from 'vueds/lib/store/'
+import { defp } from 'vueds/lib/util'
+import { Pager, SelectionFlags } from 'vueds/lib/types'
+import { PojoStore } from 'vueds/lib/store/'
 
 export const enum Flags {
     UPDATE = 16,

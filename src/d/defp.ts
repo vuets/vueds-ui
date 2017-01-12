@@ -1,4 +1,4 @@
-import { defp } from 'vueds'
+import { defp } from 'vueds/lib/util'
 
 export function bind(this: any) {
     if (!this.arg) {

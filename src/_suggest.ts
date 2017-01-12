@@ -1,5 +1,5 @@
 import { nextTick } from 'vueds'
-import { SelectionType, SelectionFlags } from 'vueds/lib/store/'
+import { SelectionType, SelectionFlags } from 'vueds/lib/types'
 import { ds } from 'vueds/lib/ds/'
 import * as rpc from 'vueds/lib/rpc/'
 //import * as keymage from './keymage'

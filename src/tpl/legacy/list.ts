@@ -1,5 +1,4 @@
-import { PojoState } from 'vueds'
-import { PojoListState } from 'vueds/lib/store/'
+import { PojoState, PojoListState } from 'vueds/lib/types'
 import { attrs, exprs, or, append, prepend } from '../common'
 
 export interface ItemOpts {

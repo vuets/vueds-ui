@@ -1,6 +1,6 @@
 import { VNodeDirective, VNodeWithData } from '../v2/'
 import { Opts, parseOpts } from '../_sval'
-import { defp } from 'vueds'
+import { defp } from 'vueds/lib/util'
 
 export function bind(el: any, dir: VNodeDirective, vnode: VNodeWithData) {
     if (!dir.arg) {

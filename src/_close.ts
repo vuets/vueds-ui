@@ -1,4 +1,4 @@
-import { EventFlags } from 'vueds'
+import { EventFlags } from 'vueds/lib/types'
 import { resolveElementArray, removeClass } from './dom_util'
 import { prevent } from './util'
 

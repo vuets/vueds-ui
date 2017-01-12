@@ -1,6 +1,6 @@
 import { append } from '../common'
-import { FieldType, ChangeFlags } from 'vueds'
-import { PagerState } from 'vueds/lib/store/'
+import { FieldType, PagerState } from 'vueds/lib/types'
+import { ChangeFlags } from 'vueds'
 import { enum_options, option_empty, dpicker } from './form'
 
 export interface Opts {

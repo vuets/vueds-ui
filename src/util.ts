@@ -1,6 +1,6 @@
 declare function require(path: string) : any;
 
-import { EventFlags } from 'vueds'
+import { EventFlags } from 'vueds/lib/types'
 import { Trie } from './trie'
 
 export function extractFlagsLen(str: string): number {
