@@ -1,4 +1,4 @@
-import { FieldType } from 'vueds';
+import { FieldType } from 'vueds/lib/types';
 export declare const enum Keys {
     BACKSPACE = 8,
     ENTER = 13,

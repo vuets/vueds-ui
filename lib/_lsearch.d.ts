@@ -1,4 +1,4 @@
-import { Pager } from 'vueds/lib/store/';
+import { Pager } from 'vueds/lib/types';
 export declare const enum Flags {
     SELECT_FROM_PARENT = 8,
 }

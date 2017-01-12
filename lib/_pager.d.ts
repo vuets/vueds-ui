@@ -1,4 +1,4 @@
-import { Pager } from 'vueds/lib/store/';
+import { Pager } from 'vueds/lib/types';
 export declare const enum Flags {
     UPDATE = 16,
     PAGE_AND_SELECT = 32,

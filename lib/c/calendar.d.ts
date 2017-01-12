@@ -1,4 +1,5 @@
-import { PojoStore, Pager, SelectionFlags } from 'vueds/lib/store/';
+import { Pager, SelectionFlags } from 'vueds/lib/types';
+import { PojoStore } from 'vueds/lib/store/';
 import * as cal from '../calendar';
 /**
  *

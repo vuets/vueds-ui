@@ -1,4 +1,5 @@
-import { PojoStore, Pager, SelectionFlags } from 'vueds/lib/store/';
+import { Pager, SelectionFlags } from 'vueds/lib/types';
+import { PojoStore } from 'vueds/lib/store/';
 import { ds } from 'vueds/lib/ds/';
 export interface Opts {
     str: string;

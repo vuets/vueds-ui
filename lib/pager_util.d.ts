@@ -1,4 +1,5 @@
-import { PojoStore, Pager } from 'vueds/lib/store/';
+import { Pager } from 'vueds/lib/types';
+import { PojoStore } from 'vueds/lib/store/';
 export declare function selectIdx(idx: number, array: any[], store: PojoStore<any>, flags: number): void;
 export declare function pageAndSelectIdx(page: number, idx: number, array: any[], store: PojoStore<any>, flags: number): void;
 export declare function listUp(pager: Pager, index_selected: number, e: Event, flags: number): void;
