@@ -1,4 +1,4 @@
-import { FnUpdate, getFnUpdate } from './dom_util'
+import { FnUpdate, getFnUpdate } from './field_util'
 
 export interface Opts {
     type: number
@@ -7,7 +7,7 @@ export interface Opts {
 }
 
 export function parseOpts(args: string[], el): Opts {
-    let i = 0, len = args.length, 
+    let i = 0, len = args.length,
         type = parseInt(args[i++], 10),
         flags = i === len ? 0 : parseInt(args[i++], 10)
     
