@@ -37,7 +37,7 @@ function item_class_expr(it: ItemOpts): string {
 
 export function item(it: ItemOpts, content: string, initialAttrs?: string) {
     let pojo = it.pojo
-    return `
+    return /**/`
 <li${append(initialAttrs)} v-defp:pager_item="${pojo}" class="item${append(it.item_class)}"${attrs(it.item_attrs)}
     v-show="(${pojo}._.lstate & ${PojoListState.INCLUDED})${append(it.item_show_expr, ' && ')}"
     ${it.item_class_exprs && item_class_exprs(it) || item_class_expr(it)}>
@@ -49,7 +49,7 @@ export function item(it: ItemOpts, content: string, initialAttrs?: string) {
     </div>
   </div>
 </li>
-`
+`/**/
 }
 
 export function new_pi(it: ItemOpts) {
@@ -69,12 +69,13 @@ export function pi(it: ListOpts, content: string, pojo?: string) {
     if (!pojo)
         pojo = 'pojo'
     
-    return `
+    return /**/`
 <ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
   <pi v-for="${pojo} in ${it.pager}.array" :${pojo}="${pojo}">
     ${content}
   </pi>
-</ul>`
+</ul>
+`/**/
 }
 
 export function main(it: Opts, content: string): string {
@@ -84,8 +85,9 @@ export function main(it: Opts, content: string): string {
     if (!it.pojo)
         it.pojo = 'pojo'
     
-    return `
+    return /**/`
 <ul class="ui ${or(it.custom_list_class, list_class, it)} list"${attrs(it.attrs)}>
   ${item(it, content, `v-for="${it.pojo} in ${it.pager}.array"`)}
-</ul>`
+</ul>
+`/**/
 }

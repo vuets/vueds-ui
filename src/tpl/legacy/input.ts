@@ -18,10 +18,11 @@ export interface ChangeOpts extends BaseOpts {
 export function change(it: ChangeOpts): string {
     let flags = it.change_flags === undefined ? ChangeFlags.CB_ONLY_ON_SET : it.change_flags,
         disable = it.disable_expr || `(${it.pojo}._.state & ${PojoState.LOADING})`
-    return `
+    return /**/`
 <input type="text" v-disable="${disable}"${attr(it, 'id')}${attr(it, 'placeholder')}
     v-sval:${FieldType.STRING}="pnew.${it.field}"
-    @change="pnew.$d.$change($event, pnew, '${it.field}', false, null, ${it.handler}, ${flags})" />`
+    @change="pnew.$d.$change($event, pnew, '${it.field}', false, null, ${it.handler}, ${flags})" />
+`/**/
 }
 
 export interface SuggestOpts extends BaseOpts {
@@ -35,8 +36,9 @@ export function suggest(it: SuggestOpts): string {
     if (fetch.charAt(0) === '/')
         fetch = `'${fetch}'`
     
-    return `
+    return /**/`
 <input type="text" v-disable="${disable}"${attr(it, 'id')}${attr(it, 'placeholder')}
-    v-suggest="{ pojo: ${it.pojo}, field: '${it.field}', fetch: ${fetch}, onSelect: ${it.handler} }" />`
+    v-suggest="{ pojo: ${it.pojo}, field: '${it.field}', fetch: ${fetch}, onSelect: ${it.handler} }" />
+`/**/
 }
 

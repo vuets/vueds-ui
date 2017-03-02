@@ -77,11 +77,11 @@ export class Suggest {
         })).pager
     }
 }
-const item_tpl = `
+const item_tpl = /**/`
 <li v-defp:pager_item="pojo" class="item"
     v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
     v-show="(pojo._.lstate & ${PojoListState.INCLUDED})" v-text="pojo.name"></li>
-`
+`/**/
 export default component({
     created(this: Suggest) { Suggest.created(this) },
     components: {
@@ -93,7 +93,7 @@ export default component({
             template: item_tpl
         }
     },
-    template: `
+    template: /**/`
 <div class="suggest" v-pager:${Flags.SUGGEST}="pager">
   <ul class="ui small divided selection list">
     <si v-for="pojo in pager.array" :pojo="pojo"></si>
@@ -101,5 +101,6 @@ export default component({
   <div v-show="pager.size > pager.array.length">
     ${pager_controls.main({ pager: 'pager', without_rpc: true, without_msg: true }, ' ')}
   </div>
-</div>`
+</div>
+`/**/
 }, Suggest)

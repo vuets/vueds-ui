@@ -12,16 +12,17 @@ export interface CommonOpts {
 }
 
 function itoggle_id(it: CommonOpts): string {
-    return `
+    return /**/`
 <div class="item">
   <a v-itoggle="click,1,resize-small,resize-full:[ ['${it.itoggle_id}'] ]">
     <i class="icon resize-full"></i>
   </a>
-</div>`
+</div>
+`/**/
 }
 
 function dropdown(it: CommonOpts, content: string, show_expr?: string): string {
-    return `
+    return /**/`
 <div class="item"${append_kv('v-show', show_expr)}>
   <div class="dropdown"${attr(it, "id")}>
     <div v-toggle="'1'"><i class="icon down-dir"></i></div>
@@ -29,16 +30,18 @@ function dropdown(it: CommonOpts, content: string, show_expr?: string): string {
       ${content}
     </ul>
   </div>
-</div>`
+</div>
+`/**/
 }
 
 export function right_menu(it: CommonOpts, content?: string): string {
-    return `
+    return /**/`
 <div class="right menu">
   ${it.itoggle_id && itoggle_id(it) || ''}
   ${it.content_loc === ContentLoc.RIGHT_MENU && content || ''}
   ${!it.content_loc && content && dropdown(it, content) || ''}
-</div>`
+</div>
+`/**/
 }
 
 export interface SimpleOpts extends CommonOpts {
@@ -46,7 +49,7 @@ export interface SimpleOpts extends CommonOpts {
 }
 
 export function simple(it: SimpleOpts, content?: string): string {
-    return `
+    return /**/`
 <div class="ui attached large secondary pointing menu">
   <div class="item">
     <div class="ui small left icon input">
@@ -54,7 +57,8 @@ export function simple(it: SimpleOpts, content?: string): string {
     </div>
   </div>
   ${right_menu(it, content)}
-</div>`
+</div>
+`/**/
 }
 
 export interface PagerOpts extends CommonOpts {
@@ -72,7 +76,7 @@ function disable(it: PagerOpts, dpager): string {
 
 export function pager(it: PagerOpts, content?: string): string {
     let dpager = it.dpager || it.pager
-    return `
+    return /**/`
 <div class="ui attached large secondary pointing menu">
   <div class="item${append(it.item_class)}"${append(it.item_raw_attrs)}>
     <div class="ui small left icon input">
@@ -82,7 +86,8 @@ export function pager(it: PagerOpts, content?: string): string {
     </div>
   </div>
   ${right_menu(it, content)}
-</div>`
+</div>
+`/**/
 }
 
 export interface PagerLazyOpts extends PagerOpts {
@@ -96,7 +101,7 @@ export interface PagerLazyOpts extends PagerOpts {
 
 export function pager_lazy(it: PagerLazyOpts, content?: string, items?: string): string {
     let dpager = it.dpager || it.pager
-    return `
+    return /**/`
 <div class="ui attached large secondary pointing menu">
   <div class="item${append(it.item_class)}"${append(it.item_raw_attrs)}>
     <div class="ui small left icon input">
@@ -114,5 +119,6 @@ export function pager_lazy(it: PagerLazyOpts, content?: string, items?: string):
     </div>
     ${content && dropdown(it, content, it.init_var || 'initialized') || ''}
   </div>
-</div>`
+</div>
+`/**/
 }

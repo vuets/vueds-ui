@@ -9,18 +9,19 @@ export interface Opts {
 
 export function field_enum(fd: any, pojo: string, display: string, 
         custom_class?: string, content?: string): string {
-    return `
+    return /**/`
 <div class="${custom_class || 'fluid picker'}">
   <select v-disable="${pojo}.disable_" v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)">
     <option value="">${display}</option>${enum_options(fd.v_fn(), fd.$v_fn())}
   </select>${content || ''}
-</div>`
+</div>
+`/**/
 }
 
 export function field_bool(fd: any, pojo: string, display: string, 
         custom_class?: string, content?: string): string {
-    return `
+    return /**/`
 <div class="${custom_class || 'fluid picker'}">
 <select class="icons" :class="{ active: ${pojo}.${fd.$}, disabled: ${pojo}.disable_ }"
     v-disable="${pojo}.disable_" v-sval:${fd.t}="${pojo}.${fd.$}"
@@ -29,47 +30,51 @@ export function field_bool(fd: any, pojo: string, display: string,
   <option value="1">${fd.$n} &#xe9fc;</option>
   <option value="0">${fd.$n} &#xea00;</option>
 </select>${content || ''}
-</div>`
+</div>
+`/**/
 }
 
 export function field_suggest(fd: any, pojo: string, display: string, 
         custom_class?: string, content?: string): string {
-    return `
+    return /**/`
 <div class="${custom_class || 'ui input'}">
   <input type="text"
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_"
       v-suggest="{ pojo: ${pojo}, field: '${fd.$}', fetch: qform.${fd.$}$$AC }" />${content || ''}
-</div>`
+</div>
+`/**/
 }
 
 export function field_num(fd: any, pojo: string, display: string, 
         custom_class?: string, content?: string): string {
-    return `
+    return /**/`
 <div class="${custom_class || 'ui input'}">
   <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$)" />${content || ''}
-</div>`
+</div>
+`/**/
 }
 
 export function field_num_end(fd: any, pojo: string, display: string, 
         custom_class?: string, content?: string): string {
-    return `
+    return /**/`
 <div class="${custom_class || 'ui input'}">
   <input type="text"${fd.o === 2 && dpicker(false, pojo + '$', fd.$ || fd._) || ''}
       placeholder="End ${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}$.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}$, ${fd._}, false, null, ${pojo}$$, true)" />${content || ''}
-</div>`
+</div>
+`/**/
 }
 
 export function field_num_range(fd: any, pojo: string, display: string, 
         custom_class?: string): string {
     let sval = `${fd.t}${append(fd.o, ',')}`,
         clazz = custom_class || 'ui input'
-    return `
+    return /**/`
 <div class="${clazz}">
   <input type="text"${fd.o === 2 && dpicker(false, pojo, fd.$ || fd._) || ''}
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
@@ -81,18 +86,20 @@ export function field_num_range(fd: any, pojo: string, display: string,
       placeholder="End ${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${sval}="${pojo}$.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}$, ${fd._}, false, null, ${pojo}$$, true)" />
-</div>`
+</div>
+`/**/
 }
 
 export function field_default(fd: any, pojo: string, display: string, changeSuffix: string, 
         custom_class?: string, content?: string): string {
-    return `
+    return /**/`
 <div class="${custom_class || 'ui input'}">
   <input type="text"
       placeholder="${display}" v-sclass:disabled="${pojo}.disable_"
       v-disable="${pojo}.disable_" v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, false, null, ${pojo}$$${changeSuffix})" />${content || ''}
-</div>`
+</div>
+`/**/
 }
 
 export function filter_fields(it: Opts, jso: any, fields: number[], pojo: string, nf: string): string {
@@ -164,7 +171,7 @@ export function main(it: Opts) {
         values = qd.value_array,
         displayValues = qd.display_array
     
-    return `
+    return /**/`
 <div class="fluid picker">
   <select v-disable="${pager}.state & ${PagerState.MASK_RPC_DISABLE}" @change="qform.change($event)">
   ${option_empty}
@@ -173,5 +180,6 @@ export function main(it: Opts) {
 </div>
 <form class="ui form" onsubmit="return false;">
   ${items(it, values)}
-</form>`
+</form>
+`/**/
 }

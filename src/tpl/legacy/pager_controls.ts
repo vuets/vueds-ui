@@ -60,55 +60,60 @@ function track_clicks(it: Opts): string {
 
 export function msg_fragment(it: Opts): string {
     let pager = it.pager
-    return `
+    return /**/`
 <div v-show="${pager}.msg && (${pager}.state & ${PagerState.MASK_STATUS})">
   <div class="ui message" v-pclass:status-="(${pager}.state & ${PagerState.MASK_STATUS})">
     <i class="close icon" @click.prevent="${pager}.msg = null"></i>
     <span v-text="${pager}.msg"></span>
   </div>
-</div>`
+</div>
+`/**/
 }
 
 export function sort_btn(it: Opts): string {
     let pager = it.pager
-    return `
+    return /**/`
 <button type="button" class="ui button"
     v-disable="2 > ${pager}.size || (${pager}.state & ${PagerState.LOADING})"
     @click.prevent="pager.store.repaint(
         (${pager}.state ^= ${PagerState.DESC})${include_if(it.track_clicks, track_clicks, it)})">
   <i class="icon" v-pclass:desc-="${pager}.state & ${PagerState.DESC} ? ${tern_yes_no(!it.reverse_icon)}"></i>
-</button>`
+</button>
+`/**/
 }
 
 export function rpc_newer_btn(it: Opts): string {
-    return `
+    return /**/`
 <button type="button" class="ui button" 
     v-disable="(${it.pager}.state & ${PagerState.MASK_RPC_DISABLE})"
     @click.prevent="${it.pager}.store.pagePrevOrLoad(${it.flags || 0}${include_if(it.track_clicks, track_clicks, it)})">
   <i class="icon reply"></i>
-</button>`
+</button>
+`/**/
 }
 
 export function rpc_older_btn(it: Opts): string {
-    return `
+    return /**/`
 <button type="button" class="ui button"
     v-disable="(${it.pager}.state & ${PagerState.MASK_RPC_DISABLE}) || ${it.pager}.size === 0"
     @click.prevent="${it.pager}.store.pageNextOrLoad(${it.flags || 0}${include_if(it.track_clicks, track_clicks, it)})">
   <i class="icon forward"></i>
-</button>`
+</button>
+`/**/
 }
 
 export function rpc_reload_btn(it: Opts): string {
-    return `
+    return /**/`
 <button type="button" class="ui button"
     v-disable="(${it.pager}.state & ${PagerState.MASK_RPC_DISABLE}) || ${it.pager}.size === 0"
     @click.prevent="${it.pager}.store.reload(${include_if(it.track_clicks, track_clicks, it)})">
   <i class="icon cw"></i>
-</button>`
+</button>
+`/**/
 }
 
 export function rpc_item(it: Opts): string {
-    return `
+    return /**/`
 <div class="item">
   <div class="ui tiny icon buttons">
     ${when(it.content_slot === ContentSlot.RPC_FIRST, it._content)}
@@ -118,13 +123,14 @@ export function rpc_item(it: Opts): string {
     ${include_if(!it.without_rpc_reload, rpc_reload_btn, it)}
     ${when(it.content_slot === ContentSlot.RPC_LAST, it._content)}
   </div>
-</div>`
+</div>
+`/**/
 }
 
 export function nav_item(it: Opts): string {
     let pager = it.pager, 
         track_clicks_ = include_if(it.track_clicks, track_clicks, it)
-    return `
+    return /**/`
 <div class="item">
   <div class="ui tiny slim icon buttons">
     ${when(it.content_slot === ContentSlot.NAV_FIRST, it._content)}
@@ -150,12 +156,13 @@ export function nav_item(it: Opts): string {
     </button>
     ${when(it.content_slot === ContentSlot.NAV_LAST, it._content)}
   </div>
-</div>`
+</div>
+`/**/
 }
 
 export function count_item(it: Opts): string {
     let pager = it.pager
-    return `
+    return /**/`
 <div class="item">
   ${when(it.content_slot === ContentSlot.COUNT_FIRST, it._content)}
   <span v-show="${pager}.size !== 0" v-text="${pager}.page_from"></span>
@@ -164,7 +171,8 @@ export function count_item(it: Opts): string {
   <span v-text="${pager}.page_to"></span>
   </span> of <span v-text="${pager}.size"></span>
   ${when(it.content_slot === ContentSlot.COUNT_LAST, it._content)}
-</div>`
+</div>
+`/**/
 }
 
 function list_class(it: Opts): string {
@@ -173,7 +181,7 @@ function list_class(it: Opts): string {
 
 export function main(it: Opts, content?: string): string {
     it._content = content
-    return `
+    return /**/`
 ${include_if(!it.without_msg && it.top, msg_fragment, it)}
 <div class="ui skimped tiny horizontal list${include_if(it.list_class, list_class, it)}"${attrs(it.attrs)}>
   ${when(it.content_slot === ContentSlot.FIRST, it._content)}
@@ -185,5 +193,5 @@ ${include_if(!it.without_msg && it.top, msg_fragment, it)}
   ${when(it.content_slot === ContentSlot.LAST, it._content)}
 </div>
 ${include_if(!it.without_msg && !it.top, msg_fragment, it)}
-`
+`/**/
 }

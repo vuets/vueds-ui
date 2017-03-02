@@ -318,12 +318,12 @@ export class Calendar {
         hidePopup(getPopup())
     }
 }
-const item_tpl = `
+const item_tpl = /**/`
 <li v-defp:pager_item="pojo" class="day"
     v-show="pojo.day"
     v-sclass:active="(pojo._.lstate & ${PojoListState.SELECTED})"
     v-pclass:type-="pojo.flags" v-text="pojo.day"></li>
-`
+`/**/
 export default component({
     created(this: Calendar) { Calendar.created(this) },
     mounted(this: Calendar) { Calendar.mounted(this) }, // vue 2.0
@@ -337,7 +337,7 @@ export default component({
             template: item_tpl
         }
     },
-    template: `
+    template: /**/`
 <ul class="ui calendar" v-pager:0,0,7="pager">
   <li class="header">
     <span class="l">
@@ -361,5 +361,6 @@ export default component({
   <li class="weekday">Sat</li>
   <ci v-for="pojo in pager.array" :pojo="pojo"></ci>
   <div class="footer"></div>
-</ul>`
+</ul>
+`/**/
 }, Calendar)

@@ -53,32 +53,35 @@ export function enum_options(arrayValue: any[], arrayDisplay: any[]): string {
 }
 
 function field_enum(it: Opts, fd: any, pojo: string, ffid: any): string {
-    return `
+    return /**/`
 <div class="fluid picker">
   <select${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})">
     ${when(!it.update, option_empty)}${enum_options(fd.v_fn(), fd.$v_fn())}
   </select>
-</div>`
+</div>
+`/**/
 }
 
 function field_bool(it: Opts, fd: any, pojo: string, ffid: any): string {
-    return `
+    return /**/`
 <div class="ui checkbox">
   <input${include_if(ffid, ffid_attr, ffid)} type="checkbox"
       v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
-</div>`
+</div>
+`/**/
 }
 
 function field_textarea(it: Opts, fd: any, pojo: string, ffid: any): string {
-    return `
+    return /**/`
 <div class="ui input">
   <textarea${include_if(ffid, ffid_attr, ffid)} v-sval:${fd.t}="${pojo}.${fd.$}"
       @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})"></textarea>
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
-</div>`
+</div>
+`/**/
 }
 
 export function dpicker(update: boolean, pojo: string, field: string): string {
@@ -86,27 +89,29 @@ export function dpicker(update: boolean, pojo: string, field: string): string {
 }
 
 function field_num(it: Opts, fd: any, pojo: string, ffid: any): string {
-    return `
+    return /**/`
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="text"${fd.o === 2 && dpicker(!!it.update, pojo, fd.$ || fd._) || ''}
       v-sval:${fd.t}${append(fd.o, ',')}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
-</div>`
+</div>
+`/**/
 }
 
 function field_default(it: Opts, fd: any, pojo: string, ffid: any): string {
-    return `
+    return /**/`
 <div class="ui input">
   <input${include_if(ffid, ffid_attr, ffid)} type="${fd.pw ? 'password' : 'text'}"
       v-sval:${fd.t}="${pojo}.${fd.$}" @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
   ${include_if(fd.$h, help_text, fd)}
   <div v-text="!(${pojo}._.vfbs & ${1 << (fd._ - 1)}) ? '' : ${pojo}._['${fd._}']"></div>
-</div>`
+</div>
+`/**/
 }
 
 function help_text(fd): string {
-    return `<div class="help-text">${fd.$h}</div>`
+    return /**/`<div class="help-text">${fd.$h}</div>`/**/
 }
 
 function ffid_attr(ffid): string {
@@ -170,12 +175,12 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
             f = fd._
         if (!fd.t || (fd.a & mask) || (exclude_fn && exclude_fn(f, descriptor))) continue
 
-        out += `
+        out += /**/`
 <div class="field${when(fd.m === 2, ' required')}"${with_error(fd.t) && error_class(it, fd, pojo) || ''}${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''}>
   <label>${fd.$n}${when(fd.m === 2, ' *')}</label>
   ${field_switch(it, fd, i, pojo, ffid)}
 </div>
-        `
+`/**/
         ffid = null
     }
 
@@ -193,27 +198,29 @@ function msg_show_update(pojo: string): string {
 
 // TODO v-show="${pojo}._.msg{{? it.update}} && (${pojo}._.state & {{c.MASK_STATUS}}){{?}}"
 export function msg(pojo: string, update?: boolean): string {
-    return `
+    return /**/`
 <div class="ui message"
     v-show="${pojo}._.msg${include_if(update, msg_show_update, pojo)}"
     v-pclass:status-="(${pojo}._.state & ${PojoState.MASK_STATUS})">
   <i class="icon close" @click.prevent="${pojo}._.msg = null"></i>
   <span v-text="${pojo}._.msg"></span>
-</div>`
+</div>
+`/**/
 }
 
 export function toggle_el(it: Opts): string {
-    return `
+    return /**/`
 <hr/>
-<i class="icon resize-full" v-itoggle:click,1,resize-small,resize-full="[ [${quote(it.toggle_el)}] ]"></i>`
+<i class="icon resize-full" v-itoggle:click,1,resize-small,resize-full="[ [${quote(it.toggle_el)}] ]"></i>
+`/**/
 }
 
 function close_el(it: Opts): string {
-    return `<i class="icon close" v-close:click,${$close.Flags.SELECT_FROM_PARENT}="${quote(it.close_el)}"></i>`
+    return /**/`<i class="icon close" v-close:click,${$close.Flags.SELECT_FROM_PARENT}="${quote(it.close_el)}"></i>`/**/
 }
 
 export function title(it: Opts): string {
-    return `<p class="title">${it.title}</p>`
+    return /**/`<p class="title">${it.title}</p>`/**/
 }
 
 export function disable_pager(it: Opts): string {
@@ -231,7 +238,7 @@ export function main(it: Opts, content?: string): string {
         disable = it.pager || it.disable_expr,
         btn_text = it.btn_text || (it.update ? 'Update' : 'Submit')
     
-    return `
+    return /**/`
 ${
     it.toggle_el && toggle_el(it) || 
     it.hr_before && '<hr />' || 
@@ -251,5 +258,5 @@ ${
   </button>
 </${tag}>
 ${when(it.hr_after, '<hr />')}
-`
+`/**/
 }
