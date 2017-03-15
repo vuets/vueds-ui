@@ -221,9 +221,9 @@ vue@^1.0.28:
     numeral "^1.5.3"
     whatwg-fetch "^1.0.0"
 
-vuets@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/vuets/-/vuets-0.9.2.tgz#de95bf781868e717ed0674483797a18ff570ec33"
+vuets@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/vuets/-/vuets-0.10.0.tgz#1fe27f221d45e17b419c6f01a3d7bdcc49edc835"
 
 whatwg-fetch@^1.0.0:
   version "1.1.1"
