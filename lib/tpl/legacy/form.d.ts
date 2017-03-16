@@ -24,6 +24,7 @@ export interface Opts {
     without_fields?: boolean;
     without_msg?: boolean;
     without_vclass?: boolean;
+    use_switch?: boolean;
     ffid?: string;
     id?: string;
 }
