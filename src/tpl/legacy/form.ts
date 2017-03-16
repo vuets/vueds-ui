@@ -34,6 +34,9 @@ export interface Opts {
     without_msg?: boolean
     without_vclass?: boolean
 
+    // use a switch instead of checkbox
+    use_switch?: boolean
+
     //_content?: string
     ffid?: string // first field id
     id?: string
@@ -60,6 +63,17 @@ function field_enum(it: Opts, fd: any, pojo: string, ffid: any): string {
     ${when(!it.update, option_empty)}${enum_options(fd.v_fn(), fd.$v_fn())}
   </select>
 </div>
+`/**/
+}
+
+function field_bool_switch(it: Opts, fd: any, pojo: string, ffid: any): string {
+    return /**/`
+<label class="switch">
+  <input${include_if(ffid, ffid_attr, ffid)} type="checkbox"
+      v-sval:${fd.t}="${pojo}.${fd.$}"
+      @change="${pojo}.$d.$change($event, ${pojo}, ${fd._}, ${!!it.update}${append(pojo !== it.pojo && it.pojo, ', ')})" />
+  <i></i> ${fd.$n}
+</label>
 `/**/
 }
 
@@ -119,20 +133,24 @@ function ffid_attr(ffid): string {
 }
 
 function field_switch(it: Opts, fd: any, idx: number, pojo: string, ffid: any): string {
-    let t = fd.t
+    let buf = '',
+        t = fd.t
+    
+    if (!it.use_switch || t !== FieldType.BOOL)
+        buf += `<label>${fd.$n}${when(fd.m === 2, ' *')}</label>`
+    
     if (t === FieldType.BOOL)
-        return field_bool(it, fd, pojo, ffid)
+        buf += it.use_switch ? field_bool_switch(it, fd, pojo, ffid) : field_bool(it, fd, pojo, ffid)
+    else if (t === FieldType.ENUM)
+        buf += field_enum(it, fd, pojo, ffid)
+    else if (t !== FieldType.STRING)
+        buf += field_num(it, fd, pojo, ffid)
+    else if (fd.ta)
+        buf += field_textarea(it, fd, pojo, ffid)
+    else
+        buf += field_default(it, fd, pojo, ffid)
     
-    if (t === FieldType.ENUM)
-        return field_enum(it, fd, pojo, ffid)
-    
-    if (t !== FieldType.STRING)
-        return field_num(it, fd, pojo, ffid)
-
-    if (fd.ta)
-        return field_textarea(it, fd, pojo, ffid)
-    
-    return field_default(it, fd, pojo, ffid)
+    return buf
 }
 
 function show_field(it: Opts, expr: string): string {
@@ -177,7 +195,6 @@ function body(it: Opts, descriptor: any, pojo: string, root: any): string {
 
         out += /**/`
 <div class="field${when(fd.m === 2, ' required')}"${with_error(fd.t) && error_class(it, fd, pojo) || ''}${show_fn ? when_fn(show_fn, f, descriptor, show_field, it) : ''}>
-  <label>${fd.$n}${when(fd.m === 2, ' *')}</label>
   ${field_switch(it, fd, i, pojo, ffid)}
 </div>
 `/**/
