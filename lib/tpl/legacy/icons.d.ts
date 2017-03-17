@@ -3,6 +3,7 @@ export interface CommonOpts {
 }
 export interface TimeagoOpts extends CommonOpts {
     icon_class?: string;
+    skip_rev?: boolean;
 }
 export declare function timeago(it: TimeagoOpts): string;
 export interface ToggleOpts extends CommonOpts {
