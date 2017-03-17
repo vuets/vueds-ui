@@ -6,13 +6,20 @@ export interface CommonOpts {
 
 export interface TimeagoOpts extends CommonOpts {
     icon_class?: string
+    skip_rev?: boolean
+}
+
+function timeago_rev(pojo: string): string {
+    return /**/`
+<i class="icon pencil" v-show="${pojo}.rev" :title="${pojo}.rev"></i><span v-show="${pojo}.rev">{{ ${pojo}.updateTs | prettydate }}</span>
+`/**/
 }
 
 export function timeago(it: TimeagoOpts): string {
     let pojo = it.pojo
     return /**/`
 <i class="icon clock${append(it.icon_class)}"></i>{{ ${pojo}.ts | prettydate }}
-<i class="icon pencil" v-show="${pojo}.rev" :title="${pojo}.rev"></i><span v-show="${pojo}.rev">{{ ${pojo}.updateTs | prettydate }}</span>
+${!it.skip_rev && timeago_rev(pojo) || ''}
 `/**/
 }
 
