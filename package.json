@@ -2,8 +2,13 @@
   "name": "vueds-ui",
   "version": "0.5.0",
   "description": "vueds ui",
-  "private": true,
   "author": "dyu",
+  "license": "Apache-2.0",
+  "README": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vuets/vueds-ui.git"
+  },
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
@@ -22,6 +27,6 @@
   },
   "peerDependencies": {
     "vue": "^1.0.28 || ^2.0.0",
-    "vueds": "*"
+    "vueds": "^0.7.0"
   }
 }
