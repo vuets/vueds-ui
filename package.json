@@ -7,7 +7,6 @@
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
-    "dot": "dotgen templates/legacy lib/gen/legacy",
     "build": "tsc"
   },
   "dependencies": {
