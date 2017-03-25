@@ -213,9 +213,9 @@ vue@^1.0.28:
   dependencies:
     envify "^3.4.0"
 
-"vueds@git+ssh://git@gitlab.com/dyu/vueds.git#master":
-  version "0.3.1"
-  resolved "git+ssh://git@gitlab.com/dyu/vueds.git#1f2ba1f893458af4ed0e24bc580d6ee7aa1fae2c"
+vueds@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/vueds/-/vueds-0.7.0.tgz#5071384c72289156592472cf2fe86d8ec0a8fdb3"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.3"
