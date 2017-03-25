@@ -19,7 +19,7 @@
     "@types/vue": "^1.0.31",
     "typescript": "^2.2.1",
     "vue": "^1.0.28",
-    "vueds": "git+ssh://git@gitlab.com/dyu/vueds.git#master"
+    "vueds": "^0.7.0"
   },
   "peerDependencies": {
     "vue": "^1.0.28 || ^2.0.0",
