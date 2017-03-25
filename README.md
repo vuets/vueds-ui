@@ -1,12 +1,12 @@
-Vue UI using terminal directives that call the compiled templates.
+# vueds ui
 
+### Setup
 ```sh
-# install deps
 yarn install
+```
 
-# compile the templates
-yarn run dot
-
-# build
+### Build
+```sh
 yarn run build
 ```
+
