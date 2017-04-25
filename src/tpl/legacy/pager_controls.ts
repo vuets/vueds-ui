@@ -169,7 +169,7 @@ export function count_item(it: Opts): string {
   <span v-show="${pager}.page_from !== ${pager}.page_to">
   <span v-show="${pager}.size !== 0" >-</span>
   <span v-text="${pager}.page_to"></span>
-  </span> of <span v-text="${pager}.size"></span>
+  </span><span> of </span><span v-text="${pager}.size"></span>
   ${when(it.content_slot === ContentSlot.COUNT_LAST, it._content)}
 </div>
 `/**/
