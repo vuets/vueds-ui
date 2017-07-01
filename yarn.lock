@@ -213,9 +213,9 @@ vue@^1.0.28:
   dependencies:
     envify "^3.4.0"
 
-vueds@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/vueds/-/vueds-0.7.0.tgz#5071384c72289156592472cf2fe86d8ec0a8fdb3"
+vueds@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/vueds/-/vueds-0.8.3.tgz#f68b011f95df926d9df345da1e8394651a80d9a8"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.3"

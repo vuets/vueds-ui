@@ -23,7 +23,7 @@
     "@types/vue": "^1.0.31",
     "typescript": "2.4.1",
     "vue": "^1.0.28",
-    "vueds": "^0.7.0"
+    "vueds": "^0.8.3"
   },
   "peerDependencies": {
     "vue": "^1.0.28 || ^2.0.0",
