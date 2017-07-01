@@ -79,5 +79,5 @@ export declare class Calendar {
     page(next: boolean, year?: boolean): void;
     hide(): void;
 }
-declare var _default: any;
+declare const _default: any;
 export default _default;

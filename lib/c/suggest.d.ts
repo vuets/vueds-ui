@@ -16,5 +16,5 @@ export declare class Suggest {
     constructor();
     static created(self: Suggest): void;
 }
-declare var _default: any;
+declare const _default: any;
 export default _default;

@@ -27,5 +27,5 @@ export declare class MediaQueryRegistry {
     register(q: string, entry: Opts, shouldDegrade?: boolean): this;
     unregister(q: string, entry?: Opts): this;
 }
-declare var _default: MediaQueryRegistry;
+declare const _default: MediaQueryRegistry;
 export default _default;
