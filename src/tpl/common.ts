@@ -43,7 +43,7 @@ export function attrs(obj: any): string {
     if (!obj) return ''
 
     var buf = ''
-    for (var i in obj) {
+    for (var i of Object.keys(obj)) {
         buf += ' ' + i + '="' + obj[i] + '"'
     }
     return buf
@@ -65,7 +65,7 @@ export function exprs(obj: any): string {
     if (!obj) return ''
 
     var buf = ''
-    for (var i in obj) {
+    for (var i of Object.keys(obj)) {
         buf += ', ' + i + ': ' + obj[i]
     }
     return buf

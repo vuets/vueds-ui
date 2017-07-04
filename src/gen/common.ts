@@ -111,7 +111,7 @@ export function exprs(array: any[], pojo: any, delim: string, prepend: boolean =
 export function kv_exprs(attrs: any, pojo: any, delim: string, prepend: boolean, exprDelim: string) {
     var buf = ''
     
-    for (var k in attrs) {
+    for (var k of Object.keys(attrs)) {
         if (prepend) buf += delim
         else prepend = true
         
