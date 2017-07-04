@@ -106,12 +106,8 @@ const DIACRITICS = {
 }
 
 function getDiacriticsRegex(pattern, letter) {
-    for (letter in DIACRITICS) {
-        if (DIACRITICS.hasOwnProperty(letter))
-            pattern = pattern.replace(new RegExp(letter, 'g'), DIACRITICS[letter])
-    }
-
-    return pattern
+    var d = DIACRITICS[letter]
+    return !d ? pattern : pattern.replace(new RegExp(letter, 'g'), d)
 }
 
 const regexSpace = / +/
