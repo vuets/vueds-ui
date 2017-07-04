@@ -79,7 +79,7 @@ for (i = 65; i < 91; i++) {
 
 // Reverse key codes
 var KEYREV = {};
-for (var k in KEYS) {
+for (var k of Object.keys(KEYS)) {
     var val = KEYS[k];
     if (!KEYREV[val] || KEYREV[val].length < k.length) {
         KEYREV[val] = k;
