@@ -1,3 +1,8 @@
+## 0.9.0 (2017-07-05)
+
+* Use Object.keys()
+* Depend on vueds >= 0.9.0
+
 ## 0.7.2 (2017-04-27)
 
 * add "action" class to toggle/drawer icons
