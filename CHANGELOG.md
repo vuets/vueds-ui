@@ -1,3 +1,7 @@
+## 0.9.1 (2017-07-12)
+
+* Fix lsearch not searching on the store's current array
+
 ## 0.9.0 (2017-07-05)
 
 * Use Object.keys()
