@@ -11,6 +11,7 @@ export interface Opts {
     fn?: string;
     str: string;
     array: any;
+    target_array: any;
     change: any;
 }
 export declare function parseOpts(args: string[] | any, pager: Pager, fields: string[], fn: string | undefined, vm: any, el: any): Opts;
