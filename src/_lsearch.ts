@@ -18,6 +18,7 @@ export interface Opts {
 
     str: string
     array: any
+    target_array: any
 
     change: any
 }
@@ -39,6 +40,7 @@ export function parseOpts(args: string[]|any, pager: Pager, fields: string[], fn
 
         str: '',
         array: null,
+        target_array: null,
 
         change: null
     }
@@ -75,7 +77,8 @@ function change(this: Opts, e) {
             this.vm[fn](0)
         
         pager.state ^= PagerState.LOCAL_SEARCH
-        store.replace(store.mainArray, SelectionType.RETAIN)
+        store.replace(this.target_array, SelectionType.RETAIN)
+        this.target_array = null
         this.array = null
         return
     }
@@ -90,9 +93,11 @@ function change(this: Opts, e) {
 
     let target_array
     if (fn)
-        target_array = this.vm[fn](1) || store.mainArray
+        target_array = this.vm[fn](1) || store.array
     else
-        target_array = store.mainArray
+        target_array = store.array
+    
+    this.target_array = target_array
     
     let result_array = search(value, this, target_array)
     this.array = result_array
