@@ -1,3 +1,7 @@
+## 0.9.2 (2017-07-13)
+
+* Fix lsearch not re-using the current array
+
 ## 0.9.1 (2017-07-12)
 
 * Fix lsearch not searching on the store's current array
