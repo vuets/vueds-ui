@@ -91,13 +91,10 @@ function change(this: Opts, e) {
 
     }*/
 
-    let target_array
-    if (fn)
-        target_array = this.vm[fn](1) || store.array
-    else
-        target_array = store.array
-    
-    this.target_array = target_array
+    let target_array = this.target_array
+    if (!target_array) {
+        this.target_array = target_array = fn && this.vm[fn](1) || store.array
+    }
     
     let result_array = search(value, this, target_array)
     this.array = result_array
